@@ -24,8 +24,9 @@ export async function auditAccessibilite(page: Page, ecran: string) {
 /** Range tous les candidats en tournant sur les bacs, pour un parcours reproductible. */
 export async function classerTout(page: Page) {
   const bacs = ["J'adore", "Plutôt bien", "Bof", "Plutôt pas", "Jamais", "Je ne le connais pas"];
-  for (let i = 0; i < 21; i++) {
-    await page.getByRole("group", { name: /Ton ressenti/ }).getByRole("button", { name: bacs[i % bacs.length] }).click();
+  const groupe = page.getByRole("group", { name: /Ton ressenti/ });
+  for (let i = 0; await groupe.isVisible(); i++) {
+    await groupe.getByRole("button", { name: bacs[i % bacs.length] }).click();
   }
   await expect(page.getByRole("heading", { name: "Ta gare routière" })).toBeVisible();
 }

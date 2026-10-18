@@ -97,7 +97,7 @@
 <style>
   .formats { display: grid; gap: 10px; margin: 16px 0; }
   .formats button { display: flex; flex-direction: column; align-items: flex-start; text-align: left; border-radius: var(--rayon); gap: 2px; }
-  .formats span { color: var(--discret); font-size: 15px; }
+  .formats span { color: var(--discret); font-size: 16px; }
   .entete { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; }
   .maison { width: 60px; height: 56px; flex: none; }
   .barre { height: 6px; background: var(--trait); border-radius: 3px; overflow: hidden; margin: 6px 0 4px; }

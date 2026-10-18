@@ -30,7 +30,8 @@ const interdits = [
   ...[...new Set(donnees.candidats.map(c => c.parti))].map(p => ({ motif: new RegExp(echapper(p)), raison: `nom de parti (${p})` })),
   { motif: /\{@html/, raison: "injection de HTML brut ({@html})" },
   { motif: /\.innerHTML\s*=|insertAdjacentHTML|outerHTML\s*=/, raison: "injection de HTML brut" },
-  { motif: /\bsondage|intentions? de vote/i, raison: "vocabulaire réservé aux sondages" },
+  // Citer la moyenne des sondages publiés (sélection des candidats) est permis ; présenter l'outil comme un sondage, non.
+  { motif: /\b(notre|ce|cet|un|mon|ton) sondage|intentions? de vote|r[ée]sultats? du sondage/i, raison: "l'outil ne doit pas se présenter comme un sondage" },
   { motif: /(src|href)=["']https?:\/\/(?!monvote2027\.fr|www\.service-public\.fr|www\.tiktok\.com)/, raison: "ressource ou lien externe non prévu" },
   { motif: /@import\s+url\(|fonts\.googleapis/, raison: "police ou feuille de style externe" },
 ];

@@ -11,14 +11,79 @@
   import Bus from "./Bus.svelte";
   import { avenue, BLOC, CANAL, COLS, dansGrille, GARE, HAUTEUR, LARGEUR, MAISON, PARC, positionBus, px, ROWS, RUES, TERMINUS } from "./ville";
 
-  let { bus, vue, ratio, pietons = [], etiquettes = [] }: {
+  type Vue = [number, number, number, number];
+  let { bus, vue = $bindable(), ratio, pietons = [], etiquettes = [], interactive = false, selectionne = null, onChoisir }: {
     bus: BusSurCarte[];
-    vue: [number, number, number, number];
+    vue: Vue;
     /** Largeur ÷ hauteur du cadre affiché (portrait sur mobile). */
     ratio: number;
     pietons?: Pieton[];
     etiquettes?: Etiquette[];
+    /** Carte finale : on peut la déplacer, zoomer et toucher un bus. */
+    interactive?: boolean;
+    selectionne?: string | null;
+    onChoisir?: (id: string) => void;
   } = $props();
+
+  // --- Navigation : glisser pour déplacer, pincer ou molette pour zoomer, toucher pour choisir un bus.
+  let svg: SVGSVGElement | undefined = $state();
+  const doigts = new Map<number, { x: number; y: number }>();
+  let depart: { x: number; y: number; cible: string | null } | null = null;
+  let bouge = false;
+  const LARGEUR_MIN = 240, LARGEUR_MAX = 2400;
+
+  function echelle() { return vue[2] / (svg?.getBoundingClientRect().width || 1); }
+
+  /** Zoom de facteur f autour d'un point de l'écran (coordonnées client). */
+  function zoomer(f: number, cx: number, cy: number) {
+    if (!svg) return;
+    const r = svg.getBoundingClientRect();
+    const w = Math.min(LARGEUR_MAX, Math.max(LARGEUR_MIN, vue[2] * f)), h = w / ratio;
+    const ux = (cx - r.left) / r.width, uy = (cy - r.top) / r.height;
+    vue = [vue[0] + (vue[2] - w) * ux, vue[1] + (vue[3] - h) * uy, w, h];
+  }
+
+  function appui(e: PointerEvent) {
+    if (!interactive) return;
+    svg!.setPointerCapture(e.pointerId);
+    doigts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (doigts.size === 1) {
+      depart = { x: e.clientX, y: e.clientY, cible: (e.target as Element).closest("[data-id]")?.getAttribute("data-id") ?? null };
+      bouge = false;
+    }
+  }
+
+  function deplacement(e: PointerEvent) {
+    const avant = doigts.get(e.pointerId);
+    if (!interactive || !avant) return;
+    if (doigts.size === 1) {
+      const k = echelle();
+      vue = [vue[0] - (e.clientX - avant.x) * k, vue[1] - (e.clientY - avant.y) * k, vue[2], vue[3]];
+      if (depart && Math.hypot(e.clientX - depart.x, e.clientY - depart.y) > 6) bouge = true;
+    } else if (doigts.size === 2) {
+      const [a, b] = [...doigts.values()];
+      const autre = a === avant ? b! : a!;
+      const d0 = Math.hypot(avant.x - autre.x, avant.y - autre.y), d1 = Math.hypot(e.clientX - autre.x, e.clientY - autre.y);
+      if (d0 > 0 && d1 > 0) zoomer(d0 / d1, (e.clientX + autre.x) / 2, (e.clientY + autre.y) / 2);
+      bouge = true;
+    }
+    doigts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  }
+
+  function relache(e: PointerEvent) {
+    if (!interactive) return;
+    doigts.delete(e.pointerId);
+    if (doigts.size === 0 && depart && !bouge && depart.cible) onChoisir?.(depart.cible);
+    if (doigts.size === 0) depart = null;
+  }
+
+  // La molette doit pouvoir empêcher le défilement de la page : écouteur non passif.
+  $effect(() => {
+    if (!svg || !interactive) return;
+    const roulette = (e: WheelEvent) => { e.preventDefault(); zoomer(Math.exp(e.deltaY * 0.0015), e.clientX, e.clientY); };
+    svg.addEventListener("wheel", roulette, { passive: false });
+    return () => svg?.removeEventListener("wheel", roulette);
+  });
 
   const ECHELLE = 0.28;
   const C = { sol: "#f3f1ec", pate: "#e6e3db", parc: "#c9e7bd", arbre: "#a9d69a", eau: "#a8d3e6",
@@ -49,7 +114,7 @@
   const places = $derived(bus.map(b => ({ ...b, p: positionBus(b.ligne, b.d, b.voie) })));
 </script>
 
-<svg viewBox={vue.map(n => n.toFixed(1)).join(" ")} style:aspect-ratio={ratio} role="img" aria-label="Plan de ville : la gare au centre, ta maison en haut à droite, le terminus en bas à gauche">
+<svg bind:this={svg} viewBox={vue.map(n => n.toFixed(1)).join(" ")} style:aspect-ratio={ratio} class:interactive role="img" onpointerdown={appui} onpointermove={deplacement} onpointerup={relache} onpointercancel={relache} aria-label="Plan de ville : la gare au centre, ta maison en haut à droite, le terminus en bas à gauche">
   <rect x="-1000" y="-1000" width={LARGEUR + 2000} height={HAUTEUR + 2000} fill={C.sol} />
   {#each pates as [x, y] (`${x},${y}`)}
     <rect x={x + 12} y={y + 12} width={BLOC - 24} height={BLOC - 24} rx="6" fill={C.pate} />
@@ -84,8 +149,9 @@
   {/each}
 
   {#each places as b (b.id)}
-    <g class="bus" class:attenue={b.attenue}
+    <g class="bus" class:attenue={b.attenue && b.id !== selectionne} data-id={b.id}
        transform="translate({b.p.x.toFixed(1)} {b.p.y.toFixed(1)}) rotate({b.p.angle.toFixed(1)}) scale({ECHELLE} {ECHELLE * (b.p.retourne ? -1 : 1)}) translate(-100 -55)">
+      {#if interactive}<rect x="-30" y="-30" width="260" height="160" fill="transparent" />{/if}
       <Bus niveau={b.niveau} />
     </g>
   {/each}
@@ -108,13 +174,17 @@
   </g>
 
   {#each etiquettes as e (e.id)}
-    <rect x={e.x - e.largeur / 2} y={e.y - 15} width={e.largeur} height="30" rx="15" fill={e.accent ? "#1a73e8" : "#fff"} stroke="#3c4043" stroke-width="1.2" />
-    <text x={e.x} y={e.y + 6} font-size="17" font-weight="600" text-anchor="middle" fill={e.accent ? "#fff" : "#202124"}>{e.texte}</text>
+    <g class="etiquette" data-id={e.id}>
+      <rect x={e.x - e.largeur / 2} y={e.y - 17} width={e.largeur} height="34" rx="17" fill={e.accent ? "#1a73e8" : "#fff"} stroke={e.id === selectionne ? "#e85d2a" : "#3c4043"} stroke-width={e.id === selectionne ? 3 : 1.2} />
+      <text x={e.x} y={e.y + 7} font-size="19" font-weight="600" text-anchor="middle" fill={e.accent ? "#fff" : "#202124"}>{e.texte}</text>
+    </g>
   {/each}
 </svg>
 
 <style>
   svg { width: 100%; height: auto; display: block; background: #f3f1ec; }
   .bus { transition: opacity 0.6s; }
+  .interactive { touch-action: none; cursor: grab; }
+  .interactive .bus, .interactive .etiquette { cursor: pointer; }
   .bus.attenue { opacity: 0.18; }
 </style>

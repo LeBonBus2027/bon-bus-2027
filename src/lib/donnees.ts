@@ -1,4 +1,5 @@
 import brut from "../../data/monvote.json";
+import sondages from "../../data/selection.json";
 import type { Position } from "./calcul";
 
 export interface Candidat {
@@ -21,6 +22,15 @@ export const meta = brut.meta;
 export const candidats: readonly Candidat[] = brut.candidats;
 export const questions: readonly Question[] = brut.questions;
 export const positions = brut.positions as Readonly<Record<string, Readonly<Record<string, Position>>>>;
+
+/**
+ * Candidats proposés d'office : moyenne des sondages au-dessus du seuil (data/selection.json).
+ * Critère unique, affiché sur la page Méthode ; les autres restent ajoutables à la main.
+ */
+export const selection = sondages;
+const moyennes = sondages.moyennes as Record<string, number>;
+export const retenusParDefaut: readonly string[] = candidats.filter(c => (moyennes[c.id] ?? 0) >= sondages.seuil).map(c => c.id);
+export const moyenne = (id: string): number | null => moyennes[id] ?? null;
 
 /** Les 10 grands thèmes affichés par monvote2027 ; une question est rangée selon sa première étiquette. */
 const GRANDS_THEMES: Record<string, string> = {

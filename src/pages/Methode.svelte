@@ -1,6 +1,6 @@
 <script lang="ts">
   import { COUVERTURE_MIN, MIN_REPONSES, R0 } from "../lib/calcul";
-  import { candidats, meta, questions } from "../lib/donnees";
+  import { candidats, meta, questions, retenusParDefaut, selection } from "../lib/donnees";
 </script>
 
 <h1 tabindex="-1">Comment ça marche</h1>
@@ -9,6 +9,10 @@
 <h2>D'où viennent les données</h2>
 <p>Les {questions.length} questions et les positions des {candidats.length} candidats viennent de <a href="https://monvote2027.fr/donnees" target="_blank" rel="noopener noreferrer">MonVote2027</a>, un outil citoyen indépendant qui source chaque position (programmes, déclarations, votes). Nous n'en modifions aucune. Une erreur sur une position ? Signale-la directement à MonVote2027 : la correction arrivera ici à l'import suivant.</p>
 <p class="petit discret">Version des données : import du {new Date(meta.date_import).toLocaleDateString("fr-FR")}, empreinte <code>{meta.empreinte.slice(0, 16)}…</code></p>
+
+<h2>Quels candidats au départ</h2>
+<p>Pour que le classement reste rapide, on te propose d'office les candidats à <strong>{selection.seuil} % ou plus</strong> dans la moyenne des sondages du premier tour ({retenusParDefaut.length} candidats). Source : <a href={selection.url} target="_blank" rel="noopener noreferrer">{selection.source}</a>, au {new Date(selection.date).toLocaleDateString("fr-FR")}. Ce seuil est le même que celui du remboursement des frais de campagne.</p>
+<p>Tous les autres candidats référencés restent disponibles : tu peux les ajouter à ta gare en un geste. Le calcul est fait pour tous les candidats ; si l'un de ceux que tu n'as pas ajoutés t'aurait déposé plus près que tes bus, on te le signale.</p>
 
 <h2>Comment les bus avancent</h2>
 <p>Tous les bus partent de la gare, à {R0} arrêts de chez toi. Pour chaque question, on compare ta réponse à la position du candidat :</p>

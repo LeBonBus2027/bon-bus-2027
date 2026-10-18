@@ -2,7 +2,7 @@
   import { tick } from "svelte";
   import { melanger } from "./lib/aleatoire";
   import type { Reponse } from "./lib/calcul";
-  import { candidats, meta } from "./lib/donnees";
+  import { candidats, meta, retenusParDefaut } from "./lib/donnees";
   import type { Niveau } from "./lib/niveaux";
   import Accueil from "./ecrans/Accueil.svelte";
   import Classement from "./ecrans/Classement.svelte";
@@ -17,7 +17,8 @@
 
   // Tout reste en mémoire dans l'onglet : rien n'est stocké ni envoyé.
   let etape = $state<Etape>("accueil");
-  let ordreCandidats = $state(melanger(candidats));
+  const retenus = () => melanger(candidats.filter(c => retenusParDefaut.includes(c.id)));
+  let ordreCandidats = $state(retenus());
   let bacs = $state<Record<string, Niveau>>({});
   let reponses = $state<Record<string, Reponse>>({});
   let ordreQuestions = $state<string[]>([]);
@@ -47,7 +48,7 @@
   }
 
   function recommencer() {
-    ordreCandidats = melanger(candidats);
+    ordreCandidats = retenus();
     bacs = {};
     reponses = {};
     ordreQuestions = [];
@@ -69,7 +70,7 @@
   {#if etape === "accueil"}
     <Accueil onCommencer={() => aller("classement")} />
   {:else if etape === "classement"}
-    <Classement ordre={ordreCandidats} bind:bacs onFini={() => aller("questionnaire")} />
+    <Classement bind:ordre={ordreCandidats} bind:bacs onFini={() => aller("questionnaire")} />
   {:else if etape === "questionnaire"}
     <Questionnaire bind:reponses bind:ordre={ordreQuestions} bind:format onFini={() => aller("trajet")} />
   {:else}
@@ -88,7 +89,7 @@
 </footer>
 
 <style>
-  footer { max-width: 760px; margin: 0 auto; padding: 0 16px 32px; color: var(--discret); font-size: 13px; }
+  footer { max-width: 760px; margin: 0 auto; padding: 0 16px 32px; color: var(--discret); font-size: 15px; }
   footer p { margin-bottom: 4px; }
   footer nav { margin-top: 8px; line-height: 2.4; }
   footer a { color: var(--discret); }

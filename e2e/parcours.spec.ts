@@ -11,7 +11,7 @@ test.describe("parcours complet", () => {
     await auditAccessibilite(page, "accueil");
     await page.getByRole("button", { name: "C'est parti" }).click();
 
-    await expect(page.getByText("Candidat 1 sur 21")).toBeVisible();
+    await expect(page.getByText("Candidat 1 sur 7")).toBeVisible();
     await auditAccessibilite(page, "classement");
     await classerTout(page);
     await auditAccessibilite(page, "gare routière");
@@ -27,7 +27,7 @@ test.describe("parcours complet", () => {
     await expect(page.getByRole("heading", { name: "Terminus !" })).toBeVisible();
     await expect(page.locator(".message")).not.toBeEmpty();
     await expect(page.getByText("Aucun bus ne te dépose pile devant chez toi.")).toBeVisible();
-    await expect(page.locator("tbody tr")).toHaveCount(21);
+    await expect(page.locator("tbody tr")).toHaveCount(7);
     await expect(page.getByRole("link", { name: "Vérifier mon inscription" })).toHaveAttribute("href", /service-public\.fr/);
     await auditAccessibilite(page, "résultats");
 
@@ -48,7 +48,7 @@ test.describe("parcours complet", () => {
     await page.getByRole("button", { name: "Recommencer" }).click();
     await expect(page.getByRole("heading", { name: "Quel bus te ramène chez toi ?" })).toBeVisible();
     await page.getByRole("button", { name: "C'est parti" }).click();
-    await expect(page.getByText("Candidat 1 sur 21")).toBeVisible();
+    await expect(page.getByText("Candidat 1 sur 7")).toBeVisible();
   });
 });
 
@@ -81,10 +81,10 @@ test("le classement se fait entièrement au clavier", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "C'est parti" }).focus();
   await page.keyboard.press("Enter");
-  await expect(page.getByText("Candidat 1 sur 21")).toBeVisible();
+  await expect(page.getByText("Candidat 1 sur 7")).toBeVisible();
   await page.keyboard.press("Tab");
   await page.keyboard.press("Enter");
-  await expect(page.getByText("Candidat 2 sur 21")).toBeVisible();
+  await expect(page.getByText("Candidat 2 sur 7")).toBeVisible();
 });
 
 test("les pages annexes s'ouvrent et rendent la main au parcours", async ({ page }) => {
@@ -97,7 +97,7 @@ test("les pages annexes s'ouvrent et rendent la main au parcours", async ({ page
     await expect(page.getByRole("heading", { level: 1, name: titre })).toBeVisible();
     await auditAccessibilite(page, titre);
     await page.getByRole("link", { name: "← Revenir au site" }).click();
-    await expect(page.getByText("Candidat 2 sur 21")).toBeVisible();
+    await expect(page.getByText("Candidat 2 sur 7")).toBeVisible();
   }
   expect(problemes).toEqual([]);
 });
@@ -111,4 +111,48 @@ test("les en-têtes de sécurité sont servis", async ({ request }) => {
   expect(h["x-content-type-options"]).toBe("nosniff");
   expect(h["referrer-policy"]).toBe("no-referrer");
   expect(h["cross-origin-opener-policy"]).toBe("same-origin");
+});
+
+test("on peut ajouter un candidat non retenu au départ", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "C'est parti" }).click();
+  await classerTout(page);
+  await page.getByText(/Ajouter un candidat \(14 autres\)/).click();
+  const bouton = page.locator(".ajout button").first();
+  const nom = ((await bouton.textContent()) ?? "").replace("+", "").split("·")[0]!.trim();
+  await bouton.click();
+  await expect(page.getByRole("heading", { name: nom })).toBeVisible();
+  await expect(page.getByText("Candidat 8 sur 8")).toBeVisible();
+  await page.getByRole("button", { name: "Bof" }).click();
+  await expect(page.getByText(/Ajouter un candidat \(13 autres\)/)).toBeVisible();
+});
+
+test("chaque bus explique sa position, depuis le tableau ou la carte", async ({ page }) => {
+  const problemes = surveiller(page);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await page.getByRole("button", { name: "C'est parti" }).click();
+  await classerTout(page);
+  await page.getByRole("button", { name: /place aux questions/ }).click();
+  await page.getByRole("button", { name: /Version rapide/ }).click();
+  await repondreTout(page, 20);
+  await page.getByRole("button", { name: "Faire partir les bus" }).click();
+  await expect(page.getByRole("heading", { name: "Terminus !" })).toBeVisible();
+
+  // Depuis le tableau.
+  await page.getByRole("button", { name: /^Pourquoi \?/ }).first().click();
+  await expect(page.getByRole("heading", { name: /^Pourquoi .+ s'arrête/ })).toBeVisible();
+  await expect(page.getByText(/Sur tes 20 réponses/)).toBeVisible();
+  await auditAccessibilite(page, "explication");
+  await page.getByRole("button", { name: "Fermer l'explication" }).click();
+  await expect(page.getByRole("heading", { name: /^Pourquoi .+ s'arrête/ })).toHaveCount(0);
+
+  // Depuis la carte : toucher une étiquette.
+  await page.locator(".etiquette").first().click();
+  await expect(page.getByRole("heading", { name: /^Pourquoi .+ s'arrête/ })).toBeVisible();
+
+  // Zoom et recentrage ne cassent rien.
+  await page.getByRole("button", { name: "Zoomer", exact: true }).click();
+  await page.getByRole("button", { name: "Recentrer sur chez toi" }).click();
+  expect(problemes).toEqual([]);
 });
