@@ -92,8 +92,3 @@ export function classer<T>(
     .sort((a, b) => a.trajet.distance - b.trajet.distance || a.cle - b.cle)
     .map(({ candidat, trajet }) => ({ candidat, trajet }));
 }
-
-/** Nombre aléatoire non prédictible dans [0, 1). */
-export function tirageCrypto(): number {
-  return crypto.getRandomValues(new Uint32Array(1))[0]! / 2 ** 32;
-}
