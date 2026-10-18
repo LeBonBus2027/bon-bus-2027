@@ -1,0 +1,5 @@
+# À compléter avant la mise en ligne : adresse dédiée au projet et domaine définitif.
+Contact: mailto:securite@A-COMPLETER.fr
+Expires: 2027-12-31T23:00:00.000Z
+Preferred-Languages: fr, en
+Canonical: https://A-COMPLETER.fr/.well-known/security.txt

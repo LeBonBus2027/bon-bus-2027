@@ -6,7 +6,8 @@
   import { candidats, positions, questions } from "../lib/donnees";
   import type { Niveau } from "../lib/niveaux";
   import { arrets, rejeu, reveler } from "../lib/revelation";
-  import { aPied, HAUTEUR, LARGEUR, lignes, MAISON, positionBus, px } from "../lib/ville";
+  import { placer } from "../lib/etiquettes";
+  import { aPied, GARE, HAUTEUR, LARGEUR, lignes, MAISON, positionBus, px } from "../lib/ville";
   import Resultats from "./Resultats.svelte";
 
   let { bacs, reponses, ordre, onRecommencer }: {
@@ -17,7 +18,11 @@
   } = $props();
 
   type Vue = [number, number, number, number];
-  const PLEIN: Vue = [0, 0, LARGEUR, HAUTEUR];
+  // Sur mobile, cadre en portrait qui suit les bus ; sur grand écran, toute la ville d'un coup d'œil.
+  const PORTRAIT = matchMedia("(max-width: 600px)").matches;
+  const RATIO = PORTRAIT ? 0.8 : LARGEUR / HAUTEUR;
+  const MIN_ZOOM = PORTRAIT ? 400 : 600;
+  const MIN_SUIVI = PORTRAIT ? 440 : 560;
   const LIGNES = lignes(candidats.map(c => c.id));
   const parId = new Map(questions.map(q => [q.id, q]));
 
@@ -33,7 +38,7 @@
   const ligneDe = (id: string) => LIGNES[id]!;
 
   let distances = $state<Record<string, number>>(Object.fromEntries(candidats.map(c => [c.id, R0])));
-  let vue = $state<Vue>([...PLEIN]);
+  let vue = $state<Vue>(PORTRAIT ? cadrer([px(MAISON)[0], px(GARE)[0]], [px(MAISON)[1], px(GARE)[1]], 70, MIN_SUIVI) : [0, 0, LARGEUR, HAUTEUR]);
   let phase = $state<"pret" | "route" | "fin">("pret");
   let statut = $state("Tous les bus attendent à la gare.");
   let etiquettes = $state<Etiquette[]>([]);
@@ -72,6 +77,7 @@
           const but = trajets.get(c.id)!.etapes[p.index] ?? R0;
           distances[c.id] = depart[c.id]! + (but - depart[c.id]!) * t;
         }
+        if (PORTRAIT) suivre();
       });
     }
     for (const c of candidats) distances[c.id] = trajets.get(c.id)!.distance;
@@ -86,32 +92,50 @@
     const meilleur = revelation.meilleur.candidat.id;
     pietons = revelation.focus.map(f => ({ id: f.candidat.id, points: aPied(ligneDe(f.candidat.id), f.trajet.distance), accent: f.candidat.id === meilleur }));
 
-    // Pastilles au-dessus des bus, écartées si elles se chevauchent.
-    const liste = revelation.focus.map(f => {
+    // Pastilles placées autour des bus, sans se recouvrir ni cacher un bus, la maison ou la gare.
+    const infos = revelation.focus.map(f => {
       const p = positionBus(ligneDe(f.candidat.id), f.trajet.distance, voies.get(f.candidat.id)!);
-      const texte = `${f.candidat.nom} · ${arrets(f.trajet.arrets)}`;
-      return { id: f.candidat.id, x: p.x, y: p.y - 40, largeur: texte.length * 9.4 + 24, texte, cible: { x: p.x, y: p.y }, accent: f.candidat.id === meilleur };
-    }).sort((a, b) => a.y - b.y);
-    for (let tour = 0; tour < 30; tour++) for (let i = 0; i < liste.length; i++) for (let j = i + 1; j < liste.length; j++) {
-      const a = liste[i]!, b = liste[j]!;
-      if (Math.abs(a.x - b.x) < (a.largeur + b.largeur) / 2 + 6 && Math.abs(a.y - b.y) < 34) {
-        const ecart = (34 - Math.abs(a.y - b.y)) / 2 + 1;
-        if (a.y <= b.y) { a.y -= ecart; b.y += ecart; } else { a.y += ecart; b.y -= ecart; }
-      }
-    }
-    etiquettes = liste;
+      // Nom de famille seulement : pastilles plus courtes, donc zoom plus serré (le tableau garde les noms complets).
+      const nom = f.candidat.nom.slice(f.candidat.nom.indexOf(" ") + 1);
+      const texte = `${nom} · ${arrets(f.trajet.arrets)}`;
+      return { id: f.candidat.id, x: p.x, y: p.y, largeur: texte.length * 9.4 + 24, texte };
+    });
+    const [mx, my] = px(MAISON), [gx, gy] = px(GARE);
+    const places = placer(infos, [
+      { x1: mx - 60, y1: my - 60, x2: mx + 60, y2: my + 34 },
+      { x1: gx - 20, y1: gy - 40, x2: gx + 140, y2: gy + 20 },
+    ]);
+    etiquettes = infos.map((info, i) => ({
+      id: info.id, x: places[i]!.x, y: places[i]!.y, largeur: info.largeur, texte: info.texte,
+      cible: { x: info.x, y: info.y }, accent: info.id === meilleur,
+    }));
+  }
+
+  /** Caméra : cadre la maison, la gare et tous les bus, en suivant doucement leur progression. */
+  function suivre(lissage = 0.12) {
+    const pts = [px(MAISON), px(GARE), ...candidats.map(c => {
+      const p = positionBus(ligneDe(c.id), distances[c.id]!, 0);
+      return [p.x, p.y] as [number, number];
+    })];
+    const cible = cadrer(pts.map(p => p[0]), pts.map(p => p[1]), 70, MIN_SUIVI);
+    vue = vue.map((v, i) => v + (cible[i]! - v) * lissage) as Vue;
+  }
+
+  /** Plus petit cadre aux proportions de la carte qui contient ces points. */
+  function cadrer(xs: number[], ys: number[], marge: number, largeurMin: number): Vue {
+    const ratio = RATIO;
+    let w = Math.max(...xs) - Math.min(...xs) + 2 * marge, h = Math.max(...ys) - Math.min(...ys) + 2 * marge;
+    if (w / h < ratio) w = h * ratio; else h = w / ratio;
+    if (w < largeurMin) { w = largeurMin; h = w / ratio; }
+    const cx = (Math.max(...xs) + Math.min(...xs)) / 2, cy = (Math.max(...ys) + Math.min(...ys)) / 2;
+    return [cx - w / 2, cy - h / 2, w, h];
   }
 
   async function zoomer() {
     const [mx, my] = px(MAISON);
-    const xs = [mx - 70, mx + 70, ...etiquettes.flatMap(e => [e.x - e.largeur / 2, e.x + e.largeur / 2, e.cible.x])];
-    const ys = [my - 70, my + 40, ...etiquettes.flatMap(e => [e.y - 20, e.cible.y + 30])];
-    const marge = 40, ratio = LARGEUR / HAUTEUR;
-    let w = Math.max(...xs) - Math.min(...xs) + 2 * marge, h = Math.max(...ys) - Math.min(...ys) + 2 * marge;
-    if (w / h < ratio) w = h * ratio; else h = w / ratio;
-    if (w < 600) { w = 600; h = w / ratio; }
-    const cx = (Math.max(...xs) + Math.min(...xs)) / 2, cy = (Math.max(...ys) + Math.min(...ys)) / 2;
-    const de = [...vue] as Vue, vers: Vue = [cx - w / 2, cy - h / 2, w, h];
+    const xs = [mx - 70, mx + 70, ...etiquettes.flatMap(e => [e.x - e.largeur / 2, e.x + e.largeur / 2, e.cible.x - 34, e.cible.x + 34])];
+    const ys = [my - 70, my + 40, ...etiquettes.flatMap(e => [e.y - 20, e.y + 20, e.cible.y - 24, e.cible.y + 24])];
+    const de = [...vue] as Vue, vers = cadrer(xs, ys, 30, MIN_ZOOM);
     await animer(1200, t => { vue = de.map((v, i) => v + (vers[i]! - v) * t) as Vue; });
   }
 
@@ -123,7 +147,7 @@
 
 <h1 tabindex="-1">{phase === "fin" ? "Terminus !" : "Le grand départ"}</h1>
 <div class="boite carte">
-  <Carte {bus} {vue} {pietons} {etiquettes} />
+  <Carte {bus} {vue} ratio={RATIO} {pietons} {etiquettes} />
 </div>
 <p class="rangee statut">
   <span aria-live="polite">{statut}</span>

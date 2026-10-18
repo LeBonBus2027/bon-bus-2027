@@ -9,11 +9,13 @@
 
 <script lang="ts">
   import Bus from "./Bus.svelte";
-  import { avenue, BLOC, CANAL, COLS, GARE, HAUTEUR, LARGEUR, MAISON, PARC, positionBus, px, ROWS, RUES, TERMINUS } from "./ville";
+  import { avenue, BLOC, CANAL, COLS, dansGrille, GARE, HAUTEUR, LARGEUR, MAISON, PARC, positionBus, px, ROWS, RUES, TERMINUS } from "./ville";
 
-  let { bus, vue, pietons = [], etiquettes = [] }: {
+  let { bus, vue, ratio, pietons = [], etiquettes = [] }: {
     bus: BusSurCarte[];
     vue: [number, number, number, number];
+    /** Largeur ÷ hauteur du cadre affiché (portrait sur mobile). */
+    ratio: number;
     pietons?: Pieton[];
     etiquettes?: Etiquette[];
   } = $props();
@@ -22,9 +24,10 @@
   const C = { sol: "#f3f1ec", pate: "#e6e3db", parc: "#c9e7bd", arbre: "#a9d69a", eau: "#a8d3e6",
               rue: "#ffffff", bordure: "#d8d3c8", avenue: "#fde9a8", bordureAvenue: "#eec56a", nom: "#6f6a60" };
 
-  // Décor fixe, calculé une seule fois.
+  // Décor fixe, calculé une seule fois. La ville se prolonge au-delà des rues utilisées par les bus.
+  const EXT = { i0: -5, i1: COLS + 4, j0: -7, j1: ROWS + 6 };
   const pates: [number, number][] = [];
-  for (let i = -1; i < COLS; i++) for (let j = -1; j < ROWS; j++) {
+  for (let i = EXT.i0; i < EXT.i1; i++) for (let j = EXT.j0; j < EXT.j1; j++) {
     if (j === CANAL || (i >= PARC.i && i < PARC.i + PARC.w && j >= PARC.j && j < PARC.j + PARC.h)) continue;
     pates.push(px([i, j]));
   }
@@ -32,22 +35,28 @@
   const arbres = [[0.22, 0.25], [0.7, 0.2], [0.35, 0.72], [0.78, 0.7], [0.5, 0.45]].map(([u, v]) => [parcG + u! * (parcD - parcG), parcH + v! * (parcB - parcH)]);
   const canalY = px([0, CANAL])[1];
   const amorces: [Noeud, Noeud][] = [];
-  for (let i = 0; i < COLS; i++) amorces.push([[i, 0], [i, -1]], [[i, ROWS - 1], [i, ROWS]]);
-  for (let j = 0; j < ROWS; j++) amorces.push([[0, j], [-1, j]], [[COLS - 1, j], [COLS, j]]);
+  for (let i = EXT.i0; i <= EXT.i1; i++) for (let j = EXT.j0; j <= EXT.j1; j++) {
+    for (const n of [[i + 1, j], [i, j + 1]] as Noeud[]) {
+      if (dansGrille([i, j]) && dansGrille(n)) continue;          // rues de la grille : gérées par RUES
+      if (n[0] > EXT.i1 || n[1] > EXT.j1) continue;
+      if (j === CANAL && n[1] === CANAL + 1 && i % 3 !== 0) continue; // quelques ponts seulement, comme en ville
+      amorces.push([[i, j], n]);
+    }
+  }
   const troncons = [...amorces, ...RUES].map(([a, b]) => ({ a: px(a), b: px(b), grande: avenue(a, b) }));
   const [tx, ty] = px(TERMINUS), [gx, gy] = px(GARE), [mx, my] = px(MAISON);
 
   const places = $derived(bus.map(b => ({ ...b, p: positionBus(b.ligne, b.d, b.voie) })));
 </script>
 
-<svg viewBox={vue.map(n => n.toFixed(1)).join(" ")} role="img" aria-label="Plan de ville : la gare au centre, ta maison en haut à droite, le terminus en bas à gauche">
-  <rect x="-400" y="-400" width={LARGEUR + 800} height={HAUTEUR + 800} fill={C.sol} />
+<svg viewBox={vue.map(n => n.toFixed(1)).join(" ")} style:aspect-ratio={ratio} role="img" aria-label="Plan de ville : la gare au centre, ta maison en haut à droite, le terminus en bas à gauche">
+  <rect x="-1000" y="-1000" width={LARGEUR + 2000} height={HAUTEUR + 2000} fill={C.sol} />
   {#each pates as [x, y] (`${x},${y}`)}
     <rect x={x + 12} y={y + 12} width={BLOC - 24} height={BLOC - 24} rx="6" fill={C.pate} />
   {/each}
   <rect x={parcG + 12} y={parcH + 12} width={parcD - parcG - 24} height={parcB - parcH - 24} rx="10" fill={C.parc} />
   {#each arbres as [cx, cy] (`${cx}`)}<circle {cx} {cy} r="9" fill={C.arbre} />{/each}
-  <rect x="-400" y={canalY + 16} width={LARGEUR + 800} height={BLOC - 32} fill={C.eau} />
+  <rect x="-1000" y={canalY + 16} width={LARGEUR + 2000} height={BLOC - 32} fill={C.eau} />
 
   {#each troncons as t, i (i)}
     <line x1={t.a[0]} y1={t.a[1]} x2={t.b[0]} y2={t.b[1]} stroke={t.grande ? C.bordureAvenue : C.bordure} stroke-width={t.grande ? 26 : 21} stroke-linecap="round" />
@@ -68,6 +77,10 @@
 
   {#each pietons as p (p.id)}
     <polyline points={p.points.map(q => q.join(",")).join(" ")} fill="none" stroke={p.accent ? "#1a73e8" : "#80868b"} stroke-width="7" stroke-linecap="round" stroke-dasharray="0 13" opacity=".9" />
+  {/each}
+
+  {#each etiquettes as e (e.id)}
+    <line x1={e.cible.x} y1={e.cible.y} x2={e.x} y2={e.y} stroke="#3c4043" stroke-width="1.5" />
   {/each}
 
   {#each places as b (b.id)}
@@ -95,14 +108,13 @@
   </g>
 
   {#each etiquettes as e (e.id)}
-    <line x1={e.cible.x} y1={e.cible.y - 12} x2={e.x} y2={e.y + 14} stroke="#3c4043" stroke-width="1.5" />
     <rect x={e.x - e.largeur / 2} y={e.y - 15} width={e.largeur} height="30" rx="15" fill={e.accent ? "#1a73e8" : "#fff"} stroke="#3c4043" stroke-width="1.2" />
     <text x={e.x} y={e.y + 6} font-size="17" font-weight="600" text-anchor="middle" fill={e.accent ? "#fff" : "#202124"}>{e.texte}</text>
   {/each}
 </svg>
 
 <style>
-  svg { width: 100%; height: auto; display: block; aspect-ratio: 1160 / 840; background: #f3f1ec; }
+  svg { width: 100%; height: auto; display: block; background: #f3f1ec; }
   .bus { transition: opacity 0.6s; }
   .bus.attenue { opacity: 0.18; }
 </style>

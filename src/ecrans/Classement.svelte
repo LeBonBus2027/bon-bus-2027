@@ -52,9 +52,9 @@
       <ul class="gare">
         {#each dedans as c (c.id)}
           <li>
-            <button onclick={() => (index = ordre.indexOf(c))} aria-label="{c.nom}, bac {BAC[n.cle]} : modifier">
+            <button onclick={() => (index = ordre.indexOf(c))}>
               <svg viewBox="-34 -8 240 112" aria-hidden="true"><Bus niveau={n.cle} /></svg>
-              <span>{c.nom}</span>
+              <span>{c.nom}</span><span class="visually-hidden">, bac {BAC[n.cle]} : modifier</span>
             </button>
           </li>
         {/each}

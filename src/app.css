@@ -5,7 +5,9 @@
   --discret: #5c6570;
   --trait: #e3ddd0;
   --accent: #e85d2a;
+  --accent-texte: #b03f17; /* même teinte, assombrie pour le texte (contraste ≥ 4,5:1) */
   --bleu: #1a73e8;
+  --lien: #1558b0; /* contraste ≥ 4,5:1 sur le fond beige (WCAG AA) */
   --rayon: 14px;
   color-scheme: light;
 }
@@ -26,7 +28,7 @@ main { max-width: 760px; margin: 0 auto; padding: 24px 16px 48px; }
 h1 { font-size: clamp(26px, 6vw, 36px); line-height: 1.15; margin: 8px 0 12px; }
 h2 { font-size: 21px; margin: 28px 0 10px; }
 p { margin: 0 0 12px; }
-a { color: var(--bleu); }
+a { color: var(--lien); }
 
 button {
   font: inherit;

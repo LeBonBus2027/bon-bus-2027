@@ -27,7 +27,7 @@ for (let i = 0; i < COLS; i++) if (!PONTS.includes(i)) FERMEES.add(ek([i, CANAL]
 for (const n of [[8, 3], [10, 3], [9, 2], [9, 4]] as Noeud[]) FERMEES.add(ek([9, 3], n));
 for (const [a, b] of [[[3, 2], [4, 2]], [[11, 6], [12, 6]], [[2, 4], [2, 5]], [[10, 8], [11, 8]]] as [Noeud, Noeud][]) FERMEES.add(ek(a, b));
 
-const dansGrille = ([i, j]: Noeud) => i >= 0 && j >= 0 && i < COLS && j < ROWS;
+export const dansGrille = ([i, j]: Noeud) => i >= 0 && j >= 0 && i < COLS && j < ROWS;
 export const rue = (a: Noeud, b: Noeud) => dansGrille(a) && dansGrille(b) && !FERMEES.has(ek(a, b));
 export const avenue = (a: Noeud, b: Noeud) =>
   (a[1] === b[1] && a[1] === 5) || (a[0] === b[0] && a[0] === 6) || (a[1] === b[1] && a[1] === 1 && a[0] >= 6);

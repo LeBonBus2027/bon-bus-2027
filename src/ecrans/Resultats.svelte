@@ -51,7 +51,7 @@
 
 <style>
   .message { font-size: 20px; font-weight: 600; margin-top: 16px; }
-  .morale { color: var(--accent); font-weight: 600; }
+  .morale { color: var(--accent-texte); font-weight: 600; }
   .tableau { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; font-size: 15px; background: var(--carte); border-radius: var(--rayon); }
   th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--trait); vertical-align: top; }

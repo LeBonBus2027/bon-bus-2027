@@ -1,0 +1,43 @@
+# Contrôles à chaque modification (cahier des charges, sections 5 à 7).
+# Avant d'activer le déploiement : épingler chaque action sur un SHA de commit (protection de la chaîne d'approvisionnement).
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verifier:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Audit des dépendances
+        run: npm audit --audit-level=moderate
+      - name: Neutralité et sécurité du code
+        run: node scripts/verifier-neutralite.mjs
+      - name: Types
+        run: npm run check
+      - name: Tests unitaires
+        run: npm test
+      - name: Navigateurs de test
+        run: npx playwright install --with-deps chromium firefox webkit
+      - name: Tests de bout en bout et accessibilité (Chrome, Firefox, Safari, mobile)
+        run: npm run test:e2e
+        env:
+          CI: "1"
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: rapport-playwright
+          path: test-results/
+          retention-days: 7
