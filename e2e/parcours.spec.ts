@@ -237,3 +237,27 @@ test("mode duo : deux trajets sur le même téléphone, puis « Ensemble »", as
   await expect(page.getByRole("heading", { name: "Quel bus te ramène chez toi ?" })).toBeVisible();
   expect(problemes).toEqual([]);
 });
+
+test("le rétroviseur rejoue le trajet étape par étape", async ({ page }) => {
+  const problemes = surveiller(page);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await page.getByRole("button", { name: "C'est parti" }).click();
+  await classerTout(page);
+  await page.getByRole("button", { name: /place aux questions/ }).click();
+  await page.getByRole("button", { name: /Version rapide/ }).click();
+  await repondreTout(page, 20);
+  await page.getByRole("button", { name: "Faire partir les bus" }).click();
+  const curseur = page.getByLabel("Rétroviseur : rejoue le trajet");
+  await expect(curseur).toHaveValue("20");
+  await curseur.fill("0");
+  await expect(page.getByText("Départ : tous les bus attendent à la gare.")).toBeVisible();
+  await expect(page.locator(".etiquette")).toHaveCount(0);           // pas d'étiquettes pendant le rejeu
+  await page.getByRole("button", { name: "Étape suivante" }).click();
+  await expect(page.getByText(/^Étape 1 sur 20/)).toBeVisible();
+  await expect(page.getByText(/Ta réponse/)).toBeVisible();
+  await curseur.fill("20");
+  await expect(page.locator(".etiquette").first()).toBeVisible();     // retour à l'arrivée
+  await auditAccessibilite(page, "rétroviseur");
+  expect(problemes).toEqual([]);
+});

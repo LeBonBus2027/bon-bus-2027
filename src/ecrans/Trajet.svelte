@@ -9,6 +9,7 @@
   import { placer } from "../lib/etiquettes";
   import { aPied, GARE, HAUTEUR, LARGEUR, lignes, MAISON, positionBus, px } from "../lib/ville";
   import Explication from "./Explication.svelte";
+  import { distanceA, libelleReponse, mouvements } from "../lib/retroviseur";
   import { urlPhoto } from "../lib/Photo.svelte";
   import Resultats from "./Resultats.svelte";
 
@@ -52,6 +53,9 @@
   // Après l'arrivée, la peinture est grattée : chaque bus prend l'apparence de ce qu'il vaut vraiment pour toi.
   let gratte = $state(false);
   let passer = false;
+  // Rétroviseur : null = position finale ; k = rejouer l'état après la k-ième étape (0 = départ).
+  let curseur = $state<number | null>(null);
+  const NB_ETAPES = r.passages.length;
 
   const bus = $derived(mesBus.map(c => ({
     id: c.id, niveau: gratte ? niveauReel(trajets.get(c.id)!.arrets) : bacs[c.id] ?? "inconnu", ligne: ligneDe(c.id), d: distances[c.id]!,
@@ -59,7 +63,7 @@
   })));
 
   // À l'arrivée : étiquettes et trajet à pied pour les bus mis en avant, plus celui que tu as touché.
-  const montres = $derived(phase !== "fin" ? [] : classement.filter(c => enAvant.has(c.candidat.id) || c.candidat.id === selectionne));
+  const montres = $derived(phase !== "fin" || (curseur !== null && curseur < NB_ETAPES) ? [] : classement.filter(c => enAvant.has(c.candidat.id) || c.candidat.id === selectionne));
   const pietons = $derived<Pieton[]>(montres.map(c => ({
     id: c.candidat.id, points: aPied(ligneDe(c.candidat.id), c.trajet.distance), accent: c === revelation.meilleur,
   })));
@@ -162,6 +166,29 @@
     vue = [x + (w - nw) / 2, y + (h - nh) / 2, nw, nh];
   }
 
+  function rejouer(k: number) {
+    curseur = Math.max(0, Math.min(NB_ETAPES, k));
+    for (const c of mesBus) distances[c.id] = distanceA(trajets.get(c.id)!, r.passages, curseur);
+  }
+
+  const nomCourt = (id: string) => { const n = mesBus.find(c => c.id === id)?.nom ?? id; return n.slice(n.indexOf(" ") + 1); };
+  const pasTexte = (p: number) => `${Math.abs(p)} pas`;
+  /** Ce qui s'est passé à l'étape affichée par le rétroviseur. */
+  const etapeTexte = $derived.by(() => {
+    const k = curseur ?? NB_ETAPES;
+    if (k === 0) return "Départ : tous les bus attendent à la gare.";
+    const p = r.passages[k - 1]!;
+    const q = NB_ETAPES === r.ordre.length ? parId.get(r.ordre[p.index]!) : undefined;
+    const quoi = q ? `« ${q.texte} » Ta réponse : ${libelleReponse(reponses[q.id])}.` : `${p.libelle}.`;
+    const m = mouvements(trajets, r.passages, k);
+    const avance = m[0], recule = m.at(-1);
+    const bouge = [
+      avance && avance.pas > 0 ? `Le bus de ${nomCourt(avance.id)} avance le plus (${pasTexte(avance.pas)}).` : "",
+      recule && recule.pas < 0 ? `Celui de ${nomCourt(recule.id)} recule le plus (${pasTexte(recule.pas)}).` : "",
+    ].filter(Boolean).join(" ") || "Aucun bus ne bouge.";
+    return `Étape ${k} sur ${NB_ETAPES} : ${quoi} ${bouge}`;
+  });
+
   /** Touché sur la carte ou « Pourquoi ? » dans le tableau. */
   async function choisir(id: string) {
     selectionne = id;
@@ -193,6 +220,19 @@
   {#if phase === "route"}<button class="discret" onclick={() => (passer = true)}>Passer l'animation</button>{/if}
 </p>
 
+{#if phase === "fin"}
+  <div class="retroviseur boite">
+    <label for="retroviseur" class="etiquette-signal">Rétroviseur : rejoue le trajet</label>
+    <div class="curseur">
+      <button onclick={() => rejouer((curseur ?? NB_ETAPES) - 1)} aria-label="Étape précédente" disabled={curseur === 0}>◀</button>
+      <input id="retroviseur" type="range" min="0" max={NB_ETAPES} step="1" value={curseur ?? NB_ETAPES}
+        oninput={e => rejouer(Number(e.currentTarget.value))} aria-valuetext={`Étape ${curseur ?? NB_ETAPES} sur ${NB_ETAPES}`} />
+      <button onclick={() => rejouer((curseur ?? NB_ETAPES) + 1)} aria-label="Étape suivante" disabled={curseur === null || curseur === NB_ETAPES}>▶</button>
+    </div>
+    <p aria-live="polite">{etapeTexte}</p>
+  </div>
+{/if}
+
 {#if choisi}
   <Explication candidat={choisi.candidat} trajet={choisi.trajet} bac={bacs[choisi.candidat.id] ?? "inconnu"}
     ordre={r.ordre} {reponses} positions={positions[choisi.candidat.id] ?? {}} onFermer={() => (selectionne = null)} />
@@ -206,5 +246,10 @@
   .carte { padding: 0; overflow: hidden; position: relative; }
   .commandes { position: absolute; right: 8px; top: 8px; display: flex; flex-direction: column; gap: 6px; }
   .commandes button { width: 48px; min-height: 48px; padding: 0; font-size: 22px; line-height: 1; box-shadow: 0 1px 4px rgb(0 0 0 / 0.15); }
+  .retroviseur { margin: 4px 0 14px; }
+  .retroviseur p { margin: 8px 0 0; }
+  .curseur { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+  .curseur input { flex: 1; min-width: 0; height: 44px; accent-color: var(--jaune); }
+  .curseur button { width: 48px; padding: 0; flex: none; }
   .statut { justify-content: space-between; color: var(--discret); margin-top: 8px; min-height: 48px; }
 </style>
