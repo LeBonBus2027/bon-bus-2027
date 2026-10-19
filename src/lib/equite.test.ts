@@ -6,6 +6,8 @@
 import { describe, expect, it } from "vitest";
 import { trajet, type Reponse } from "./calcul";
 import { candidats, positions, questions } from "./donnees";
+import { graine } from "./aleatoire";
+import { tirerQuestions } from "./tirage";
 
 function classementPour(modele: string, ids: string[]) {
   const reponses = Object.fromEntries(ids.map(q => [q, (positions[modele]?.[q] ?? null) as Reponse]));
@@ -14,10 +16,13 @@ function classementPour(modele: string, ids: string[]) {
     .sort((a, b) => a.d - b.d);
 }
 
-describe.each([
-  ["version rapide (20 questions)", questions.filter(q => q.quiz_rapide).map(q => q.id)],
+const CAS: [string, string[]][] = [
+  // Version rapide : plusieurs tirages au hasard de 20 questions (graine fixe pour un test reproductible).
+  ...Array.from({ length: 5 }, (_, i): [string, string[]] => [`version rapide, tirage n°${i + 1}`, tirerQuestions(questions, 20, graine(100 + i))]),
   ["version complète (100 questions)", questions.map(q => q.id)],
-])("équité, %s", (_, ids) => {
+];
+
+describe.each(CAS)("équité, %s", (_, ids) => {
   it.each(candidats.map(c => [c.nom, c.id]))("un électeur qui pense comme %s le voit arriver premier", (_, id) => {
     const res = classementPour(id, ids);
     const lui = res.find(r => r.id === id)!;

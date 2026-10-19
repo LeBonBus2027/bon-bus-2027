@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { melanger } from "../lib/aleatoire";
+  import { tirerQuestions } from "../lib/tirage";
   import { MIN_REPONSES, type Reponse } from "../lib/calcul";
   import { grandTheme, questions } from "../lib/donnees";
 
@@ -27,7 +27,8 @@
 
   function lancer(f: 20 | 100) {
     format = f;
-    ordre = melanger(questions.filter(q => f === 100 || q.quiz_rapide).map(q => q.id));
+    // Nouveau tirage à chaque parcours : 20 questions au hasard (2 par grand thème) ou les 100, toujours dans un ordre différent.
+    ordre = tirerQuestions(questions, f);
     index = 0;
   }
 
@@ -48,7 +49,7 @@
   <h1 tabindex="-1">Maintenant, tes idées</h1>
   <p>On va construire ta maison : chaque réponse en pose une brique. Ensuite, on verra quel bus s'arrête le plus près.</p>
   <div class="formats">
-    <button class="boite" onclick={() => lancer(20)}><strong>Version rapide</strong><span>20 questions · 2 à 3 minutes</span></button>
+    <button class="boite" onclick={() => lancer(20)}><strong>Version rapide</strong><span>20 questions tirées au hasard parmi 100 · 2 à 3 minutes</span></button>
     <button class="boite" onclick={() => lancer(100)}><strong>Version complète</strong><span>100 questions · 10 minutes, plus précis</span></button>
   </div>
   <p class="discret petit">Les questions et les positions des candidats viennent de <a href="https://monvote2027.fr/donnees" target="_blank" rel="noopener noreferrer">MonVote2027</a>.</p>

@@ -36,7 +36,7 @@
 <ul>
   <li><strong>Ton classement de départ</strong> ne change que l'apparence des bus. Il n'a aucun effet sur leur trajet.</li>
   <li><strong>Les rues empruntées</strong> par chaque bus sont tirées au hasard une fois pour toutes. Elles ne disent rien des candidats : seul compte le nombre d'arrêts.</li>
-  <li><strong>L'ordre d'affichage</strong> des candidats et des questions est tiré au hasard à chaque visite. Les ex-aequo sont départagés au hasard.</li>
+  <li><strong>L'ordre d'affichage</strong> des candidats et des questions est tiré au hasard à chaque visite. Les ex-aequo sont départagés au hasard. En version rapide, les 20 questions sont elles-mêmes tirées au hasard parmi les 100 à chaque parcours, 2 dans chacun des 10 grands thèmes pour qu'aucun sujet ne soit oublié.</li>
 </ul>
 
 <h2>Les limites</h2>
