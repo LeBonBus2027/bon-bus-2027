@@ -1,17 +1,17 @@
 <script lang="ts">
   import Bus from "../lib/Bus.svelte";
-  import type { Niveau } from "../lib/niveaux";
-  import { BAC } from "../lib/niveaux";
-  import type { Revelation } from "../lib/revelation";
+  import { BAC, NIVEAUX, type Niveau } from "../lib/niveaux";
+  import { niveauReel, type Revelation } from "../lib/revelation";
+  import { dessinerTicket, type LigneTicket } from "../lib/ticket";
 
   let { revelation, bacs }: { revelation: Revelation; bacs: Record<string, Niveau> } = $props();
 
   let avecNoms = $state(false);
   let enCours = $state(false);
   let message = $state("");
-  let dessinBus: SVGSVGElement | undefined = $state();
-
-  const niveauMeilleur = $derived(bacs[revelation.meilleur.candidat.id] ?? "inconnu");
+  // Un dessin caché de chaque bus, sérialisé en image pour le ticket.
+  let dessins = $state<Partial<Record<Niveau, SVGSVGElement>>>({});
+  let apercu = $state<string | null>(null);
   const n = (k: number) => `${k} arrêt${k > 1 ? "s" : ""}`;
   // On partage l'accueil, jamais un résultat : ni réponse ni classement dans l'adresse.
   const lien = `${location.origin}${location.pathname}`;
@@ -46,23 +46,13 @@
     { nom: "Telegram", url: `https://t.me/share/url?url=${e(lien)}&text=${e(texte)}` },
   ]);
 
-  function couper(ctx: CanvasRenderingContext2D, t: string, largeur: number): string[] {
-    const sortie: string[] = [];
-    let ligne = "";
-    for (const mot of t.split(" ")) {
-      const essai = ligne ? `${ligne} ${mot}` : mot;
-      if (ctx.measureText(essai).width > largeur && ligne) { sortie.push(ligne); ligne = mot; } else ligne = essai;
-    }
-    if (ligne) sortie.push(ligne);
-    return sortie;
-  }
-
-  async function imageBus(): Promise<HTMLImageElement | null> {
-    if (!dessinBus) return null;
-    const copie = dessinBus.cloneNode(true) as SVGSVGElement;
+  async function imageBus(niveau: Niveau): Promise<HTMLImageElement | null> {
+    const svg = dessins[niveau];
+    if (!svg) return null;
+    const copie = svg.cloneNode(true) as SVGSVGElement;
     copie.querySelectorAll(".bouffee, .mouche").forEach(el => el.remove());   // animées en CSS, absentes de l'image
-    copie.setAttribute("width", "600");
-    copie.setAttribute("height", "280");
+    copie.setAttribute("width", "660");
+    copie.setAttribute("height", "308");
     const url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(copie)], { type: "image/svg+xml" }));
     try {
       const img = new Image();
@@ -74,36 +64,35 @@
     }
   }
 
-  /** Image 1080 × 1350 (format portrait des réseaux), fabriquée dans le navigateur. */
-  async function creerImage(): Promise<File> {
-    const W = 1080, H = 1350, canvas = document.createElement("canvas");
-    canvas.width = W; canvas.height = H;
-    const ctx = canvas.getContext("2d")!;
-    ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, W, H);
-    // Bandeau « Ligne 2027 », comme en haut du site.
-    ctx.fillStyle = "#0b1f3a"; ctx.fillRect(0, 0, W, 96); ctx.fillStyle = "#ffcd00"; ctx.fillRect(0, 96, W, 10);
-    ctx.beginPath(); ctx.arc(110, 48, 24, 0, 2 * Math.PI); ctx.fill();
-    ctx.fillStyle = "#0b1f3a"; ctx.font = "900 28px system-ui, sans-serif"; ctx.fillText("B", 100, 58);
-    ctx.fillStyle = "#ffffff"; ctx.font = "800 26px system-ui, sans-serif"; ctx.fillText("LIGNE 2027 · LE BON BUS", 150, 58);
-    ctx.fillStyle = "#0b1f3a"; ctx.font = "900 72px system-ui, sans-serif";
-    couper(ctx, "Quel bus te ramène chez toi ?", W - 160).forEach((l, i) => ctx.fillText(l, 80, 170 + i * 86));
-    const img = await imageBus();
-    if (img) ctx.drawImage(img, 240, 360, 600, 280);
-    ctx.font = "600 46px system-ui, sans-serif";
-    let y = 760;
-    for (const para of lignesTexte()) {
-      for (const l of couper(ctx, para, W - 160)) { ctx.fillText(l, 80, y); y += 60; }
-      y += 24;
-    }
-    ctx.fillStyle = "#0b1f3a"; ctx.font = "800 38px system-ui, sans-serif";
-    for (const l of couper(ctx, `Aucun bus ne te dépose pile devant chez toi. ${APPEL}`, W - 160)) { ctx.fillText(l, 80, y + 20); y += 50; }
-    ctx.fillStyle = "#4a5b72"; ctx.font = "400 30px system-ui, sans-serif";
-    ctx.fillText("Selon mon classement personnel", 80, H - 120);
-    ctx.fillText(location.host, 80, H - 72);
-    const blob = await new Promise<Blob | null>(ok => canvas.toBlob(ok, "image/png"));
-    if (!blob) throw new Error("image");
-    return new File([blob], "mon-bus-2027.png", { type: "image/png" });
+  /** Contenu du ticket : bus imaginé → bus réel, sans nom par défaut. */
+  function lignesTicket(): LigneTicket[] {
+    const { meilleur, beau, intuition } = revelation;
+    const ligne = (titre: string, c: typeof meilleur): LigneTicket => ({
+      titre, nom: avecNoms ? c.candidat.nom : undefined,
+      avant: bacs[c.candidat.id] ?? "inconnu", apres: niveauReel(c.trajet.arrets), arrets: c.trajet.arrets,
+    });
+    if (!beau || intuition) return [ligne(intuition ? "MON BUS PRÉFÉRÉ ME RAMÈNE BIEN" : "CELUI QUI ME RAMÈNE", meilleur)];
+    return [ligne("MON PLUS BEAU BUS", beau), ligne("CELUI QUI ME RAMÈNE", meilleur)];
   }
+
+  async function creerImage(): Promise<File> {
+    const blob = await dessinerTicket(lignesTicket(), imageBus, location.host);
+    return new File([blob], "mon-ticket-2027.png", { type: "image/png" });
+  }
+
+  // Aperçu du ticket, refait quand on coche ou décoche les noms.
+  $effect(() => {
+    void avecNoms;
+    if (NIVEAUX.some(n => !dessins[n.cle])) return;
+    let annule = false;
+    let url: string | null = null;
+    creerImage().then(f => {
+      if (annule) return;
+      url = URL.createObjectURL(f);
+      apercu = url;
+    }).catch(() => { apercu = null; });
+    return () => { annule = true; if (url) URL.revokeObjectURL(url); };
+  });
 
   /** Menu de partage du téléphone (HTTPS uniquement) ; sinon on renvoie vers les boutons. */
   async function partager() {
@@ -155,6 +144,7 @@
 
 <div class="boite partage">
   <h2>Partage ton trajet</h2>
+  {#if apercu}<img class="apercu" src={apercu} alt="Aperçu de ton ticket de bus à partager : ton plus beau bus et celui qui te ramène, tels que tu les imaginais et tels qu'ils sont vraiment pour toi." />{/if}
   <p><button class="principal" onclick={partager} disabled={enCours}>{enCours ? "Préparation…" : "Partager"}</button></p>
   <ul class="reseaux" aria-label="Partager sur un réseau">
     {#each reseaux as r (r.nom)}
@@ -166,7 +156,11 @@
   <label><input type="checkbox" bind:checked={avecNoms} /> Afficher les noms des candidats</label>
   <p class="discret petit">Sans les noms, ton partage ne dévoile pas tes préférences : il donne juste envie d'essayer. Le lien mène à l'accueil, jamais à ton résultat.</p>
   {#if message}<p role="status">{message}</p>{/if}
-  <svg bind:this={dessinBus} class="cache" viewBox="-34 -8 240 112" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><Bus niveau={niveauMeilleur} /></svg>
+  <div class="cache" aria-hidden="true">
+    {#each NIVEAUX as n (n.cle)}
+      <svg bind:this={dessins[n.cle]} viewBox="-20 -6 230 110" xmlns="http://www.w3.org/2000/svg"><Bus niveau={n.cle} /></svg>
+    {/each}
+  </div>
 </div>
 
 <style>
@@ -181,4 +175,5 @@
   input { width: 22px; height: 22px; }
   .partage p:last-of-type { margin-bottom: 0; }
   .cache { position: absolute; width: 1px; height: 1px; overflow: hidden; left: -9999px; }
+  .apercu { display: block; width: 100%; max-width: 360px; height: auto; margin: 0 auto 14px; border-radius: var(--rayon); box-shadow: 0 6px 20px rgb(11 31 58 / 0.18); }
 </style>

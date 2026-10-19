@@ -175,3 +175,23 @@ test("le mode sombre reste lisible (contrastes WCAG AA)", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Terminus !" })).toBeVisible();
   await auditAccessibilite(page, "résultats sombres");
 });
+
+test("le ticket de bus à partager s'affiche en aperçu, avec ou sans noms", async ({ page }) => {
+  const problemes = surveiller(page);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await page.getByRole("button", { name: "C'est parti" }).click();
+  await classerTout(page);
+  await page.getByRole("button", { name: /place aux questions/ }).click();
+  await page.getByRole("button", { name: /Version rapide/ }).click();
+  await repondreTout(page, 20);
+  await page.getByRole("button", { name: "Faire partir les bus" }).click();
+  const apercu = page.getByRole("img", { name: /Aperçu de ton ticket/ });
+  await expect(apercu).toBeVisible();
+  const taille = await apercu.evaluate((img: HTMLImageElement) => [img.naturalWidth, img.naturalHeight]);
+  expect(taille).toEqual([1080, 1350]);
+  const avant = await apercu.getAttribute("src");
+  await page.getByLabel("Afficher les noms des candidats").check();
+  await expect(apercu).not.toHaveAttribute("src", avant!);
+  expect(problemes).toEqual([]);
+});
