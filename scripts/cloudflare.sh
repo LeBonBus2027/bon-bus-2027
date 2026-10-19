@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
-# Mise en ligne sur Cloudflare Pages (envoi direct du dossier dist, sans passer par GitHub).
-# Première fois : npx wrangler@4.145.0 login, puis
-#                 npx wrangler@4.145.0 pages project create bon-bus-2027 --production-branch main
-# Usage : npm run cloudflare              → version d'essai (adresse de prévisualisation)
+# Mise en ligne sur Cloudflare (Workers, fichiers statiques seulement ; configuration dans wrangler.jsonc).
+# Première fois : npx wrangler@4.145.0 login --scopes account:read user:read workers:write workers_scripts:write
+# Usage : npm run cloudflare              → version d'essai, à une adresse de prévisualisation (essai-…workers.dev)
 #         npm run cloudflare -- --prod    → site public, après la vérification complète
-# Variables : CF_PROJET (nom du projet, bon-bus-2027 par défaut), VITE_SITE_URL (adresse publique définitive).
+# Variable : VITE_SITE_URL (adresse publique définitive, pour l'image d'aperçu des liens partagés).
 set -euo pipefail
 cd "$(dirname "$0")/.."
 WRANGLER="wrangler@4.145.0"   # version figée (publiée il y a plus de deux semaines), jamais « latest »
-PROJET="${CF_PROJET:-bon-bus-2027}"
-BRANCHE="essai"
+export WRANGLER_SEND_METRICS=false
 if [[ "${1:-}" == "--prod" ]]; then
-  BRANCHE="main"
   npm run verifier
+  npx vite build
+  npx --yes "$WRANGLER" deploy
+else
+  npx vite build
+  npx --yes "$WRANGLER" versions upload --preview-alias essai
 fi
-VITE_SITE_URL="${VITE_SITE_URL:-https://$PROJET.pages.dev}" npx vite build
-npx --yes "$WRANGLER" pages deploy dist --project-name "$PROJET" --branch "$BRANCHE" --commit-dirty=true

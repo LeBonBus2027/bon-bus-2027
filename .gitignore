@@ -6,3 +6,4 @@ test-results/
 playwright-report/
 rapport-import.txt
 corps-pr.md
+.wrangler/

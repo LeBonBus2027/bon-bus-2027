@@ -1,0 +1,11 @@
+// Hébergement Cloudflare (Workers, fichiers statiques seulement : aucun script côté serveur).
+// Les en-têtes de sécurité viennent de public/_headers, copié dans dist au build.
+{
+  "name": "bon-bus-2027",
+  "compatibility_date": "2026-10-19",
+  "assets": { "directory": "./dist" },
+  // Aucune collecte : pas de journaux ni de traces des visites côté Cloudflare.
+  "observability": { "enabled": false },
+  "workers_dev": true,
+  "preview_urls": true
+}
