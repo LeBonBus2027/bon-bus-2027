@@ -26,8 +26,9 @@
 <div class="hero">
   <div class="haut">
     <p class="etiquette-signal">Présidentielle 2027</p>
-    <button class="theme" onclick={basculerTheme} aria-pressed={theme === "sombre"}>
-      <span aria-hidden="true">{theme === "sombre" ? "☀" : "☾"}</span> Mode sombre
+    <!-- Le bouton annonce le mode vers lequel il bascule. -->
+    <button class="theme" class:sombre={theme === "sombre"} onclick={basculerTheme}>
+      <span aria-hidden="true">{theme === "sombre" ? "☀" : "☾"}</span> {theme === "sombre" ? "Mode clair" : "Mode sombre"}
     </button>
   </div>
   <h1 tabindex="-1">Quel bus te ramène chez toi ?</h1>
@@ -71,8 +72,9 @@
   .hero p { color: var(--jaune); margin: 0 0 6px; }
   .haut { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; }
   .haut p { margin: 0; }
-  .theme { min-height: 44px; padding: 6px 14px; font-size: 15px; border-radius: 999px; background: transparent; color: #fff; border-color: rgb(255 255 255 / 0.6); }
-  .theme[aria-pressed="true"] { background: var(--jaune); border-color: var(--jaune); color: var(--marque); }
+  /* Bouton plein, bien visible sur le bandeau bleu nuit : blanc en mode clair, jaune en mode sombre. */
+  .theme { min-height: 44px; padding: 6px 14px; font-size: 15px; border-radius: 999px; background: #fff; color: var(--marque); border-color: #fff; font-weight: 800; }
+  .theme.sombre { background: var(--jaune); border-color: var(--jaune); }
   .hero h1 { margin: 0; }
   .trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 8px 0 16px; background: var(--panneau); border-radius: var(--rayon); padding: 6px; }
   .trio svg { width: 100%; height: auto; }

@@ -193,11 +193,10 @@ test("le bouton de l'accueil force le mode sombre ou clair", async ({ page }) =>
   await page.emulateMedia({ colorScheme: "light" });
   await page.goto("/");
   const fond = () => page.evaluate(() => getComputedStyle(document.body).backgroundColor);
-  const bouton = page.getByRole("button", { name: "Mode sombre" });
+  // Le bouton annonce toujours l'autre mode.
   expect(await fond()).toBe("rgb(255, 255, 255)");
-  await expect(bouton).toHaveAttribute("aria-pressed", "false");
-  await bouton.click();
-  await expect(bouton).toHaveAttribute("aria-pressed", "true");
+  await page.getByRole("button", { name: "Mode sombre" }).click();
+  await expect(page.getByRole("button", { name: "Mode clair" })).toBeVisible();
   expect(await fond()).toBe("rgb(14, 23, 38)");
   await auditAccessibilite(page, "accueil sombre forcé");
   // Le choix tient pour tout le parcours…
@@ -206,8 +205,8 @@ test("le bouton de l'accueil force le mode sombre ou clair", async ({ page }) =>
   // … et l'emporte sur le réglage du système dans les deux sens.
   await page.emulateMedia({ colorScheme: "dark" });
   await page.goto("/");
-  await expect(page.getByRole("button", { name: "Mode sombre" })).toHaveAttribute("aria-pressed", "true");
-  await page.getByRole("button", { name: "Mode sombre" }).click();
+  await page.getByRole("button", { name: "Mode clair" }).click();
+  await expect(page.getByRole("button", { name: "Mode sombre" })).toBeVisible();
   expect(await fond()).toBe("rgb(255, 255, 255)");
 });
 
