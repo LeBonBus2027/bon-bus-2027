@@ -1,7 +1,13 @@
 <script lang="ts">
   import Bus from "../lib/Bus.svelte";
 
-  let { onCommencer }: { onCommencer: () => void } = $props();
+  /** noms = null : parcours solo ; deux prénoms : mode duo (chacun son tour sur le même téléphone). */
+  let { onCommencer }: { onCommencer: (noms: [string, string] | null) => void } = $props();
+
+  let duo = $state(false);
+  let nom1 = $state("");
+  let nom2 = $state("");
+  const propre = (n: string, defaut: string) => n.trim().slice(0, 24) || defaut;
 </script>
 
 <div class="hero">
@@ -24,7 +30,21 @@
   <li><strong>Les bus partent.</strong> On regarde lequel s'arrête le plus près de chez toi.</li>
 </ol>
 
-<p class="rangee"><button class="principal" onclick={onCommencer}>C'est parti</button> <span class="discret petit">5 minutes environ</span></p>
+<p class="rangee">
+  <button class="principal" onclick={() => onCommencer(null)}>C'est parti</button>
+  <button onclick={() => (duo = !duo)} aria-expanded={duo}>À deux</button>
+  <span class="discret petit">5 minutes environ</span>
+</p>
+
+{#if duo}
+  <form class="boite duo" onsubmit={ev => { ev.preventDefault(); onCommencer([propre(nom1, "Joueur 1"), propre(nom2, "Joueur 2")]); }}>
+    <p><strong>Idéal en famille ou entre amis.</strong> Chacun range les candidats et répond de son côté, sur ce téléphone, puis on compare vos deux trajets.</p>
+    <label>Premier prénom <input bind:value={nom1} maxlength="24" placeholder="Joueur 1" autocomplete="off" /></label>
+    <label>Second prénom <input bind:value={nom2} maxlength="24" placeholder="Joueur 2" autocomplete="off" /></label>
+    <p class="discret petit">Les prénoms restent sur ce téléphone et disparaissent à la fermeture de la page.</p>
+    <button class="principal" type="submit">Commencer à deux</button>
+  </form>
+{/if}
 
 <p class="info petit">Rien n'est enregistré : tout se passe dans ton navigateur et disparaît quand tu fermes la page. Pas de compte, pas de cookie, pas de pub.</p>
 
@@ -37,4 +57,8 @@
   .etapes { padding-left: 22px; }
   .etapes li { margin-bottom: 6px; }
   .etapes li::marker { font-weight: 900; }
+  .duo { display: grid; gap: 10px; margin-bottom: 16px; }
+  .duo p { margin: 0; }
+  .duo label { display: grid; gap: 4px; font-weight: 700; }
+  .duo input { font: inherit; min-height: 48px; padding: 8px 12px; border: 2px solid var(--contour); border-radius: 6px; background: var(--fond); color: var(--encre); }
 </style>

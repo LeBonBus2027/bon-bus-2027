@@ -195,3 +195,45 @@ test("le ticket de bus à partager s'affiche en aperçu, avec ou sans noms", asy
   await expect(apercu).not.toHaveAttribute("src", avant!);
   expect(problemes).toEqual([]);
 });
+
+test("mode duo : deux trajets sur le même téléphone, puis « Ensemble »", async ({ page }) => {
+  const problemes = surveiller(page);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await page.getByRole("button", { name: "À deux" }).click();
+  await page.getByLabel("Premier prénom").fill("Léa");
+  await page.getByLabel("Second prénom").fill("Papa");
+  await page.getByRole("button", { name: "Commencer à deux" }).click();
+
+  await expect(page.getByText("Au tour de Léa")).toBeVisible();
+  await classerTout(page);
+  await page.getByRole("button", { name: /place aux questions/ }).click();
+  await page.getByRole("button", { name: /Version rapide/ }).click();
+  await repondreTout(page, 20);
+  await page.getByRole("button", { name: "Faire partir les bus" }).click();
+
+  await expect(page.getByRole("heading", { name: "Passe le téléphone à Papa" })).toBeVisible();
+  await auditAccessibilite(page, "relais");
+  await page.getByRole("button", { name: "C'est moi, j'y vais" }).click();
+  await expect(page.getByText("Au tour de Papa")).toBeVisible();
+  await expect(page.getByText("Candidat 1 sur 7")).toBeVisible();   // le classement de Léa n'est pas montré
+  await classerTout(page);
+  await page.getByRole("button", { name: /place aux questions/ }).click();
+  // Même format que Léa : directement aux questions.
+  const reponses = ["Pas du tout d'accord", "Plutôt pas d'accord", "Neutre"];
+  for (let i = 0; i < 20; i++) await page.getByRole("group", { name: "Ta réponse" }).getByRole("button", { name: reponses[i % 3], exact: true }).click();
+  await page.getByRole("button", { name: "Faire partir les bus" }).click();
+
+  await expect(page.getByRole("heading", { name: "Léa et Papa" })).toBeVisible();
+  await expect(page.getByText("Entre vos deux maisons")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Le bus qui vous rapproche tous les deux" })).toBeVisible();
+  await expect(page.locator("tbody tr")).toHaveCount(7);
+  await auditAccessibilite(page, "ensemble");
+
+  await page.getByRole("tab", { name: "Trajet de Papa" }).click();
+  await expect(page.getByRole("heading", { name: "Terminus !" })).toBeVisible();
+  await page.getByRole("tab", { name: "Ensemble" }).click();
+  await page.getByRole("button", { name: "Recommencer" }).click();
+  await expect(page.getByRole("heading", { name: "Quel bus te ramène chez toi ?" })).toBeVisible();
+  expect(problemes).toEqual([]);
+});

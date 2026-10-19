@@ -8,12 +8,15 @@
   import Classement from "./ecrans/Classement.svelte";
   import Questionnaire from "./ecrans/Questionnaire.svelte";
   import Trajet from "./ecrans/Trajet.svelte";
+  import Duo from "./ecrans/Duo.svelte";
+  import Relais from "./ecrans/Relais.svelte";
+  import type { Partie } from "./lib/duo";
   import APropos from "./pages/APropos.svelte";
   import Confidentialite from "./pages/Confidentialite.svelte";
   import MentionsLegales from "./pages/MentionsLegales.svelte";
   import Methode from "./pages/Methode.svelte";
 
-  type Etape = "accueil" | "classement" | "questionnaire" | "trajet";
+  type Etape = "accueil" | "classement" | "questionnaire" | "relais" | "trajet";
 
   // Tout reste en mémoire dans l'onglet : rien n'est stocké ni envoyé.
   let etape = $state<Etape>("accueil");
@@ -23,6 +26,27 @@
   let reponses = $state<Record<string, Reponse>>({});
   let ordreQuestions = $state<string[]>([]);
   let format = $state<20 | 100 | null>(null);
+  // Mode duo : deux personnes jouent tour à tour sur le même téléphone ; le premier tour est gardé de côté.
+  let duo = $state<{ noms: [string, string]; joueur: 0 | 1; premier: Partie | null } | null>(null);
+
+  function commencer(noms: [string, string] | null) {
+    duo = noms ? { noms, joueur: 0, premier: null } : null;
+    aller("classement");
+  }
+
+  function finQuestions() {
+    if (duo && duo.joueur === 0) {
+      duo.premier = $state.snapshot({ bacs, reponses, ordre: ordreQuestions });
+      // Second tour : mêmes candidats et mêmes questions, dans un nouvel ordre.
+      const memes = new Set(ordreCandidats.map(c => c.id));
+      ordreCandidats = melanger(candidats.filter(c => memes.has(c.id)));
+      ordreQuestions = melanger($state.snapshot(ordreQuestions));
+      bacs = {};
+      reponses = {};
+      duo.joueur = 1;
+      aller("relais");
+    } else aller("trajet");
+  }
 
   // Pages annexes : simple ancre dans l'adresse ; le parcours en cours est conservé pendant la lecture.
   const PAGES = { methode: Methode, confidentialite: Confidentialite, "mentions-legales": MentionsLegales, "a-propos": APropos } as const;
@@ -53,6 +77,7 @@
     reponses = {};
     ordreQuestions = [];
     format = null;
+    duo = null;
     aller("accueil");
   }
 </script>
@@ -75,12 +100,19 @@
   {/if}
   <!-- Le parcours reste monté (masqué) pendant la lecture d'une page : rien n'est perdu ni rejoué. -->
   <div id="parcours" hidden={!!page}>
+  {#if duo && (etape === "classement" || etape === "questionnaire")}
+    <p class="tour etiquette-signal">Au tour de {duo.noms[duo.joueur]}</p>
+  {/if}
   {#if etape === "accueil"}
-    <Accueil onCommencer={() => aller("classement")} />
+    <Accueil onCommencer={commencer} />
+  {:else if etape === "relais" && duo}
+    <Relais nom={duo.noms[1]} onPret={() => aller("classement")} />
   {:else if etape === "classement"}
     <Classement bind:ordre={ordreCandidats} bind:bacs onFini={() => aller("questionnaire")} />
   {:else if etape === "questionnaire"}
-    <Questionnaire bind:reponses bind:ordre={ordreQuestions} bind:format onFini={() => aller("trajet")} />
+    <Questionnaire bind:reponses bind:ordre={ordreQuestions} bind:format onFini={finQuestions} />
+  {:else if duo?.premier}
+    <Duo noms={duo.noms} parties={[duo.premier, { bacs, reponses, ordre: ordreQuestions }]} onRecommencer={recommencer} />
   {:else}
     <Trajet {bacs} {reponses} ordre={ordreQuestions} onRecommencer={recommencer} />
   {/if}
@@ -106,4 +138,5 @@
   footer nav { margin-top: 8px; line-height: 2.4; }
   footer a { color: var(--discret); }
   :global(main h1:focus) { outline: none; }
+  .tour { display: inline-block; background: var(--jaune); color: var(--marque); padding: 4px 10px; border-radius: 6px; margin: 0 0 6px; }
 </style>
