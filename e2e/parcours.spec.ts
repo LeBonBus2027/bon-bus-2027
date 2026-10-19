@@ -25,6 +25,7 @@ test.describe("parcours complet", () => {
     await page.getByRole("button", { name: "Faire partir les bus" }).click();
 
     await expect(page.getByRole("heading", { name: "Terminus !" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "On a gratté la peinture" })).toBeVisible();
     await expect(page.locator(".message")).not.toBeEmpty();
     await expect(page.getByText("Aucun bus ne te dépose pile devant chez toi.")).toBeVisible();
     await expect(page.locator("tbody tr")).toHaveCount(7);

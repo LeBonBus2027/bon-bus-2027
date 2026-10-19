@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { Classe } from "./calcul";
 import { questions, type Candidat } from "./donnees";
 import type { Niveau } from "./niveaux";
-import { reveler, rejeu } from "./revelation";
+import { niveauReel, reveler, rejeu } from "./revelation";
 
 /** Les textes utilisent des espaces insécables (typographie française) : on compare sans en tenir compte. */
 const norm = (s: string) => s.replace(/ /g, " ");
@@ -94,5 +94,12 @@ describe("metaphore", () => {
     const m = reveler(classement, { a: "jamais", b: "bof", c: "bof", d: "pas", e: "adore" }, () => 0).metaphore;
     expect(norm(m)).toContain("Tu le voyais comme une épave");
     expect(norm(m)).toContain("Et le car de luxe ? Tu pensais que c'était le bon bus : il est parti dans l'autre sens.");
+  });
+});
+
+describe("niveauReel", () => {
+  it("dégrade le bus avec la distance, avec les mêmes seuils pour tous", () => {
+    expect([0, 2, 3, 5, 6, 8, 9, 11, 12, 20].map(niveauReel)).toEqual(
+      ["adore", "adore", "bien", "bien", "bof", "bof", "pas", "pas", "jamais", "jamais"]);
   });
 });

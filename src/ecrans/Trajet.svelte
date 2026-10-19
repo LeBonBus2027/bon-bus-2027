@@ -5,7 +5,7 @@
   import { classer, R0, trajet, type Reponse } from "../lib/calcul";
   import { candidats, positions, questions } from "../lib/donnees";
   import type { Niveau } from "../lib/niveaux";
-  import { arrets, rejeu, reveler } from "../lib/revelation";
+  import { arrets, niveauReel, rejeu, reveler } from "../lib/revelation";
   import { placer } from "../lib/etiquettes";
   import { aPied, GARE, HAUTEUR, LARGEUR, lignes, MAISON, positionBus, px } from "../lib/ville";
   import Explication from "./Explication.svelte";
@@ -49,10 +49,12 @@
   let phase = $state<"pret" | "route" | "fin">("pret");
   let statut = $state("Tous les bus attendent à la gare.");
   let selectionne = $state<string | null>(null);
+  // Après l'arrivée, la peinture est grattée : chaque bus prend l'apparence de ce qu'il vaut vraiment pour toi.
+  let gratte = $state(false);
   let passer = false;
 
   const bus = $derived(mesBus.map(c => ({
-    id: c.id, niveau: bacs[c.id] ?? "inconnu", ligne: ligneDe(c.id), d: distances[c.id]!,
+    id: c.id, niveau: gratte ? niveauReel(trajets.get(c.id)!.arrets) : bacs[c.id] ?? "inconnu", ligne: ligneDe(c.id), d: distances[c.id]!,
     voie: voies.get(c.id)!, attenue: phase === "fin" && !enAvant.has(c.id),
   })));
 
@@ -120,6 +122,10 @@
     phase = "fin";
     await tick();
     await recentrer();
+    // Un temps pour voir les bus tels que tu les imaginais… puis on gratte la peinture.
+    await new Promise(r => setTimeout(r, reduit() ? 0 : 900));
+    gratte = true;
+    statut = `On a gratté la peinture : chaque bus montre maintenant ce qu'il vaut vraiment pour toi, selon l'endroit où il s'arrête. ${statut.slice(statut.indexOf(".") + 2)}`;
   }
 
   /** Caméra : cadre la maison, la gare et tous les bus, en suivant doucement leur progression. */

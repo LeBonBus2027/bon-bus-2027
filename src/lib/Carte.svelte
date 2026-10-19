@@ -167,7 +167,7 @@
     <g class="bus" class:attenue={b.attenue && b.id !== selectionne} data-id={b.id}
        transform="translate({b.p.x.toFixed(1)} {b.p.y.toFixed(1)}) rotate({b.p.angle.toFixed(1)}) scale({ECHELLE} {ECHELLE * (b.p.retourne ? -1 : 1)}) translate(-100 -55)">
       {#if interactive}<rect x="-30" y="-30" width="260" height="160" fill="transparent" />{/if}
-      <Bus niveau={b.niveau} />
+      {#key b.niveau}<g class="mue"><Bus niveau={b.niveau} /></g>{/key}
     </g>
   {/each}
 
@@ -210,4 +210,8 @@
   .interactive { touch-action: none; cursor: grab; }
   .interactive .bus, .interactive .etiquette { cursor: pointer; }
   .bus.attenue { opacity: 0.18; }
+  /* Changement d'apparence d'un bus (peinture grattée) : petit « pouf » de transformation. */
+  .mue { transform-box: fill-box; transform-origin: center; animation: mue 0.7s ease-out; }
+  @keyframes mue { 0% { transform: scale(0.4) rotate(-8deg); opacity: 0; } 60% { transform: scale(1.15) rotate(3deg); opacity: 1; } 100% { transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .mue { animation: none; } }
 </style>

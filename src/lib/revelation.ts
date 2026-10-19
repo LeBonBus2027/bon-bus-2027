@@ -36,7 +36,7 @@ export interface Revelation {
 }
 
 /** Ce que l'utilisateur voyait, selon le bac où il a rangé le candidat (sa perception, pas un jugement). */
-const VU: Record<Niveau, string> = {
+export const VU: Record<Niveau, string> = {
   adore: "un car de luxe", bien: "un bus flambant neuf", bof: "un bus banal",
   pas: "un bus cabossé", jamais: "une épave", inconnu: "un bus anonyme",
 };
@@ -115,4 +115,16 @@ export function reveler(classement: readonly Classe<Candidat>[], bacs: Readonly<
   }
   const mot = metaphore(bacs[meilleur.candidat.id] ?? "inconnu", haut, beau, intuition, tirage);
   return { meilleur, beau, epave, focus, message, metaphore: mot, intuition };
+}
+
+/**
+ * Ce que vaut vraiment un bus POUR TOI, d'après sa distance finale (seuils fixes, identiques pour tous) :
+ * c'est la « peinture grattée » montrée à l'arrivée, à comparer avec le bac choisi au départ.
+ */
+export function niveauReel(arrets: number): Exclude<Niveau, "inconnu"> {
+  if (arrets <= 2) return "adore";
+  if (arrets <= 5) return "bien";
+  if (arrets <= 8) return "bof";
+  if (arrets <= 11) return "pas";
+  return "jamais";
 }

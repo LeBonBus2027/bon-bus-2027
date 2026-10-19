@@ -1,9 +1,10 @@
 <script lang="ts">
   import type { Classe } from "../lib/calcul";
   import type { Candidat } from "../lib/donnees";
-  import { BAC, type Niveau } from "../lib/niveaux";
-  import { arrets, type Revelation } from "../lib/revelation";
+  import { BAC, NIVEAUX, type Niveau } from "../lib/niveaux";
+  import { arrets, niveauReel, type Revelation } from "../lib/revelation";
   import Photo from "../lib/Photo.svelte";
+  import AvantApres from "./AvantApres.svelte";
   import Partage from "./Partage.svelte";
 
   let { revelation, classement, bacs, horsSelection, onPourquoi, onRecommencer }: {
@@ -18,6 +19,8 @@
 </script>
 
 <p class="message">{revelation.message}</p>
+
+<AvantApres focus={revelation.focus} {bacs} {onPourquoi} />
 <blockquote class="metaphore">{revelation.metaphore}</blockquote>
 <p class="morale"><span>Aucun bus ne te dépose pile devant chez toi. Prends celui qui te rapproche le plus.</span></p>
 
@@ -31,7 +34,7 @@
 <p class="discret petit">Distance en arrêts entre l'endroit où le bus s'arrête et ta porte. Au-delà de 10, il est reparti dans l'autre sens.</p>
 <div class="tableau">
   <table>
-    <thead><tr><th scope="col">#</th><th scope="col">Candidat</th><th scope="col">Ton bac</th><th scope="col">Distance</th></tr></thead>
+    <thead><tr><th scope="col">#</th><th scope="col">Candidat</th><th scope="col">Ton ressenti → pour toi</th><th scope="col">Distance</th></tr></thead>
     <tbody>
       {#each classement as c, i (c.candidat.id)}
         <tr>
@@ -41,7 +44,7 @@
             <a href={c.candidat.url_source} target="_blank" rel="noopener noreferrer">{c.candidat.nom}</a>
             <span class="discret petit">{c.candidat.parti}</span>
           </td>
-          <td>{BAC[bacs[c.candidat.id] ?? "inconnu"]}</td>
+          <td>{BAC[bacs[c.candidat.id] ?? "inconnu"]} <span class="discret petit">→ {NIVEAUX.find(n => n.cle === niveauReel(c.trajet.arrets))?.bus}</span></td>
           <td>
             {arrets(c.trajet.arrets)}{#if c.trajet.incomplet}<span class="discret petit"> (position incomplète)</span>{/if}
             <button class="pourquoi" onclick={() => onPourquoi(c.candidat.id)}>Pourquoi ?<span class="visually-hidden"> {c.candidat.nom}</span></button>

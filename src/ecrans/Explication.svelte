@@ -2,7 +2,7 @@
   import { pas, type Position, type Reponse, type Trajet } from "../lib/calcul";
   import { questions, type Candidat } from "../lib/donnees";
   import { BAC, type Niveau } from "../lib/niveaux";
-  import { arrets } from "../lib/revelation";
+  import { arrets, niveauReel, VU } from "../lib/revelation";
   import Photo from "../lib/Photo.svelte";
 
   let { candidat, trajet, bac, ordre, reponses, positions, onFermer }: {
@@ -46,7 +46,7 @@
     <h2 id="titre-explication" tabindex="-1" bind:this={titre}>Pourquoi {candidat.nom} s'arrête à {arrets(trajet.arrets)}</h2>
     <button class="discret fermer" onclick={onFermer} aria-label="Fermer l'explication">✕</button>
   </div>
-  <p>Tu avais mis ce bus dans le bac « {BAC[bac]} ». {lieu}</p>
+  <p>Tu avais mis ce bus dans le bac « {BAC[bac]} ». Peinture grattée, pour toi c'est en réalité <strong>{VU[niveauReel(trajet.arrets)]}</strong>. {lieu}</p>
   <p>Sur tes {lignes.length} réponses, son bus a avancé sur <strong>{pour.length}</strong>, reculé sur <strong>{contre.length}</strong> et n'a pas bougé sur {neutres}.</p>
 
   {#if pour.length}
