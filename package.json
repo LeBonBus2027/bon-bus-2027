@@ -12,6 +12,7 @@
     "test:e2e": "playwright test",
     "verifier": "node scripts/verifier-neutralite.mjs && npm run check && npm test && npm run test:e2e",
     "import:monvote": "node scripts/import-monvote.mjs",
+    "cloudflare": "bash scripts/cloudflare.sh",
     "audit:monvote": "node scripts/audit-monvote.mjs",
     "simulations": "vitest run src/lib/simulations.test.ts --mode rapport -u"
   },
