@@ -10,6 +10,7 @@
   import type { Niveau } from "../lib/niveaux";
   import { distanceA } from "../lib/retroviseur";
   import { questionsPourAffiner } from "../lib/affiner";
+  import { melanger } from "../lib/aleatoire";
   import { niveauReel, rejeu, reveler } from "../lib/revelation";
   import { aPied, GARE, HAUTEUR, LARGEUR, lignes, MAISON, positionBus, px } from "../lib/ville";
   import Explication from "./Explication.svelte";
@@ -157,9 +158,14 @@
     for (const c of mesBus) distances[c.id] = distanceA(trajets.get(c.id)!, r.passages, curseur);
   }
 
-  /** 10 questions de plus, là où les 3 bus les plus proches divergent le plus. */
-  function affiner() {
-    onAffiner?.(questionsPourAffiner(ordre, classement.slice(0, 3).map(c => c.candidat.id), positions, questions));
+  // Questions pas encore posées (ni répondues ni passées).
+  const restantes = untrack(() => questions.filter(q => !ordre.includes(q.id)).map(q => q.id));
+
+  /** 10 questions là où les 3 bus les plus proches divergent le plus, ou toutes les restantes (mélangées). */
+  function affiner(mode: "cible" | "tout") {
+    onAffiner?.(mode === "tout"
+      ? melanger(restantes)
+      : questionsPourAffiner(ordre, classement.slice(0, 3).map(c => c.candidat.id), positions, questions));
   }
 
   /** Touché sur la carte ou « Pourquoi ? » dans le tableau. */
@@ -202,7 +208,7 @@
 
 {#if phase === "fin"}
   <Resultats {revelation} {classement} {bacs} {horsSelection} onPourquoi={choisir} {onRecommencer}
-    onAffiner={onAffiner && r.ordre.length < questions.length ? affiner : undefined}>
+    onAffiner={onAffiner ? affiner : undefined} restantes={restantes.length}>
     {#snippet outils()}
     <Priorites themes={THEMES} bind:prioritaires max={MAX_PRIORITES} onChange={glisser} />
     <Retroviseur bind:curseur passages={r.passages} ordre={r.ordre} {reponses} {trajets} bus={mesBus} {parId} onRejouer={rejouer} />

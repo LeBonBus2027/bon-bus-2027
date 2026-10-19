@@ -297,7 +297,8 @@ test("« Affine ton résultat » : 10 questions ciblées de plus après la versi
   await repondreTout(page, 20);
   await page.getByRole("button", { name: "Faire partir les bus" }).click();
   await expect(page.getByRole("heading", { name: "Affine ton résultat" })).toBeVisible();
-  await page.getByRole("button", { name: "10 questions de plus" }).click();
+  await expect(page.getByRole("button", { name: "Les 80 restantes" })).toBeVisible();
+  await page.getByRole("button", { name: "10 questions ciblées" }).click();
   await expect(page.getByText(/Question 21 sur 30/)).toBeVisible();
   await repondreTout(page, 10);
   await expect(page.getByText("30 réponses sur 30")).toBeVisible();
@@ -306,4 +307,23 @@ test("« Affine ton résultat » : 10 questions ciblées de plus après la versi
   // Le rétroviseur rejoue maintenant thème par thème (plus de 20 questions).
   await expect(page.getByLabel("Rétroviseur : rejoue le trajet")).not.toHaveValue("30");
   expect(problemes).toEqual([]);
+});
+
+test("« Affine ton résultat » : répondre à toutes les questions restantes", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await page.getByRole("button", { name: "C'est parti" }).click();
+  await classerTout(page);
+  await page.getByRole("button", { name: /place aux questions/ }).click();
+  await page.getByRole("button", { name: /Version rapide/ }).click();
+  await repondreTout(page, 20);
+  await page.getByRole("button", { name: "Faire partir les bus" }).click();
+  await page.getByRole("button", { name: "Les 80 restantes" }).click();
+  await expect(page.getByText(/Question 21 sur 100/)).toBeVisible();
+  await repondreTout(page, 80);
+  await expect(page.getByText("100 réponses sur 100")).toBeVisible();
+  await page.getByRole("button", { name: "Faire partir les bus" }).click();
+  await expect(page.getByRole("heading", { name: "Terminus !" })).toBeVisible();
+  // Plus aucune question à ajouter : le bloc disparaît.
+  await expect(page.getByRole("heading", { name: "Affine ton résultat" })).toHaveCount(0);
 });

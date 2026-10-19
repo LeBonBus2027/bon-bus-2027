@@ -8,15 +8,17 @@
   import AvantApres from "./AvantApres.svelte";
   import Partage from "./Partage.svelte";
 
-  let { revelation, classement, bacs, horsSelection, onPourquoi, onRecommencer, onAffiner, outils }: {
+  let { revelation, classement, bacs, horsSelection, onPourquoi, onRecommencer, onAffiner, restantes = 0, outils }: {
     revelation: Revelation;
     classement: readonly Classe<Candidat>[];
     bacs: Record<string, Niveau>;
     /** Candidat non ajouté qui t'aurait déposé plus près que tous tes bus. */
     horsSelection?: Classe<Candidat>;
     onPourquoi: (id: string) => void;
-    /** Présent seulement après une version rapide (et hors mode duo) : propose 10 questions de plus. */
-    onAffiner?: () => void;
+    /** Présent tant qu'il reste des questions (hors mode duo) : 10 questions ciblées, ou toutes les restantes. */
+    onAffiner?: (mode: "cible" | "tout") => void;
+    /** Nombre de questions pas encore posées. */
+    restantes?: number;
     /** Outils interactifs (priorités, rétroviseur), placés juste après le résultat. */
     outils?: Snippet;
     onRecommencer: () => void;
@@ -27,11 +29,20 @@
 
 <AvantApres focus={revelation.focus} {bacs} {onPourquoi} />
 
-{#if onAffiner}
+{#if onAffiner && restantes > 0}
+  {@const minutes = Math.max(1, Math.round((restantes * 6) / 60))}
   <div class="boite affiner">
     <h2>Affine ton résultat</h2>
-    <p>Tu n'as répondu qu'à une partie des questions : ton résultat peut encore bouger. Réponds à 10 questions de plus, choisies parmi celles où tes bus les plus proches ne sont pas d'accord entre eux.</p>
-    <p><button class="principal" onclick={onAffiner}>10 questions de plus</button></p>
+    <p>Tu n'as répondu qu'à une partie des questions : ton résultat peut encore bouger.</p>
+    {#if restantes > 10}
+      <p class="rangee">
+        <button class="principal" onclick={() => onAffiner("cible")}>10 questions ciblées</button>
+        <button onclick={() => onAffiner("tout")}>Les {restantes} restantes</button>
+      </p>
+      <p class="discret petit">Les 10 questions ciblées sont celles où tes bus les plus proches ne sont pas d'accord entre eux (environ 1 minute). Les {restantes} restantes donnent le résultat le plus précis (environ {minutes} minutes).</p>
+    {:else}
+      <p><button class="principal" onclick={() => onAffiner("tout")}>Les {restantes} dernières questions</button></p>
+    {/if}
   </div>
 {/if}
 <blockquote class="metaphore">{revelation.metaphore}</blockquote>
