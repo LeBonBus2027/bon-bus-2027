@@ -61,3 +61,12 @@ Part des électeurs pour qui chaque candidat arrive premier (2 000 électeurs). 
 | Anasse Kazib | 2 % | 4 % |
 | Marine Tondelier | 1 % | 3 % |
 | Jean-Luc Mélenchon | 1 % | 2 % |
+
+## 3. « Ce qui compte pour toi »
+
+3150 électeurs proches d'un candidat (20 questions, un tiers de réponses au hasard) choisissent 1 à 3 thèmes prioritaires au hasard.
+
+- Le candidat qui pense comme eux perd la 1re place : 1,3 % des cas.
+- … sans que le nouveau premier fasse mieux que lui sur les thèmes choisis : 0.
+- Bus qui avancent alors que tu es en désaccord avec eux sur ces thèmes, ou qui reculent alors que tu es d'accord : 0.
+- Clones parfaits qui ne retrouvent plus leur candidat en 1er : 0.

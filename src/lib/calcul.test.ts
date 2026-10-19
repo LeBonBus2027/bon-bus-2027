@@ -124,4 +124,23 @@ describe("trajet pondéré (« Ce qui compte pour toi »)", () => {
     const t = trajet(qs, { q1: 2, q2: 2 }, { q1: 2, q2: 2 }, () => 3);
     expect(t.distance).toBe(0);
   });
+
+  it("un thème prioritaire où tu es d'accord fait avancer le bus, même si tu l'es moins qu'ailleurs", () => {
+    // Très d'accord en général (q1, q2), un peu moins sur le thème prioritaire (q3).
+    const ids = ["q1", "q2", "q3"];
+    const r = { q1: 2, q2: 2, q3: 1 } as Record<string, Reponse>;
+    const p = { q1: 2, q2: 2, q3: 2 } as Record<string, Position>;
+    const sans = trajet(ids, r, p).distance;
+    const avec = trajet(ids, r, p, q => (q === "q3" ? 2 : 1)).distance;
+    expect(avec).toBeLessThan(sans);
+  });
+
+  it("un thème prioritaire où tu n'es pas d'accord fait reculer le bus, même s'il était déjà loin", () => {
+    const ids = ["q1", "q2", "q3"];
+    const r = { q1: 2, q2: 2, q3: 1 } as Record<string, Reponse>;
+    const p = { q1: -2, q2: -2, q3: -1 } as Record<string, Position>;
+    const sans = trajet(ids, r, p).distance;
+    const avec = trajet(ids, r, p, q => (q === "q3" ? 2 : 1)).distance;
+    expect(avec).toBeGreaterThan(sans);
+  });
 });

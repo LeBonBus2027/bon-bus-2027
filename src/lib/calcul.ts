@@ -38,7 +38,7 @@ export interface Trajet {
   /** Part des questions répondues sur lesquelles le candidat a une position. */
   couverture: number;
   incomplet: boolean;
-  /** Somme des poids des questions répondues (= leur nombre sans pondération). */
+  /** Nombre de questions répondues (sert au rétroviseur pour retrouver les pas). */
   poids?: number;
 }
 
@@ -48,6 +48,11 @@ export interface Trajet {
  * @param reponses réponses de l'utilisateur par question
  * @param positions positions du candidat par question
  * @param poids poids de chaque question (« Ce qui compte pour toi ») ; 1 par défaut, ce qui redonne la règle de base
+ *
+ * Les thèmes prioritaires ne sont pas mélangés à la moyenne (ce qui ferait reculer un bus avec lequel tu es d'accord
+ * sur ces thèmes, mais un peu moins qu'ailleurs) : ils donnent une poussée à part. Si tu es globalement d'accord avec
+ * le candidat sur ces thèmes, son bus avance ; en désaccord, il recule ; jamais l'inverse. Et un bus n'en dépasse
+ * un autre que s'il fait mieux que lui sur ces thèmes.
  */
 export function trajet(
   ordre: readonly string[],
@@ -56,25 +61,36 @@ export function trajet(
   poids: (q: string) => number = () => 1,
 ): Trajet {
   const repondues = ordre.filter(q => (reponses[q] ?? null) !== null);
-  const n = repondues.reduce((s, q) => s + poids(q), 0);
   if (repondues.length === 0) return { etapes: [], distance: R0, arrets: R0, couverture: 0, incomplet: true, poids: 0 };
+  const n = repondues.length;
+  const nBonus = repondues.reduce((s, q) => s + poids(q) - 1, 0);
 
   let somme = 0;
+  let bonus = 0;
   let couvertes = 0;
   const etapes = repondues.map(q => {
     const p = positions[q] ?? null;
     if (p !== null) couvertes++;
-    somme += pas(reponses[q] ?? null, p) * poids(q);
-    return distanceDepuisSomme(somme, n);
+    const k = pas(reponses[q] ?? null, p);
+    somme += k;
+    bonus += k * (poids(q) - 1);
+    return distanceDepuis(somme, n, bonus, nBonus);
   });
-  const distance = distanceDepuisSomme(somme, n);
+  const distance = distanceDepuis(somme, n, bonus, nBonus);
   const couverture = couvertes / repondues.length;
   return { etapes, distance, arrets: Math.round(distance), couverture, incomplet: couverture < COUVERTURE_MIN, poids: n };
 }
 
-/** r = R0 × (1 − Σ(pas × poids) ÷ 2·Σpoids), calculé en une fois pour éviter toute dérive d'arrondi. */
-function distanceDepuisSomme(somme: number, n: number): number {
-  return R0 * (1 - somme / (2 * n));
+/**
+ * Règle de base : d = R0 × (1 − s), avec s = Σpas ÷ 2n entre −1 (opposé sur tout) et 1 (d'accord sur tout).
+ * Thèmes prioritaires : poussée b = Σ(pas × (poids − 1)) ÷ 2(n + Σ(poids − 1)), qui rapproche s de 1 si elle est positive,
+ * de −1 si elle est négative, sans jamais sortir de l'intervalle. Sans priorité, b = 0 et on retrouve la règle de base.
+ */
+function distanceDepuis(somme: number, n: number, bonus: number, nBonus: number): number {
+  const s = somme / (2 * n);
+  const b = nBonus > 0 ? bonus / (2 * (n + nBonus)) : 0;
+  const s2 = b >= 0 ? s + b * (1 - s) : s + b * (1 + s);
+  return R0 * (1 - s2);
 }
 
 export interface Classe<T> {

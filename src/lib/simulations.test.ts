@@ -5,9 +5,10 @@
 import { describe, expect, it } from "vitest";
 import { R0 } from "./calcul";
 import { candidats } from "./donnees";
-import { electeursAuHasard, neutre, rapport, simulerCandidat, type LigneCandidat } from "./simulations";
+import { electeursAuHasard, neutre, rapport, simulerCandidat, simulerPriorites, type LigneCandidat } from "./simulations";
 
 const lignes: LigneCandidat[] = candidats.map(c => simulerCandidat(c.id));
+const prio = simulerPriorites();
 
 describe("simulations de cohérence", () => {
   it("un électeur 100 % neutre laisse tous les bus à la gare", () => {
@@ -29,8 +30,14 @@ describe("simulations de cohérence", () => {
     expect(l.distrait.top3).toBeGreaterThanOrEqual(0.9);
   });
 
+  it("« Ce qui compte pour toi » ne déplace jamais un bus pour rien", () => {
+    expect(prio.contreSens).toBe(0);
+    expect(prio.perdSansRaison).toBe(0);
+    expect(prio.clonePerd).toBe(0);
+  });
+
   it("écrit le rapport (npm run simulations)", { timeout: 120_000 }, async () => {
     if (import.meta.env.MODE !== "rapport") return;
-    await expect(rapport(lignes, electeursAuHasard(2000, 100), electeursAuHasard(2000, 20))).toMatchFileSnapshot("../../rapports/simulations.md");
+    await expect(rapport(lignes, electeursAuHasard(2000, 100), electeursAuHasard(2000, 20), prio)).toMatchFileSnapshot("../../rapports/simulations.md");
   });
 }, 120_000);
