@@ -37,7 +37,7 @@
 </script>
 
 {#if courant}
-  <p class="discret petit" aria-live="polite">Candidat {index + 1} sur {ordre.length}</p>
+  <p class="etiquette-signal discret" aria-live="polite">Candidat {index + 1} sur {ordre.length}</p>
   <div class="identite">
     <Photo id={courant.id} taille={112} />
     <div>
@@ -46,7 +46,7 @@
     </div>
   </div>
 
-  <p>Spontanément, sans réfléchir, il te fait quel effet ?</p>
+  <p>Spontanément, sans réfléchir, il te fait quel effet ?</p>
   <div class="bacs" role="group" aria-label="Ton ressenti sur {courant.nom}">
     {#each NIVEAUX as n (n.cle)}
       <button class:actif={bacs[courant.id] === n.cle} aria-pressed={bacs[courant.id] === n.cle} onclick={() => choisir(n.cle)}>
@@ -74,7 +74,7 @@
             <button onclick={() => (index = ordre.indexOf(c))}>
               <Photo id={c.id} taille={56} />
               <svg viewBox="-34 -8 240 112" aria-hidden="true"><Bus niveau={n.cle} /></svg>
-              <span>{c.nom}</span><span class="visually-hidden">, bac {BAC[n.cle]} : modifier</span>
+              <span>{c.nom}</span><span class="visually-hidden">, bac {BAC[n.cle]} : modifier</span>
             </button>
           </li>
         {/each}
@@ -106,7 +106,8 @@
     display: flex; flex-direction: column; align-items: center; gap: 4px;
     border-radius: var(--rayon); border-color: var(--trait); padding: 10px;
   }
-  .bacs button.actif { border-color: var(--encre); border-width: 2.5px; }
+  .bacs button { border: 2px solid var(--nuit); font-weight: 800; text-transform: uppercase; font-size: 15px; letter-spacing: 0.03em; }
+  .bacs button.actif { background: var(--jaune); }
   .bacs svg { width: 100%; max-width: 140px; height: auto; }
   .gare { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
   .gare svg { width: 100%; max-width: 110px; height: auto; }

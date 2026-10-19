@@ -46,7 +46,7 @@
 
 {#if !format}
   <h1 tabindex="-1">Maintenant, tes idées</h1>
-  <p>On va construire ta maison : chaque réponse en pose une brique. Ensuite, on verra quel bus s'arrête le plus près.</p>
+  <p>On va construire ta maison : chaque réponse en pose une brique. Ensuite, on verra quel bus s'arrête le plus près.</p>
   <div class="formats">
     <button class="boite" onclick={() => lancer(20)}><strong>Version rapide</strong><span>20 questions · 2 à 3 minutes</span></button>
     <button class="boite" onclick={() => lancer(100)}><strong>Version complète</strong><span>100 questions · 10 minutes, plus précis</span></button>
@@ -54,21 +54,21 @@
   <p class="discret petit">Les questions et les positions des candidats viennent de <a href="https://monvote2027.fr/donnees" target="_blank" rel="noopener noreferrer">MonVote2027</a>.</p>
 {:else if courante}
   <div class="entete">
-    <p class="discret petit" aria-live="polite">Question {index + 1} sur {ordre.length} · {grandTheme(courante)}</p>
+    <p class="etiquette-signal discret" aria-live="polite">Question {index + 1} sur {ordre.length} · {grandTheme(courante)}</p>
     <svg class="maison" viewBox="0 0 60 56" aria-hidden="true">
-      <rect x="6" y="50" width="48" height="4" rx="1" fill="#c9bfa8" />
-      {#if progression > 0.1}<rect x="10" y="26" width="40" height="24" fill="#f4d7b5" />{/if}
-      {#if progression > 0.3}<rect x="25" y="36" width="10" height="14" rx="1" fill="#8a5a3c" />{/if}
+      <rect x="6" y="50" width="48" height="4" rx="1" fill="#0b1f3a" />
+      {#if progression > 0.1}<rect x="10" y="26" width="40" height="24" fill="#dfe5ec" />{/if}
+      {#if progression > 0.3}<rect x="25" y="36" width="10" height="14" rx="1" fill="#0b1f3a" />{/if}
       {#if progression > 0.5}<rect x="14" y="31" width="8" height="7" fill="#a8d3e6" /><rect x="38" y="31" width="8" height="7" fill="#a8d3e6" />{/if}
-      {#if progression > 0.7}<path d="M4 28 L30 6 L56 28z" fill="#e85d2a" />{/if}
-      {#if progression > 0.85}<rect x="40" y="8" width="6" height="12" fill="#8a5a3c" />{/if}
+      {#if progression > 0.7}<path d="M4 28 L30 6 L56 28z" fill="#ffcd00" stroke="#0b1f3a" stroke-width="2" />{/if}
+      {#if progression > 0.85}<rect x="40" y="8" width="6" height="12" fill="#0b1f3a" />{/if}
     </svg>
   </div>
   <div class="barre" aria-hidden="true"><div style:width="{progression * 100}%"></div></div>
 
   <h1 tabindex="-1" bind:this={titre} class="question">{courante.texte}</h1>
   {#if courante.aide}
-    <details class="petit"><summary>De quoi parle-t-on ?</summary><p>{courante.aide}</p></details>
+    <details class="petit"><summary>De quoi parle-t-on ?</summary><p>{courante.aide}</p></details>
   {/if}
 
   <div class="choix" role="group" aria-label="Ta réponse">
@@ -86,7 +86,7 @@
     <p>Tu as répondu à {nbReponses} question{nbReponses > 1 ? "s" : ""}. Il en faut au moins {MIN_REPONSES} pour que les bus sachent où aller.</p>
     <p><button class="principal" onclick={revoirPassees}>Revoir les questions passées</button></p>
   {:else}
-    <p>{nbReponses} réponses sur {ordre.length}. Tous les bus attendent à la gare. On regarde lequel te rapproche le plus de chez toi ?</p>
+    <p>{nbReponses} réponses sur {ordre.length}. Tous les bus attendent à la gare. On regarde lequel te rapproche le plus de chez toi ?</p>
     <p class="rangee">
       <button class="principal" onclick={onFini}>Faire partir les bus</button>
       <button class="discret" onclick={() => (index = ordre.length - 1)}>Revenir aux questions</button>
@@ -106,5 +106,6 @@
   details { margin-bottom: 12px; color: var(--discret); }
   .choix { display: grid; gap: 8px; margin: 16px 0 12px; }
   .choix button { border-radius: var(--rayon); text-align: left; }
-  .choix button.actif { background: var(--encre); color: #fff; }
+  .choix button.actif { background: var(--nuit); color: #fff; }
+  .formats button { border: 2px solid var(--nuit); }
 </style>

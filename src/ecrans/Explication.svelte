@@ -36,7 +36,7 @@
 {#snippet ligne(l: (typeof lignes)[number])}
   <li>
     <span class="q">{l.texte}</span>
-    <span class="detail">Toi : {TOI[l.u ?? 0]} · Candidat : {l.p === null ? "pas de position" : LUI[l.p]} → {l.pas > 0 ? `avance de ${l.pas}` : l.pas < 0 ? `recule de ${-l.pas}` : "ne bouge pas"}</span>
+    <span class="detail">Toi : {TOI[l.u ?? 0]} · Candidat : {l.p === null ? "pas de position" : LUI[l.p]} → {l.pas > 0 ? `avance de ${l.pas}` : l.pas < 0 ? `recule de ${-l.pas}` : "ne bouge pas"}</span>
   </li>
 {/snippet}
 
@@ -46,7 +46,7 @@
     <h2 id="titre-explication" tabindex="-1" bind:this={titre}>Pourquoi {candidat.nom} s'arrête à {arrets(trajet.arrets)}</h2>
     <button class="discret fermer" onclick={onFermer} aria-label="Fermer l'explication">✕</button>
   </div>
-  <p>Tu avais mis ce bus dans le bac « {BAC[bac]} ». {lieu}</p>
+  <p>Tu avais mis ce bus dans le bac « {BAC[bac]} ». {lieu}</p>
   <p>Sur tes {lignes.length} réponses, son bus a avancé sur <strong>{pour.length}</strong>, reculé sur <strong>{contre.length}</strong> et n'a pas bougé sur {neutres}.</p>
 
   {#if pour.length}

@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Le Bon Bus · 3 directions graphiques</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #e9e6df; color: #1f2328; font: 16px/1.5 system-ui, sans-serif; }
+  header { max-width: 1100px; margin: 0 auto; padding: 24px 16px 8px; }
+  header h1 { margin: 0 0 6px; font-size: 26px; }
+  section { max-width: 1100px; margin: 0 auto; padding: 16px; }
+  section > h2 { margin: 16px 0 2px; font-size: 22px; }
+  section > p { margin: 0 0 12px; color: #555; max-width: 720px; }
+  .ecrans { display: flex; gap: 18px; overflow-x: auto; padding-bottom: 10px; scroll-snap-type: x mandatory; }
+  .tel { flex: none; width: 300px; height: 620px; border-radius: 34px; border: 10px solid #15171a; overflow: hidden; position: relative; scroll-snap-align: start; box-shadow: 0 10px 30px rgb(0 0 0 / .18); }
+  .tel > .contenu { position: absolute; inset: 0; overflow: hidden; padding: 26px 18px 18px; display: flex; flex-direction: column; gap: 10px; }
+  .legende { text-align: center; font-size: 13px; color: #666; margin-top: 6px; }
+  svg { display: block; }
+  .bacs { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+  .visage { width: 84px; height: 84px; border-radius: 50%; flex: none; }
+
+  /* ---------- 1. Signalétique transport ---------- */
+  .metro .tel > .contenu { background: #fff; color: #0b1f3a; font-family: system-ui, "Segoe UI", sans-serif; }
+  .metro .bandeau { margin: -26px -18px 4px; padding: 30px 18px 14px; background: #0b1f3a; color: #fff; }
+  .metro .ligne { display: inline-flex; align-items: center; gap: 8px; font-weight: 800; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+  .metro .pastille { width: 26px; height: 26px; border-radius: 50%; background: #ffcd00; color: #0b1f3a; display: grid; place-items: center; font-weight: 900; }
+  .metro h3 { font-size: 30px; line-height: 1.05; margin: 8px 0 0; font-weight: 900; letter-spacing: -.01em; }
+  .metro .btn { background: #ffcd00; color: #0b1f3a; font-weight: 900; text-transform: uppercase; letter-spacing: .06em; border-radius: 6px; padding: 14px; text-align: center; }
+  .metro .bac { border: 2px solid #0b1f3a; border-radius: 6px; padding: 6px; font-weight: 800; font-size: 12px; text-transform: uppercase; text-align: center; }
+  .metro .info { border-left: 6px solid #ffcd00; padding: 6px 10px; background: #f2f4f7; font-size: 14px; }
+
+  /* ---------- 2. Affiche rétro ---------- */
+  .retro .tel > .contenu { background: #f2e6cf; color: #3b2a1e; font-family: Georgia, "Times New Roman", serif; }
+  .retro .tel > .contenu::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .35;
+    background-image: radial-gradient(#c9b28d 1px, transparent 1.2px); background-size: 6px 6px; }
+  .retro h3 { font-size: 34px; line-height: 1; margin: 6px 0 0; font-style: italic; color: #d9622b; text-shadow: 2px 2px 0 #3b2a1e; position: relative; }
+  .retro .sur { font-variant: small-caps; letter-spacing: .12em; font-size: 13px; position: relative; }
+  .retro .btn { background: #1f6f6b; color: #f2e6cf; border: 3px double #f2e6cf; outline: 2px solid #1f6f6b; padding: 12px; text-align: center; font-size: 18px; font-style: italic; position: relative; }
+  .retro .bac { background: #fbf4e6; border: 1.5px solid #3b2a1e; padding: 6px; text-align: center; font-size: 14px; font-style: italic; position: relative; }
+  .retro .info { position: relative; font-size: 15px; font-style: italic; border-top: 2px solid #3b2a1e; border-bottom: 2px solid #3b2a1e; padding: 8px 0; }
+  .retro p, .retro div { position: relative; }
+
+  /* ---------- 3. Arcade ---------- */
+  .arcade .tel > .contenu { background: #12122a; color: #fff; font-family: "Courier New", ui-monospace, monospace; }
+  .arcade h3 { font-size: 26px; line-height: 1.15; margin: 4px 0 0; color: #ffe14d; text-transform: uppercase; text-shadow: 3px 3px 0 #ff3ea5; }
+  .arcade .score { display: flex; justify-content: space-between; font-weight: 700; font-size: 13px; color: #3ef7ff; }
+  .arcade .btn { background: #ff3ea5; color: #12122a; font-weight: 900; text-align: center; padding: 12px; box-shadow: 4px 4px 0 #3ef7ff; text-transform: uppercase; }
+  .arcade .bac { border: 2px solid #3ef7ff; padding: 6px; text-align: center; font-size: 12px; font-weight: 700; text-transform: uppercase; }
+  .arcade .info { border: 2px dashed #ffe14d; padding: 8px; font-size: 13px; color: #ffe14d; }
+  .arcade .clignote { animation: clig 1s steps(2) infinite; }
+  @keyframes clig { 50% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .arcade .clignote { animation: none; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Le Bon Bus · 3 directions graphiques</h1>
+  <p>Mêmes écrans, trois univers. Candidats fictifs. Fais défiler chaque rangée de côté sur téléphone.</p>
+</header>
+
+<section class="metro">
+  <h2>1. Signalétique transport</h2>
+  <p>L'univers des plans de métro et des panneaux de gare : bleu nuit, jaune signal, typographie grasse. Sobre, sérieux, très lisible. Le plus « institutionnel » : rassurant pour un sujet sensible.</p>
+  <div class="ecrans" id="metro"></div>
+</section>
+
+<section class="retro">
+  <h2>2. Affiche rétro</h2>
+  <p>Les affiches de voyage des années 1960 : papier crème, orange brûlé, bleu canard, lettres en italique. Chaleureux et illustré, le côté « carte postale » adoucit la politique.</p>
+  <div class="ecrans" id="retro"></div>
+</section>
+
+<section class="arcade">
+  <h2>3. Arcade</h2>
+  <p>Le pixel art des jeux vidéo : fond nuit, néons rose et cyan, typo machine à écrire, un « score » d'arrêts. Le plus ludique, pensé pour le public des réseaux sociaux d'où vient l'idée.</p>
+  <div class="ecrans" id="arcade"></div>
+</section>
+
+<script>
+"use strict";
+const NIV = ["adore", "bien", "bof", "pas", "jamais", "inconnu"];
+const BACS = { adore: "J'adore", bien: "Plutôt bien", bof: "Bof", pas: "Plutôt pas", jamais: "Jamais", inconnu: "Connais pas" };
+
+/* ===== 1. Signalétique : bus à plat, comme un pictogramme ===== */
+function busMetro(k) {
+  const c = { adore: ["#0b1f3a", "#ffcd00"], bien: ["#1565c0", "#fff"], bof: ["#6b7f99", "#dfe5ec"], pas: ["#a99a7a", "#e8e0cc"], jamais: ["#4a4038", "#8a7d6e"], inconnu: ["#b5bcc6", "#e6e9ee"] }[k];
+  const casse = k === "jamais", abime = k === "pas" || casse;
+  let s = `<g transform="${casse ? "rotate(4 100 80)" : ""}">
+    <rect x="10" y="22" width="180" height="56" rx="8" fill="${c[0]}"/>
+    <rect x="10" y="62" width="180" height="6" fill="${c[1]}"/>
+    ${[22, 52, 82, 112].map((x, i) => `<rect x="${x}" y="32" width="24" height="20" rx="2" fill="${casse && i % 2 ? "#222" : "#e9f1fb"}"/>`).join("")}
+    <rect x="142" y="32" width="16" height="40" fill="${c[1]}" opacity=".9"/>
+    <rect x="164" y="30" width="20" height="24" rx="3" fill="#e9f1fb"/>
+    <circle cx="48" cy="80" r="11" fill="#0b1f3a"/><circle cx="48" cy="80" r="4" fill="#fff"/>
+    <circle cx="156" cy="80" r="11" fill="#0b1f3a"/><circle cx="156" cy="80" r="4" fill="#fff"/>`;
+  if (k === "adore") s += `<path d="M100 6 l3 7 7 1 -5 5 1 7 -6 -3 -6 3 1 -7 -5 -5 7 -1z" fill="#ffcd00"/>`;
+  if (abime) s += `<path d="M60 40 l10 10 -4 4 8 6" stroke="#fff" stroke-width="2" fill="none"/>`;
+  if (casse) s += `<rect x="70" y="8" width="62" height="12" rx="2" fill="#e53935"/><text x="101" y="17.5" font-size="8" font-weight="800" fill="#fff" text-anchor="middle" font-family="system-ui">HORS SERVICE</text>`;
+  if (k === "inconnu") s += `<text x="100" y="58" font-size="16" font-weight="900" fill="#fff" text-anchor="middle" font-family="system-ui">?</text>`;
+  return s + "</g>";
+}
+function carteMetro() {
+  return `<svg viewBox="0 0 264 250" width="100%">
+    <rect width="264" height="250" fill="#f2f4f7"/>
+    <path d="M20 220 L90 150 H200 L240 110 V30" stroke="#ffcd00" stroke-width="9" fill="none" stroke-linejoin="round"/>
+    <path d="M20 60 L90 150 L140 200 H240" stroke="#e53935" stroke-width="9" fill="none" stroke-linejoin="round"/>
+    <path d="M40 30 L90 80 V150" stroke="#1565c0" stroke-width="9" fill="none" stroke-linejoin="round"/>
+    ${[[20,220],[200,150],[240,110],[20,60],[140,200],[240,200],[40,30],[90,80]].map(([x,y]) => `<circle cx="${x}" cy="${y}" r="6" fill="#fff" stroke="#0b1f3a" stroke-width="3"/>`).join("")}
+    <rect x="76" y="136" width="28" height="28" rx="6" fill="#fff" stroke="#0b1f3a" stroke-width="4"/>
+    <text x="110" y="134" font-size="10" font-weight="800" fill="#0b1f3a" font-family="system-ui">GARE</text>
+    <circle cx="240" cy="30" r="13" fill="#0b1f3a"/><text x="240" y="34" font-size="11" fill="#ffcd00" text-anchor="middle" font-weight="900" font-family="system-ui">⌂</text>
+    <text x="226" y="58" font-size="10" font-weight="900" fill="#0b1f3a" text-anchor="end" font-family="system-ui">CHEZ TOI</text>
+    <g transform="translate(212 92) scale(.22)">${busMetro("jamais")}</g>
+    <g transform="translate(60 196) scale(.22)">${busMetro("adore")}</g>
+    <g transform="translate(150 132) scale(.22)">${busMetro("bof")}</g>
+    <rect x="150" y="76" width="66" height="18" rx="9" fill="#0b1f3a"/><text x="183" y="88.5" font-size="9" font-weight="800" fill="#ffcd00" text-anchor="middle" font-family="system-ui">C · 2 ARRÊTS</text>
+    <rect x="8" y="172" width="66" height="18" rx="9" fill="#fff" stroke="#0b1f3a"/><text x="41" y="184.5" font-size="9" font-weight="800" fill="#0b1f3a" text-anchor="middle" font-family="system-ui">A · 14 ARRÊTS</text>
+  </svg>`;
+}
+
+/* ===== 2. Rétro : autobus arrondi des années 60, deux tons ===== */
+function busRetro(k) {
+  const c = { adore: ["#1f6f6b", "#f7ecd6", "#c9a24b"], bien: ["#d9622b", "#f7ecd6", "#9aa"], bof: ["#c9a24b", "#f7ecd6", "#888"], pas: ["#9a7f5c", "#d8c8a8", "#777"], jamais: ["#7a4e2d", "#a98e6e", "#555"], inconnu: ["#9b958a", "#e3ddd0", "#999"] }[k];
+  const casse = k === "jamais";
+  let s = `<g transform="${casse ? "rotate(-3 100 80)" : ""}">
+    <path d="M12 74 V44 Q12 20 44 18 H168 Q190 18 192 40 V74 Z" fill="${c[1]}" stroke="#3b2a1e" stroke-width="2"/>
+    <path d="M12 52 H192 V74 H12 Z" fill="${c[0]}" stroke="#3b2a1e" stroke-width="2"/>
+    ${[26, 58, 90, 122].map((x, i) => `<rect x="${x}" y="26" width="26" height="20" rx="6" fill="${casse && i !== 1 ? "#3b2a1e" : "#bfe0dc"}" stroke="#3b2a1e" stroke-width="1.5"/>`).join("")}
+    <rect x="156" y="26" width="28" height="22" rx="6" fill="#bfe0dc" stroke="#3b2a1e" stroke-width="1.5"/>
+    <circle cx="186" cy="62" r="4" fill="#fff6c8" stroke="#3b2a1e"/>
+    <rect x="8" y="72" width="188" height="6" rx="3" fill="${c[2]}" stroke="#3b2a1e"/>
+    ${[50, 154].map(x => `<circle cx="${x}" cy="80" r="12" fill="#3b2a1e"/><circle cx="${x}" cy="80" r="7" fill="#f7ecd6"/><circle cx="${x}" cy="80" r="3" fill="#3b2a1e"/>`).join("")}`;
+  if (k === "adore") s += `<text x="100" y="67" font-size="9" fill="${c[2]}" text-anchor="middle" font-style="italic" font-family="Georgia">Grand Express</text>`;
+  if (k === "pas" || casse) s += `<circle cx="40" cy="62" r="4" fill="#7a4e2d"/><circle cx="130" cy="58" r="3" fill="#7a4e2d"/>`;
+  if (casse) s += `<path d="M22 74 q4 -10 8 0 q4 -12 8 0" fill="#6b8f3a"/><path d="M140 74 q3 -9 6 0 q3 -11 6 0" fill="#6b8f3a"/>`;
+  return s + "</g>";
+}
+function carteRetro() {
+  return `<svg viewBox="0 0 264 250" width="100%">
+    <rect width="264" height="250" fill="#ead9b8"/>
+    <path d="M0 175 C60 160 120 200 264 170" stroke="#8fb8b2" stroke-width="22" fill="none"/>
+    ${[40, 95, 150, 205].map(x => `<path d="M${x} 0 V250" stroke="#f7ecd6" stroke-width="10"/>`).join("")}
+    ${[45, 100, 220].map(y => `<path d="M0 ${y} H264" stroke="#f7ecd6" stroke-width="10"/>`).join("")}
+    <path d="M95 100 H150 V45 H205" stroke="#d9622b" stroke-width="4" stroke-dasharray="2 7" stroke-linecap="round" fill="none"/>
+    <circle cx="205" cy="45" r="11" fill="#d9622b" stroke="#3b2a1e" stroke-width="2"/>
+    <text x="205" y="26" font-size="12" font-style="italic" text-anchor="middle" fill="#3b2a1e" font-family="Georgia">Chez toi</text>
+    <rect x="84" y="90" width="22" height="20" fill="#1f6f6b" stroke="#3b2a1e"/>
+    <text x="110" y="122" font-size="11" font-style="italic" fill="#3b2a1e" font-family="Georgia">la Gare</text>
+    <g transform="translate(150 62) scale(.22)">${busRetro("jamais")}</g>
+    <g transform="translate(20 200) scale(.22)">${busRetro("adore")}</g>
+    <g transform="translate(205 80) rotate(0)"><circle r="16" fill="none" stroke="#3b2a1e"/><path d="M0 -14 L4 0 0 14 -4 0Z" fill="#3b2a1e"/><text y="-18" font-size="8" text-anchor="middle" fill="#3b2a1e">N</text></g>
+    <text x="22" y="232" font-size="11" font-style="italic" fill="#3b2a1e" font-family="Georgia">A · 14 arrêts</text>
+    <text x="150" y="58" font-size="11" font-style="italic" fill="#3b2a1e" font-family="Georgia">C · 2 arrêts</text>
+  </svg>`;
+}
+
+/* ===== 3. Arcade : bus en pixels ===== */
+function busArcade(k) {
+  const c = { adore: ["#ffe14d", "#ff3ea5"], bien: ["#3ef7ff", "#ffffff"], bof: ["#9b8cff", "#d6d0ff"], pas: ["#b0a070", "#776a45"], jamais: ["#6d4b3a", "#3a2a22"], inconnu: ["#8a8aa0", "#c8c8d8"] }[k];
+  const P = 8, px = (x, y, w, h, col) => `<rect x="${x * P}" y="${y * P}" width="${w * P}" height="${h * P}" fill="${col}"/>`;
+  let s = `<g shape-rendering="crispEdges" transform="${k === "jamais" ? "rotate(4 100 80)" : ""}">` + px(1, 2, 23, 7, c[0]) + px(1, 7, 23, 1, c[1]);
+  [3, 7, 11, 15].forEach((x, i) => { s += px(x, 3, 3, 3, k === "jamais" && i % 2 ? "#12122a" : "#bff8ff"); });
+  s += px(19, 3, 4, 3, "#bff8ff") + px(4, 9, 3, 2, "#000") + px(18, 9, 3, 2, "#000") + px(5, 9, 1, 1, "#888") + px(19, 9, 1, 1, "#888");
+  if (k === "adore") s += px(2, 0, 1, 1, "#ffe14d") + px(12, 0, 1, 1, "#ffffff") + px(22, 1, 1, 1, "#ffe14d");
+  if (k === "pas" || k === "jamais") s += px(0, 6, 1, 1, "#888") + px(-1, 5, 1, 1, "#666");
+  if (k === "jamais") s += px(-2, 4, 2, 2, "#555") + px(9, 2, 2, 1, "#12122a") + px(13, 8, 3, 1, "#12122a");
+  if (k === "inconnu") s += px(11, 5, 1, 1, "#fff");
+  return s + "</g>";
+}
+function carteArcade() {
+  let s = `<svg viewBox="0 0 264 250" width="100%" shape-rendering="crispEdges"><rect width="264" height="250" fill="#1b1b3a"/>`;
+  for (let x = 0; x < 264; x += 24) for (let y = 0; y < 250; y += 24) s += `<rect x="${x + 3}" y="${y + 3}" width="18" height="18" fill="#262652"/>`;
+  s += `<path d="M24 216 H120 V120 H216 V48" stroke="#3ef7ff" stroke-width="4" fill="none" stroke-dasharray="6 6"/>
+    <rect x="204" y="36" width="24" height="24" fill="#ff3ea5"/><text x="216" y="30" font-size="9" fill="#ff3ea5" text-anchor="middle" font-family="monospace" font-weight="700">TA MAISON</text>
+    <rect x="108" y="108" width="24" height="24" fill="#ffe14d"/><text x="140" y="104" font-size="9" fill="#ffe14d" font-family="monospace" font-weight="700">GARE</text>
+    <g transform="translate(192 66) scale(.24)">${busArcade("jamais")}</g>
+    <g transform="translate(12 186) scale(.24)">${busArcade("adore")}</g>
+    <text x="194" y="104" font-size="10" fill="#fff" font-family="monospace" font-weight="700">C:2</text>
+    <text x="14" y="244" font-size="10" fill="#fff" font-family="monospace" font-weight="700">A:14</text>`;
+  return s + "</svg>";
+}
+
+/* ===== Écrans communs ===== */
+const svgBus = (f, k, w = 120) => `<svg viewBox="-20 -6 230 110" width="${w}">${f(k)}</svg>`;
+const visage = (fond, trait) => `<svg class="visage" viewBox="0 0 84 84"><rect width="84" height="84" fill="${fond}"/><circle cx="42" cy="34" r="16" fill="${trait}"/><path d="M12 84 Q14 54 42 54 Q70 54 72 84Z" fill="${trait}"/></svg>`;
+
+const D = {
+  metro: {
+    bus: busMetro, carte: carteMetro, visage: visage("#dfe5ec", "#6b7f99"),
+    accueil: `<div class="bandeau"><span class="ligne"><span class="pastille">B</span> Ligne 2027</span><h3>Quel bus te ramène chez toi&nbsp;?</h3></div>`,
+    classementTete: `<div class="ligne"><span class="pastille">1</span> Candidat 1 / 7</div>`,
+    fin: `<div class="ligne"><span class="pastille">⌂</span> Terminus</div>`,
+  },
+  retro: {
+    bus: busRetro, carte: carteRetro, visage: visage("#ead9b8", "#9a7f5c"),
+    accueil: `<div class="sur">Présidentielle · Édition 2027</div><h3>Quel bus te ramène chez toi&nbsp;?</h3>`,
+    classementTete: `<div class="sur">Voyageur n°1 sur 7</div>`,
+    fin: `<div class="sur">Terminus · tout le monde descend</div>`,
+  },
+  arcade: {
+    bus: busArcade, carte: carteArcade, visage: visage("#262652", "#9b8cff"),
+    accueil: `<div class="score"><span>NIVEAU 2027</span><span>1UP</span></div><h3>Quel bus te ramène chez toi&nbsp;?</h3>`,
+    classementTete: `<div class="score"><span>CANDIDAT 1/7</span><span>♥♥♥</span></div>`,
+    fin: `<div class="score"><span>TERMINUS</span><span>SCORE : 2 ARRÊTS</span></div>`,
+  },
+};
+
+for (const [id, d] of Object.entries(D)) {
+  const accueil = `${d.accueil}
+    <div style="display:flex;justify-content:space-around;align-items:flex-end">${svgBus(d.bus, "adore", 82)}${svgBus(d.bus, "bof", 82)}${svgBus(d.bus, "jamais", 82)}</div>
+    <p style="margin:0">Plusieurs bus vont passer. Aucun ne te déposera pile devant chez toi. Lequel te rapproche le plus de tes idées&nbsp;?</p>
+    <div class="btn ${id === "arcade" ? "clignote" : ""}">${id === "arcade" ? "Appuie pour jouer" : "C'est parti"}</div>
+    <div class="info">Rien n'est enregistré. Pas de compte, pas de cookie.</div>`;
+  const classement = `${d.classementTete}
+    <div style="display:flex;gap:12px;align-items:center">${d.visage}<div><strong style="font-size:20px">Candidat A</strong><br><span style="opacity:.75">Parti fictif</span></div></div>
+    <p style="margin:0">Spontanément, il te fait quel effet&nbsp;?</p>
+    <div class="bacs">${NIV.map(k => `<div class="bac">${svgBus(d.bus, k, 100)}${BACS[k]}</div>`).join("")}</div>`;
+  const fin = `${d.fin}
+    <div>${d.carte()}</div>
+    <p style="margin:0;font-weight:700">Ton plus beau bus (A) te laisse à 14 arrêts. Celui qui te rapproche le plus, c'est C (2 arrêts), que tu avais mis dans «&nbsp;Jamais&nbsp;».</p>
+    <div class="info">Tu le voyais comme une épave. Pourtant, c'est lui qui passe le plus près de chez toi.</div>`;
+  document.getElementById(id).innerHTML = [["Accueil", accueil], ["Classement", classement], ["Terminus", fin]]
+    .map(([nom, html]) => `<figure style="margin:0"><div class="tel"><div class="contenu">${html}</div></div><figcaption class="legende">${nom}</figcaption></figure>`).join("");
+}
+</script>
+</body>
+</html>

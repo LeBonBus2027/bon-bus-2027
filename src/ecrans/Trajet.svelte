@@ -169,7 +169,7 @@
   });
 </script>
 
-<h1 tabindex="-1">{phase === "fin" ? "Terminus !" : "Le grand départ"}</h1>
+<h1 tabindex="-1">{phase === "fin" ? "Terminus !" : "Le grand départ"}</h1>
 <div class="boite carte">
   <Carte {bus} bind:vue ratio={RATIO} {pietons} {etiquettes} interactive={phase === "fin"} {selectionne} onChoisir={choisir} />
   {#if phase === "fin"}

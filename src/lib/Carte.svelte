@@ -87,8 +87,10 @@
   });
 
   const ECHELLE = 0.28;
-  const C = { sol: "#f3f1ec", pate: "#e6e3db", parc: "#c9e7bd", arbre: "#a9d69a", eau: "#a8d3e6",
-              rue: "#ffffff", bordure: "#d8d3c8", avenue: "#fde9a8", bordureAvenue: "#eec56a", nom: "#6f6a60" };
+  // Palette « plan de transport » : rues blanches, grands axes en jaune signal, repères bleu nuit.
+  const C = { sol: "#dfe5ec", pate: "#f7f9fb", parc: "#d7ebd2", arbre: "#b4d9a8", eau: "#b9d6ec",
+              rue: "#ffffff", bordure: "#c9d2de", avenue: "#ffcd00", bordureAvenue: "#e0b400", nom: "#4a5b72",
+              nuit: "#0b1f3a", gris: "#6b7f99" };
 
   // Décor fixe, calculé une seule fois. La ville se prolonge au-delà des rues utilisées par les bus.
   const EXT = { i0: -5, i1: COLS + 4, j0: -7, j1: ROWS + 6 };
@@ -115,7 +117,7 @@
   const places = $derived(bus.map(b => ({ ...b, p: positionBus(b.ligne, b.d, b.voie) })));
 </script>
 
-<svg bind:this={svg} viewBox={vue.map(n => n.toFixed(1)).join(" ")} style:aspect-ratio={ratio} class:interactive role="img" onpointerdown={appui} onpointermove={deplacement} onpointerup={relache} onpointercancel={relache} aria-label="Plan de ville : la gare au centre, ta maison en haut à droite, le terminus en bas à gauche">
+<svg bind:this={svg} viewBox={vue.map(n => n.toFixed(1)).join(" ")} style:aspect-ratio={ratio} class:interactive role="img" onpointerdown={appui} onpointermove={deplacement} onpointerup={relache} onpointercancel={relache} aria-label="Plan de ville : la gare au centre, ta maison en haut à droite, le terminus en bas à gauche">
   <rect x="-1000" y="-1000" width={LARGEUR + 2000} height={HAUTEUR + 2000} fill={C.sol} />
   {#each pates as [x, y] (`${x},${y}`)}
     <rect x={x + 12} y={y + 12} width={BLOC - 24} height={BLOC - 24} rx="6" fill={C.pate} />
@@ -137,16 +139,16 @@
     <text x={px([2, 3])[0]} y={px([2, 3])[1] + 4}>Rue des Lilas</text>
     <text x={px([10, 6])[0] + 4} y={px([10, 6])[1] + 40} transform="rotate(-90 {px([10, 6])[0] + 4} {px([10, 6])[1] + 40})">Rue des Écoles</text>
     <text x={px([3, 1])[0] + 40} y={px([3, 1])[1] + 4}>Rue du Moulin</text>
-    <text x={LARGEUR / 2 + 60} y={canalY + BLOC / 2 + 4} font-style="italic" fill="#4f86a6">Canal Saint-Pierre</text>
-    <text x={(parcG + parcD) / 2} y={(parcH + parcB) / 2 + 4} fill="#3f7a35" font-weight="600">Parc des Tilleuls</text>
+    <text x={LARGEUR / 2 + 60} y={canalY + BLOC / 2 + 4} font-style="italic" fill="#2f5f86">Canal Saint-Pierre</text>
+    <text x={(parcG + parcD) / 2} y={(parcH + parcB) / 2 + 4} fill="#2f6b2a" font-weight="700">Parc des Tilleuls</text>
   </g>
 
   {#each pietons as p (p.id)}
-    <polyline points={p.points.map(q => q.join(",")).join(" ")} fill="none" stroke={p.accent ? "#1a73e8" : "#80868b"} stroke-width="7" stroke-linecap="round" stroke-dasharray="0 13" opacity=".9" />
+    <polyline points={p.points.map(q => q.join(",")).join(" ")} fill="none" stroke={p.accent ? C.nuit : C.gris} stroke-width="7" stroke-linecap="round" stroke-dasharray="0 13" opacity=".9" />
   {/each}
 
   {#each etiquettes as e (e.id)}
-    <line x1={e.cible.x} y1={e.cible.y} x2={e.x} y2={e.y} stroke="#3c4043" stroke-width="1.5" />
+    <line x1={e.cible.x} y1={e.cible.y} x2={e.x} y2={e.y} stroke={C.nuit} stroke-width="2" />
   {/each}
 
   {#each places as b (b.id)}
@@ -157,21 +159,21 @@
     </g>
   {/each}
 
-  <g transform="translate({tx} {ty})">
-    <rect x="-14" y="-14" width="28" height="28" rx="6" fill="#80868b" />
-    <text y="6" font-size="17" font-weight="700" fill="#fff" text-anchor="middle">T</text>
-    <text x="20" y="-20" font-size="15" font-weight="600" fill="#5f6368">Terminus</text>
+  <g transform="translate({tx} {ty})" font-family="system-ui, sans-serif">
+    <circle r="15" fill={C.gris} stroke="#fff" stroke-width="3" />
+    <text y="6" font-size="16" font-weight="900" fill="#fff" text-anchor="middle">T</text>
+    <text x="20" y="-20" font-size="14" font-weight="900" letter-spacing="1" fill={C.nuit} paint-order="stroke" stroke="#fff" stroke-width="4">TERMINUS</text>
   </g>
-  <g transform="translate({gx} {gy})">
-    <rect x="-17" y="-17" width="34" height="34" rx="8" fill="#1a73e8" />
-    <rect x="-10" y="-9" width="20" height="14" rx="3" fill="#fff" /><rect x="-7" y="-6" width="14" height="5" fill="#1a73e8" />
-    <circle cx="-5" cy="7" r="2.6" fill="#fff" /><circle cx="5" cy="7" r="2.6" fill="#fff" />
-    <text x="24" y="-22" font-size="15" font-weight="600" fill="#1a73e8">Gare routière</text>
+  <g transform="translate({gx} {gy})" font-family="system-ui, sans-serif">
+    <rect x="-18" y="-18" width="36" height="36" rx="7" fill="#fff" stroke={C.nuit} stroke-width="4" />
+    <rect x="-10" y="-9" width="20" height="13" rx="2" fill={C.nuit} /><rect x="-7" y="-6" width="14" height="4" fill="#fff" />
+    <circle cx="-5" cy="7" r="2.6" fill={C.nuit} /><circle cx="5" cy="7" r="2.6" fill={C.nuit} />
+    <text x="24" y="-22" font-size="14" font-weight="900" letter-spacing="1" fill={C.nuit} paint-order="stroke" stroke="#fff" stroke-width="4">GARE ROUTIÈRE</text>
   </g>
-  <g transform="translate({mx} {my})">
-    <path d="M0 0 C-5 -12 -19 -19 -19 -33 A19 19 0 1 1 19 -33 C19 -19 5 -12 0 0z" fill="#ea4335" stroke="#b3261e" stroke-width="1.5" />
-    <path d="M-9 -31 L0 -40 L9 -31 V-24 H-9z" fill="#fff" />
-    <text y="24" font-size="17" font-weight="700" fill="#c5221f" text-anchor="middle" paint-order="stroke" stroke={C.sol} stroke-width="5">Chez toi</text>
+  <g transform="translate({mx} {my})" font-family="system-ui, sans-serif">
+    <circle r="21" fill={C.nuit} stroke="#ffcd00" stroke-width="4" />
+    <path d="M-10 2 L0 -9 L10 2 V11 H-10z" fill="#ffcd00" />
+    <text y="40" font-size="16" font-weight="900" letter-spacing="1" fill={C.nuit} text-anchor="middle" paint-order="stroke" stroke="#fff" stroke-width="5">CHEZ TOI</text>
   </g>
 
   {#each etiquettes as e (e.id)}
@@ -179,19 +181,19 @@
     {@const cad = PHOTOS[e.id]?.cadrage ?? { zoom: 1, x: 50, y: 25 }}
     {@const px0 = e.x - e.largeur / 2 + 18}
     <g class="etiquette" data-id={e.id}>
-      <rect x={e.x - e.largeur / 2} y={e.y - 17} width={e.largeur} height="34" rx="17" fill={e.accent ? "#1a73e8" : "#fff"} stroke={e.id === selectionne ? "#e85d2a" : "#3c4043"} stroke-width={e.id === selectionne ? 3 : 1.2} />
+      <rect x={e.x - e.largeur / 2} y={e.y - 17} width={e.largeur} height="34" rx="17" fill={e.accent ? C.nuit : "#fff"} stroke={e.id === selectionne ? "#ffcd00" : C.nuit} stroke-width={e.id === selectionne ? 4 : 2} />
       {#if url}
         <clipPath id="photo-{e.id}"><circle cx={px0} cy={e.y} r="14" /></clipPath>
         <image href={url} x={px0 - 14 * cad.zoom} y={e.y - 14 - 28 * (cad.zoom - 1) * (cad.y / 100)} width={28 * cad.zoom} height={28 * cad.zoom}
           preserveAspectRatio="xMidYMin slice" clip-path="url(#photo-{e.id})" />
       {/if}
-      <text x={e.x + (url ? 16 : 0)} y={e.y + 7} font-size="19" font-weight="600" text-anchor="middle" fill={e.accent ? "#fff" : "#202124"}>{e.texte}</text>
+      <text x={e.x + (url ? 16 : 0)} y={e.y + 7} font-size="19" font-weight="800" text-anchor="middle" font-family="system-ui, sans-serif" fill={e.accent ? "#ffcd00" : C.nuit}>{e.texte}</text>
     </g>
   {/each}
 </svg>
 
 <style>
-  svg { width: 100%; height: auto; display: block; background: #f3f1ec; }
+  svg { width: 100%; height: auto; display: block; background: #dfe5ec; }
   .bus { transition: opacity 0.6s; }
   .interactive { touch-action: none; cursor: grab; }
   .interactive .bus, .interactive .etiquette { cursor: pointer; }

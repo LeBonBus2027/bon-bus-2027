@@ -4,6 +4,9 @@ import { questions, type Candidat } from "./donnees";
 import type { Niveau } from "./niveaux";
 import { reveler, rejeu } from "./revelation";
 
+/** Les textes utilisent des espaces insécables (typographie française) : on compare sans en tenir compte. */
+const norm = (s: string) => s.replace(/ /g, " ");
+
 const cand = (id: string, d: number): Classe<Candidat> => ({
   candidat: { id, nom: id.toUpperCase(), parti: "", url_source: "" },
   trajet: { etapes: [], distance: d, arrets: Math.round(d), couverture: 1, incomplet: false },
@@ -15,16 +18,16 @@ describe("reveler", () => {
   it("salue l'intuition quand le favori est le plus proche", () => {
     const r = reveler(classement, { a: "adore", b: "bof", c: "bof", d: "pas", e: "jamais" } satisfies Record<string, Niveau>);
     expect(r.intuition).toBe(true);
-    expect(r.message).toContain("Ton intuition était la bonne");
+    expect(norm(r.message)).toContain("Ton intuition était la bonne");
   });
 
   it("compare le plus beau bus au plus proche sinon, et signale le demi-tour", () => {
     const r = reveler(classement, { a: "jamais", b: "bof", c: "bof", d: "pas", e: "adore" });
     expect(r.beau?.candidat.id).toBe("e");
     expect(r.epave?.candidat.id).toBe("a");
-    expect(r.message).toContain("Ton plus beau bus, E, te laisse à 13 arrêts");
-    expect(r.message).toContain("reparti dans l'autre sens");
-    expect(r.message).toContain("bac « Jamais »");
+    expect(norm(r.message)).toContain("Ton plus beau bus, E, te laisse à 13 arrêts");
+    expect(norm(r.message)).toContain("reparti dans l'autre sens");
+    expect(norm(r.message)).toContain("bac « Jamais »");
   });
 
   it("prend le favori le plus éloigné quand il y en a plusieurs", () => {
@@ -42,7 +45,7 @@ describe("reveler", () => {
     const tous = Object.fromEntries(classement.map(c => [c.candidat.id, "inconnu" as Niveau]));
     const r = reveler(classement, tous);
     expect(r.beau).toBeUndefined();
-    expect(r.message).toContain("Le bus qui te rapproche le plus, c'est A");
+    expect(norm(r.message)).toContain("Le bus qui te rapproche le plus, c'est A");
   });
 });
 
@@ -89,7 +92,7 @@ describe("metaphore", () => {
 
   it("signale le demi-tour du plus beau bus", () => {
     const m = reveler(classement, { a: "jamais", b: "bof", c: "bof", d: "pas", e: "adore" }, () => 0).metaphore;
-    expect(m).toContain("Tu le voyais comme une épave");
-    expect(m).toContain("Et le car de luxe ? Tu pensais que c'était le bon bus : il est parti dans l'autre sens.");
+    expect(norm(m)).toContain("Tu le voyais comme une épave");
+    expect(norm(m)).toContain("Et le car de luxe ? Tu pensais que c'était le bon bus : il est parti dans l'autre sens.");
   });
 });

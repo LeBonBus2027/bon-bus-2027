@@ -57,6 +57,14 @@
   }
 </script>
 
+<header class="bandeau">
+  <div class="interieur">
+    <span class="pastille" aria-hidden="true">B</span>
+    <span class="etiquette-signal">Ligne 2027</span>
+    <span class="nom">Le Bon Bus</span>
+  </div>
+</header>
+
 <main>
   {#if page}
     {@const Page = PAGES[page]}
@@ -65,7 +73,7 @@
       <Page />
     </div>
   {/if}
-  <!-- Le parcours reste monté (masqué) pendant la lecture d'une page : rien n'est perdu ni rejoué. -->
+  <!-- Le parcours reste monté (masqué) pendant la lecture d'une page : rien n'est perdu ni rejoué. -->
   <div id="parcours" hidden={!!page}>
   {#if etape === "accueil"}
     <Accueil onCommencer={() => aller("classement")} />
@@ -80,7 +88,7 @@
 </main>
 
 <footer>
-  <p>Questions et positions des candidats : <a href="https://monvote2027.fr" target="_blank" rel="noopener noreferrer">MonVote2027</a>, données du {new Date(meta.date_import).toLocaleDateString("fr-FR")}. Idée originale : une vidéo de @4deux_93.</p>
+  <p>Questions et positions des candidats : <a href="https://monvote2027.fr" target="_blank" rel="noopener noreferrer">MonVote2027</a>, données du {new Date(meta.date_import).toLocaleDateString("fr-FR")}. Idée originale : une vidéo de @4deux_93.</p>
   <p>Aucune donnée collectée. Outil indicatif, indépendant de tout parti et de tout candidat.</p>
   <nav aria-label="Informations">
     <a href="#methode">Comment ça marche</a> · <a href="#confidentialite">Confidentialité</a> ·
@@ -89,7 +97,11 @@
 </footer>
 
 <style>
-  footer { max-width: 760px; margin: 0 auto; padding: 0 16px 32px; color: var(--discret); font-size: 15px; }
+  .bandeau { background: var(--nuit); color: #fff; border-bottom: 4px solid var(--jaune); }
+  .bandeau .interieur { max-width: 760px; margin: 0 auto; padding: 10px 16px; display: flex; align-items: center; gap: 10px; }
+  .pastille { width: 30px; height: 30px; border-radius: 50%; background: var(--jaune); color: var(--nuit); display: grid; place-items: center; font-weight: 900; }
+  .bandeau .nom { margin-left: auto; font-weight: 800; }
+  footer { max-width: 760px; margin: 0 auto; padding: 16px 16px 32px; color: var(--discret); font-size: 15px; border-top: 4px solid var(--jaune); }
   footer p { margin-bottom: 4px; }
   footer nav { margin-top: 8px; line-height: 2.4; }
   footer a { color: var(--discret); }

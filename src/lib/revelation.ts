@@ -52,8 +52,8 @@ export function metaphore(meilleur: Niveau, haut: Niveau | undefined, beau: Clas
   const vu = VU[meilleur];
   const debut = intuition
     ? un([
-        `Tu le voyais comme ${vu}, et pour une fois l'apparence ne trompait pas : c'est bien lui qui va dans ta direction.`,
-        `Ton intuition était la bonne : ce bus-là roule bien vers chez toi.`,
+        `Tu le voyais comme ${vu}, et pour une fois l'apparence ne trompait pas : c'est bien lui qui va dans ta direction.`,
+        `Ton intuition était la bonne : ce bus-là roule bien vers chez toi.`,
       ])
     : meilleur === "inconnu"
       ? un([
@@ -73,11 +73,11 @@ export function metaphore(meilleur: Niveau, haut: Niveau | undefined, beau: Clas
   if (intuition || !beau || !haut || !LE[haut]) return debut;
   const fin = beau.trajet.arrets > R0
     ? un([
-        `Et ${LE[haut]} ? Tu pensais que c'était le bon bus : il est parti dans l'autre sens.`,
+        `Et ${LE[haut]} ? Tu pensais que c'était le bon bus : il est parti dans l'autre sens.`,
         `Quant ${AU[haut]} que tu voyais, il file vers l'autre bout de la ville.`,
       ])
     : un([
-        `Et ${LE[haut]} ? Tu pensais que c'était le bon bus, mais il ne va pas vraiment vers chez toi.`,
+        `Et ${LE[haut]} ? Tu pensais que c'était le bon bus, mais il ne va pas vraiment vers chez toi.`,
         `Quant ${AU[haut]} que tu voyais, il prend une autre route que la tienne.`,
       ]);
   return `${debut} ${fin}`;
@@ -86,7 +86,7 @@ export function metaphore(meilleur: Niveau, haut: Niveau | undefined, beau: Clas
 export const arrets = (n: number) => (n === 0 ? "pile devant ta porte" : `${n} arrêt${n > 1 ? "s" : ""}`);
 
 function rangement(niveau: Niveau | undefined) {
-  return niveau === "inconnu" ? "que tu ne connaissais pas" : `que tu avais mis dans le bac « ${BAC[niveau ?? "inconnu"]} »`;
+  return niveau === "inconnu" ? "que tu ne connaissais pas" : `que tu avais mis dans le bac « ${BAC[niveau ?? "inconnu"]} »`;
 }
 
 /**
@@ -105,9 +105,9 @@ export function reveler(classement: readonly Classe<Candidat>[], bacs: Readonly<
   const intuition = !!haut && bacs[meilleur.candidat.id] === haut;
   let message: string;
   if (!beau) {
-    message = `Le bus qui te rapproche le plus, c'est ${n} : ${arrets(nm)}.`;
+    message = `Le bus qui te rapproche le plus, c'est ${n} : ${arrets(nm)}.`;
   } else if (intuition) {
-    message = `Ton intuition était la bonne : ${n}, ${rangement(haut)}, est le bus qui te rapproche le plus (${arrets(nm)}).`;
+    message = `Ton intuition était la bonne : ${n}, ${rangement(haut)}, est le bus qui te rapproche le plus (${arrets(nm)}).`;
   } else {
     const nb = beau.trajet.arrets;
     const loin = nb > R0 ? " Il est même reparti dans l'autre sens, vers le terminus." : "";
