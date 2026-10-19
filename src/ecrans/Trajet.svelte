@@ -9,6 +9,7 @@
   import { placer } from "../lib/etiquettes";
   import { aPied, GARE, HAUTEUR, LARGEUR, lignes, MAISON, positionBus, px } from "../lib/ville";
   import Explication from "./Explication.svelte";
+  import { urlPhoto } from "../lib/Photo.svelte";
   import Resultats from "./Resultats.svelte";
 
   let { bacs, reponses, ordre, onRecommencer }: {
@@ -68,7 +69,7 @@
       // Nom de famille seulement : pastilles plus courtes, donc zoom plus serré (le tableau garde les noms complets).
       const nom = f.candidat.nom.slice(f.candidat.nom.indexOf(" ") + 1);
       const texte = `${nom} · ${arrets(f.trajet.arrets)}`;
-      return { id: f.candidat.id, x: p.x, y: p.y, largeur: texte.length * 10.4 + 26, texte };
+      return { id: f.candidat.id, x: p.x, y: p.y, largeur: texte.length * 10.4 + 26 + (urlPhoto(f.candidat.id) ? 32 : 0), texte };
     });
     const [mx, my] = px(MAISON), [gx, gy] = px(GARE);
     const places = placer(infos, [

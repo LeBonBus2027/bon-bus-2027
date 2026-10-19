@@ -12,7 +12,7 @@
 
 <h2>Quels candidats au départ</h2>
 <p>Pour que le classement reste rapide, on te propose d'office les candidats à <strong>{selection.seuil} % ou plus</strong> dans la moyenne des sondages du premier tour ({retenusParDefaut.length} candidats). Source : <a href={selection.url} target="_blank" rel="noopener noreferrer">{selection.source}</a>, au {new Date(selection.date).toLocaleDateString("fr-FR")}. Ce seuil est le même que celui du remboursement des frais de campagne.</p>
-<p>Tous les autres candidats référencés restent disponibles : tu peux les ajouter à ta gare en un geste. Le calcul est fait pour tous les candidats ; si l'un de ceux que tu n'as pas ajoutés t'aurait déposé plus près que tes bus, on te le signale.</p>
+<p>Tous les autres candidats référencés restent disponibles : tu peux les ajouter à ta gare en un geste. Le calcul est fait pour tous les candidats ; si le bus d'un candidat que tu n'as pas ajouté s'arrête plus près de chez toi que les tiens, on te le signale.</p>
 
 <h2>Comment les bus avancent</h2>
 <p>Tous les bus partent de la gare, à {R0} arrêts de chez toi. Pour chaque question, on compare ta réponse à la position du candidat :</p>

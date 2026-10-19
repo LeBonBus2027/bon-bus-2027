@@ -57,7 +57,7 @@ test("un candidat se modifie depuis la gare routière", async ({ page }) => {
   await page.getByRole("button", { name: "C'est parti" }).click();
   await classerTout(page);
   const premier = page.locator(".gare button").first();
-  const nom = (await premier.locator("span").first().textContent())!;
+  const nom = (await premier.locator("span:not(.photo):not(.visually-hidden)").first().textContent())!;
   await premier.click();
   await expect(page.getByRole("heading", { name: nom })).toBeVisible();
   await page.getByRole("button", { name: "Jamais" }).click();

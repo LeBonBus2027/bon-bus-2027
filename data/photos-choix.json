@@ -1,0 +1,27 @@
+{
+  "glucksmann": {
+    "fichier": "Raphaël Glucksmann.jpg",
+    "raison": "La photo Wikidata vient du Parlement européen, sous licence non libre."
+  },
+  "kazib": {
+    "fichier": "Anasse Kazib, décembre 2021 (resseré).jpg",
+    "raison": "La photo Wikidata est un plan large : visage trop petit par rapport aux autres."
+  },
+  "tondelier": {
+    "fichier": "20210819 tondelier.m-cr3.jpg",
+    "raison": "La photo Wikidata est un plan large, micro à la main : portrait de face retenu pour un traitement égal."
+  },
+  "devillepin": {
+    "fichier": "Dominique de villepin.jpg",
+    "raison": "La photo Wikidata le montre en pleine prise de parole : portrait au repos retenu."
+  },
+  "roussel": {
+    "fichier": "Fabien Roussel.png",
+    "raison": "La photo Wikidata (2018) le montre en pleine prise de parole : portrait récent (2026) retenu. Recadré sur le visage pour une taille comparable aux autres.",
+    "cadrage": {
+      "zoom": 1.9,
+      "x": 50,
+      "y": 20
+    }
+  }
+}

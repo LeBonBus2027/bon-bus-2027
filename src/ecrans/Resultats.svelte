@@ -3,6 +3,7 @@
   import type { Candidat } from "../lib/donnees";
   import { BAC, type Niveau } from "../lib/niveaux";
   import { arrets, type Revelation } from "../lib/revelation";
+  import Photo from "../lib/Photo.svelte";
   import Partage from "./Partage.svelte";
 
   let { revelation, classement, bacs, horsSelection, onPourquoi, onRecommencer }: {
@@ -17,6 +18,7 @@
 </script>
 
 <p class="message">{revelation.message}</p>
+<blockquote class="metaphore">{revelation.metaphore}</blockquote>
 <p class="morale">Aucun bus ne te dépose pile devant chez toi. Prends celui qui te rapproche le plus.</p>
 
 {#if horsSelection}
@@ -34,7 +36,8 @@
       {#each classement as c, i (c.candidat.id)}
         <tr>
           <td>{i + 1}</td>
-          <td>
+          <td class="qui">
+            <Photo id={c.candidat.id} taille={40} />
             <a href={c.candidat.url_source} target="_blank" rel="noopener noreferrer">{c.candidat.nom}</a>
             <span class="discret petit">{c.candidat.parti}</span>
           </td>
@@ -52,7 +55,7 @@
 
 <div class="boite fin">
   <h2>Maintenant, c'est toi qui conduis</h2>
-  <p>Ton vote, c'est une voix de plus dans le bus qui te rapproche le plus. Avant tout, vérifie que tu es bien inscrit sur les listes électorales : ça prend deux minutes.</p>
+  <p>Ton vote, c'est une voix de plus dans le bus qui te rapproche le plus. Avant tout, vérifie ton inscription sur les listes électorales : ça prend deux minutes.</p>
   <p class="rangee">
     <a class="bouton" href="https://www.service-public.fr/particuliers/vosdroits/R51788" target="_blank" rel="noopener noreferrer">Vérifier mon inscription</a>
     <button class="discret" onclick={onRecommencer}>Recommencer</button>
@@ -66,7 +69,10 @@
   table { width: 100%; border-collapse: collapse; font-size: 16.5px; background: var(--carte); border-radius: var(--rayon); }
   th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--trait); vertical-align: top; }
   td span { display: block; }
+  td.qui { display: grid; grid-template-columns: 40px 1fr; column-gap: 10px; align-items: center; }
+  td.qui :global(.photo) { grid-row: span 2; }
   .fin { margin-top: 28px; }
+  .metaphore { margin: 12px 0; padding: 12px 16px; border-left: 4px solid var(--accent); background: var(--carte); border-radius: 0 var(--rayon) var(--rayon) 0; font-size: 19px; font-style: italic; }
   .note { margin: 12px 0; }
   .pourquoi { display: block; margin-top: 4px; min-height: 40px; padding: 6px 12px; font-size: 15px; border-color: var(--trait); }
   .fin h2 { margin-top: 0; }

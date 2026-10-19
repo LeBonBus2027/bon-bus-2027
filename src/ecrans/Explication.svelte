@@ -3,6 +3,7 @@
   import { questions, type Candidat } from "../lib/donnees";
   import { BAC, type Niveau } from "../lib/niveaux";
   import { arrets } from "../lib/revelation";
+  import Photo from "../lib/Photo.svelte";
 
   let { candidat, trajet, bac, ordre, reponses, positions, onFermer }: {
     candidat: Candidat;
@@ -41,11 +42,12 @@
 
 <section class="boite explication" aria-labelledby="titre-explication">
   <div class="tete">
+    <Photo id={candidat.id} taille={56} />
     <h2 id="titre-explication" tabindex="-1" bind:this={titre}>Pourquoi {candidat.nom} s'arrête à {arrets(trajet.arrets)}</h2>
     <button class="discret fermer" onclick={onFermer} aria-label="Fermer l'explication">✕</button>
   </div>
   <p>Tu avais mis ce bus dans le bac « {BAC[bac]} ». {lieu}</p>
-  <p>Sur tes {lignes.length} réponses, son bus t'a rapproché sur <strong>{pour.length}</strong>, éloigné sur <strong>{contre.length}</strong>, et n'a pas bougé sur {neutres}.</p>
+  <p>Sur tes {lignes.length} réponses, son bus a avancé sur <strong>{pour.length}</strong>, reculé sur <strong>{contre.length}</strong> et n'a pas bougé sur {neutres}.</p>
 
   {#if pour.length}
     <h3>Ce qui a rapproché son bus de chez toi</h3>
@@ -65,7 +67,8 @@
 
 <style>
   .explication { margin: 12px 0; }
-  .tete { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .tete { display: flex; align-items: flex-start; gap: 12px; }
+  .tete h2 { flex: 1; }
   h2 { margin: 0 0 8px; font-size: 20px; }
   h3 { font-size: 17px; margin: 16px 0 6px; }
   .fermer { min-width: 48px; padding: 0; flex: none; }

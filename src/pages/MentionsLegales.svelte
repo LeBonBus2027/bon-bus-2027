@@ -14,7 +14,7 @@
 
 <h2>Données et propriété intellectuelle</h2>
 <p>Questions et positionnements des candidats : <a href="https://monvote2027.fr" target="_blank" rel="noopener noreferrer">MonVote2027</a>, sous licence ouverte <span class="a-completer">[à préciser après confirmation de l'éditeur]</span>. Les illustrations et le code du site sont originaux.</p>
-<p>Ce site n'utilise ni photographie ni logo de candidat ou de parti.</p>
+<p>Les portraits des candidats viennent de Wikimedia Commons, sous licences libres (CC0, CC BY, CC BY-SA ou domaine public). Ils sont reproduits sans modification autre qu'un recadrage, avec le crédit de leurs auteurs sur la page <a href="#a-propos">À propos</a>. Le site n'utilise aucun logo de parti.</p>
 
 <style>
   .a-completer { background: #fff3c4; }

@@ -23,7 +23,7 @@
     const nomB = avecNoms ? ` (${beau.candidat.nom})` : "";
     const bac = bacs[meilleur.candidat.id];
     return [
-      `Mon plus beau bus${nomB} m'a laissé à ${n(beau.trajet.arrets)} de chez moi.`,
+      `Mon plus beau bus${nomB} s'arrête à ${n(beau.trajet.arrets)} de chez moi.`,
       bac === "inconnu"
         ? `Celui qui me ramenait le plus près${nomM}, je ne le connaissais même pas.`
         : `Celui qui me ramenait le plus près${nomM}, je l'avais mis dans le bac « ${BAC[bac ?? "inconnu"]} ».`,

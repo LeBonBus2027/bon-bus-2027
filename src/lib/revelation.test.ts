@@ -65,3 +65,31 @@ describe("rejeu", () => {
     expect(r.passages.at(-1)?.index).toBe(99);
   });
 });
+
+describe("metaphore", () => {
+  const classement = [cand("a", 2), cand("b", 4), cand("c", 6), cand("d", 9), cand("e", 13)];
+  const tirages = [() => 0, () => 0.99];
+
+  it("part de la perception et décrit la direction, sans jugement sur le candidat", () => {
+    const interdits = /fiable|panne|nul|mauvais|incompétent|menteur|dangereu/i;
+    const cas: Record<string, Niveau>[] = [
+      { a: "adore", b: "bof", c: "bof", d: "pas", e: "jamais" },
+      { a: "jamais", b: "bof", c: "bof", d: "pas", e: "adore" },
+      { a: "inconnu", b: "bien", c: "bof", d: "pas", e: "adore" },
+      { a: "bien", b: "bof", c: "pas", d: "jamais", e: "adore" },
+      { a: "jamais", b: "jamais", c: "jamais", d: "jamais", e: "jamais" },
+    ];
+    for (const bacs of cas) for (const t of tirages) {
+      const m = reveler(classement, bacs, t).metaphore;
+      expect(m.length).toBeGreaterThan(20);
+      expect(m).not.toMatch(interdits);
+      expect(m).not.toMatch(/undefined|Quant à un|Quant à une/);
+    }
+  });
+
+  it("signale le demi-tour du plus beau bus", () => {
+    const m = reveler(classement, { a: "jamais", b: "bof", c: "bof", d: "pas", e: "adore" }, () => 0).metaphore;
+    expect(m).toContain("Tu le voyais comme une épave");
+    expect(m).toContain("Et le car de luxe ? Tu pensais que c'était le bon bus : il est parti dans l'autre sens.");
+  });
+});

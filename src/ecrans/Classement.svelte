@@ -1,6 +1,7 @@
 <script lang="ts">
   import { untrack } from "svelte";
   import Bus from "../lib/Bus.svelte";
+  import Photo from "../lib/Photo.svelte";
   import { candidats, selection, type Candidat } from "../lib/donnees";
   import { NIVEAUX, BAC, type Niveau } from "../lib/niveaux";
 
@@ -37,8 +38,13 @@
 
 {#if courant}
   <p class="discret petit" aria-live="polite">Candidat {index + 1} sur {ordre.length}</p>
-  <h1 tabindex="-1" bind:this={titre}>{courant.nom}</h1>
-  <p class="discret">{courant.parti}</p>
+  <div class="identite">
+    <Photo id={courant.id} taille={112} />
+    <div>
+      <h1 tabindex="-1" bind:this={titre}>{courant.nom}</h1>
+      <p class="discret">{courant.parti}</p>
+    </div>
+  </div>
 
   <p>Spontanément, sans réfléchir, il te fait quel effet ?</p>
   <div class="bacs" role="group" aria-label="Ton ressenti sur {courant.nom}">
@@ -66,6 +72,7 @@
         {#each dedans as c (c.id)}
           <li>
             <button onclick={() => (index = ordre.indexOf(c))}>
+              <Photo id={c.id} taille={56} />
               <svg viewBox="-34 -8 240 112" aria-hidden="true"><Bus niveau={n.cle} /></svg>
               <span>{c.nom}</span><span class="visually-hidden">, bac {BAC[n.cle]} : modifier</span>
             </button>
@@ -81,7 +88,7 @@
       <p class="discret petit">Ces candidats sont sous {selection.seuil} % dans la moyenne des sondages, ou n'y figurent pas. Ajoute ceux que tu veux voir partir de la gare.</p>
       <ul>
         {#each autres as c (c.id)}
-          <li><button class="discret" onclick={() => ajouter(c)}>+ {c.nom} <span>· {c.parti}</span></button></li>
+          <li><button class="discret" onclick={() => ajouter(c)}><Photo id={c.id} taille={40} /> + {c.nom} <span>· {c.parti}</span></button></li>
         {/each}
       </ul>
     </details>
@@ -91,6 +98,9 @@
 {/if}
 
 <style>
+  .identite { display: flex; align-items: center; gap: 16px; margin-bottom: 8px; }
+  .identite h1 { margin: 0 0 4px; }
+  .identite p { margin: 0; }
   .bacs { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin: 12px 0; }
   .bacs button, .gare button {
     display: flex; flex-direction: column; align-items: center; gap: 4px;
@@ -104,7 +114,7 @@
   .ajout { margin-top: 24px; }
   .ajout summary { cursor: pointer; font-weight: 600; min-height: 32px; }
   .ajout ul { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 6px; }
-  .ajout button { width: 100%; text-align: left; border-radius: var(--rayon); color: var(--encre); }
+  .ajout button { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; border-radius: var(--rayon); color: var(--encre); }
   .ajout button span { color: var(--discret); font-size: 15px; }
   .suite { margin-top: 24px; }
 </style>

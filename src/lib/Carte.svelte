@@ -9,6 +9,7 @@
 
 <script lang="ts">
   import Bus from "./Bus.svelte";
+  import { PHOTOS, urlPhoto } from "./Photo.svelte";
   import { avenue, BLOC, CANAL, COLS, dansGrille, GARE, HAUTEUR, LARGEUR, MAISON, PARC, positionBus, px, ROWS, RUES, TERMINUS } from "./ville";
 
   type Vue = [number, number, number, number];
@@ -174,9 +175,17 @@
   </g>
 
   {#each etiquettes as e (e.id)}
+    {@const url = urlPhoto(e.id)}
+    {@const cad = PHOTOS[e.id]?.cadrage ?? { zoom: 1, x: 50, y: 25 }}
+    {@const px0 = e.x - e.largeur / 2 + 18}
     <g class="etiquette" data-id={e.id}>
       <rect x={e.x - e.largeur / 2} y={e.y - 17} width={e.largeur} height="34" rx="17" fill={e.accent ? "#1a73e8" : "#fff"} stroke={e.id === selectionne ? "#e85d2a" : "#3c4043"} stroke-width={e.id === selectionne ? 3 : 1.2} />
-      <text x={e.x} y={e.y + 7} font-size="19" font-weight="600" text-anchor="middle" fill={e.accent ? "#fff" : "#202124"}>{e.texte}</text>
+      {#if url}
+        <clipPath id="photo-{e.id}"><circle cx={px0} cy={e.y} r="14" /></clipPath>
+        <image href={url} x={px0 - 14 * cad.zoom} y={e.y - 14 - 28 * (cad.zoom - 1) * (cad.y / 100)} width={28 * cad.zoom} height={28 * cad.zoom}
+          preserveAspectRatio="xMidYMin slice" clip-path="url(#photo-{e.id})" />
+      {/if}
+      <text x={e.x + (url ? 16 : 0)} y={e.y + 7} font-size="19" font-weight="600" text-anchor="middle" fill={e.accent ? "#fff" : "#202124"}>{e.texte}</text>
     </g>
   {/each}
 </svg>
