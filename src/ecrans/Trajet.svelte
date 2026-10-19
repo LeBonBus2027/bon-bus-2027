@@ -113,7 +113,9 @@
       });
     }
     for (const c of mesBus) distances[c.id] = trajets.get(c.id)!.distance;
-    statut = "Terminus, tout le monde descend. Déplace la carte et touche un bus pour savoir pourquoi il s'arrête là.";
+    statut = matchMedia("(pointer: coarse)").matches
+      ? "Terminus, tout le monde descend. Deux doigts pour déplacer la carte, touche un bus pour savoir pourquoi il s'arrête là."
+      : "Terminus, tout le monde descend. Fais glisser la carte et clique sur un bus pour savoir pourquoi il s'arrête là.";
     passer = false;
     phase = "fin";
     await tick();

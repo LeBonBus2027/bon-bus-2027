@@ -55,16 +55,16 @@
 {:else if courante}
   <div class="entete">
     <p class="etiquette-signal discret" aria-live="polite">Question {index + 1} sur {ordre.length} · {grandTheme(courante)}</p>
-    <svg class="maison" viewBox="0 0 60 56" aria-hidden="true">
-      <rect x="6" y="50" width="48" height="4" rx="1" fill="#0b1f3a" />
+    <svg class="maison" viewBox="0 0 60 56" aria-hidden="true" fill="currentColor">
+      <rect x="6" y="50" width="48" height="4" rx="1" fill="currentColor" />
       {#if progression > 0.1}<rect x="10" y="26" width="40" height="24" fill="#dfe5ec" />{/if}
-      {#if progression > 0.3}<rect x="25" y="36" width="10" height="14" rx="1" fill="#0b1f3a" />{/if}
+      {#if progression > 0.3}<rect x="25" y="36" width="10" height="14" rx="1" fill="currentColor" />{/if}
       {#if progression > 0.5}<rect x="14" y="31" width="8" height="7" fill="#a8d3e6" /><rect x="38" y="31" width="8" height="7" fill="#a8d3e6" />{/if}
-      {#if progression > 0.7}<path d="M4 28 L30 6 L56 28z" fill="#ffcd00" stroke="#0b1f3a" stroke-width="2" />{/if}
-      {#if progression > 0.85}<rect x="40" y="8" width="6" height="12" fill="#0b1f3a" />{/if}
+      {#if progression > 0.7}<path d="M4 28 L30 6 L56 28z" fill="#ffcd00" stroke="currentColor" stroke-width="2" />{/if}
+      {#if progression > 0.85}<rect x="40" y="8" width="6" height="12" fill="currentColor" />{/if}
     </svg>
   </div>
-  <div class="barre" aria-hidden="true"><div style:width="{progression * 100}%"></div></div>
+  <div class="barre" aria-hidden="true"><div style:transform="scaleX({progression})"></div></div>
 
   <h1 tabindex="-1" bind:this={titre} class="question">{courante.texte}</h1>
   {#if courante.aide}
@@ -101,11 +101,11 @@
   .entete { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; }
   .maison { width: 60px; height: 56px; flex: none; }
   .barre { height: 6px; background: var(--trait); border-radius: 3px; overflow: hidden; margin: 6px 0 4px; }
-  .barre div { height: 100%; background: var(--accent); transition: width 0.3s; }
+  .barre div { height: 100%; background: var(--accent); transform-origin: left; transition: transform 0.3s; }
   .question { font-size: clamp(22px, 5vw, 28px); }
   details { margin-bottom: 12px; color: var(--discret); }
   .choix { display: grid; gap: 8px; margin: 16px 0 12px; }
   .choix button { border-radius: var(--rayon); text-align: left; }
-  .choix button.actif { background: var(--nuit); color: #fff; }
-  .formats button { border: 2px solid var(--nuit); }
+  .choix button.actif { background: var(--encre); color: var(--fond); }
+  .formats button { border: 2px solid var(--contour); }
 </style>

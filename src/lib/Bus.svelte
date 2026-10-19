@@ -82,13 +82,14 @@
 {/if}
 
 <style>
-  .bouffee { fill: #9aa3ad; opacity: 0; transform-box: fill-box; transform-origin: center; animation: bouffee 1.8s ease-out infinite; }
+  .bouffee { fill: #9aa3ad; opacity: 0; transform-box: fill-box; transform-origin: center; animation: bouffee 1.8s ease-out 3; }
   .bouffee.sombre { fill: #5a5048; }
   @keyframes bouffee { 0% { transform: translate(0, 0) scale(0.4); opacity: 0.75; } 100% { transform: translate(-26px, -16px) scale(1.8); opacity: 0; } }
-  .etincelle { transform-box: fill-box; transform-origin: center; animation: scintille 1.8s ease-in-out infinite; }
+  .etincelle { transform-box: fill-box; transform-origin: center; animation: scintille 1.8s ease-in-out 3; }
   @keyframes scintille { 0%, 100% { transform: scale(0.85); } 50% { transform: scale(1.1); } }
-  .mouche { animation: bourdonne 1.2s linear infinite; }
+  .mouche { animation: bourdonne 1.2s linear 4; }
   @keyframes bourdonne { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(6px, -4px); } 50% { transform: translate(0, -8px); } 75% { transform: translate(-6px, -4px); } }
+  /* Décor animé 3 fois puis immobile : assez pour donner vie aux bus, sans mouvement permanent à l'écran. */
   @media (prefers-reduced-motion: reduce) {
     .bouffee, .etincelle, .mouche { animation: none; }
   }

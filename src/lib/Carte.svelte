@@ -26,7 +26,8 @@
     onChoisir?: (id: string) => void;
   } = $props();
 
-  // --- Navigation : glisser pour déplacer, pincer ou molette pour zoomer, toucher pour choisir un bus.
+  // --- Navigation. Souris : glisser pour déplacer, molette pour zoomer. Tactile : un doigt fait défiler la PAGE
+  // (on ne reste jamais coincé sur la carte), deux doigts déplacent et zooment la carte. Toucher = choisir un bus.
   let svg: SVGSVGElement | undefined = $state();
   const doigts = new Map<number, { x: number; y: number }>();
   let depart: { x: number; y: number; cible: string | null } | null = null;
@@ -58,12 +59,18 @@
     const avant = doigts.get(e.pointerId);
     if (!interactive || !avant) return;
     if (doigts.size === 1) {
-      const k = echelle();
-      vue = [vue[0] - (e.clientX - avant.x) * k, vue[1] - (e.clientY - avant.y) * k, vue[2], vue[3]];
+      if (e.pointerType === "touch") window.scrollBy(0, avant.y - e.clientY);
+      else {
+        const k = echelle();
+        vue = [vue[0] - (e.clientX - avant.x) * k, vue[1] - (e.clientY - avant.y) * k, vue[2], vue[3]];
+      }
       if (depart && Math.hypot(e.clientX - depart.x, e.clientY - depart.y) > 6) bouge = true;
     } else if (doigts.size === 2) {
       const [a, b] = [...doigts.values()];
       const autre = a === avant ? b! : a!;
+      // Déplacement du milieu des deux doigts, puis zoom selon l'écart entre eux.
+      const k = echelle();
+      vue = [vue[0] - ((e.clientX - avant.x) / 2) * k, vue[1] - ((e.clientY - avant.y) / 2) * k, vue[2], vue[3]];
       const d0 = Math.hypot(avant.x - autre.x, avant.y - autre.y), d1 = Math.hypot(e.clientX - autre.x, e.clientY - autre.y);
       if (d0 > 0 && d1 > 0) zoomer(d0 / d1, (e.clientX + autre.x) / 2, (e.clientY + autre.y) / 2);
       bouge = true;
@@ -112,6 +119,13 @@
     }
   }
   const troncons = [...amorces, ...RUES].map(([a, b]) => ({ a: px(a), b: px(b), grande: avenue(a, b) }));
+
+  // Performance : tout le décor tient en quelques tracés (au lieu de ~2 700 éléments redessinés à chaque image).
+  const segments = (grande: boolean) => troncons.filter(t => t.grande === grande).map(t => `M${t.a[0]} ${t.a[1]}L${t.b[0]} ${t.b[1]}`).join("");
+  const RUES_D = segments(false), AVENUES_D = segments(true);
+  const COTE = BLOC - 24, R = 6;
+  const PATES_D = pates.map(([x, y]) =>
+    `M${x + 12 + R} ${y + 12}h${COTE - 2 * R}a${R} ${R} 0 0 1 ${R} ${R}v${COTE - 2 * R}a${R} ${R} 0 0 1 ${-R} ${R}h${2 * R - COTE}a${R} ${R} 0 0 1 ${-R} ${-R}v${2 * R - COTE}a${R} ${R} 0 0 1 ${R} ${-R}z`).join("");
   const [tx, ty] = px(TERMINUS), [gx, gy] = px(GARE), [mx, my] = px(MAISON);
 
   const places = $derived(bus.map(b => ({ ...b, p: positionBus(b.ligne, b.d, b.voie) })));
@@ -119,19 +133,17 @@
 
 <svg bind:this={svg} viewBox={vue.map(n => n.toFixed(1)).join(" ")} style:aspect-ratio={ratio} class:interactive role="img" onpointerdown={appui} onpointermove={deplacement} onpointerup={relache} onpointercancel={relache} aria-label="Plan de ville : la gare au centre, ta maison en haut à droite, le terminus en bas à gauche">
   <rect x="-1000" y="-1000" width={LARGEUR + 2000} height={HAUTEUR + 2000} fill={C.sol} />
-  {#each pates as [x, y] (`${x},${y}`)}
-    <rect x={x + 12} y={y + 12} width={BLOC - 24} height={BLOC - 24} rx="6" fill={C.pate} />
-  {/each}
+  <path d={PATES_D} fill={C.pate} />
   <rect x={parcG + 12} y={parcH + 12} width={parcD - parcG - 24} height={parcB - parcH - 24} rx="10" fill={C.parc} />
   {#each arbres as [cx, cy] (`${cx}`)}<circle {cx} {cy} r="9" fill={C.arbre} />{/each}
   <rect x="-1000" y={canalY + 16} width={LARGEUR + 2000} height={BLOC - 32} fill={C.eau} />
 
-  {#each troncons as t, i (i)}
-    <line x1={t.a[0]} y1={t.a[1]} x2={t.b[0]} y2={t.b[1]} stroke={t.grande ? C.bordureAvenue : C.bordure} stroke-width={t.grande ? 26 : 21} stroke-linecap="round" />
-  {/each}
-  {#each troncons as t, i (i)}
-    <line x1={t.a[0]} y1={t.a[1]} x2={t.b[0]} y2={t.b[1]} stroke={t.grande ? C.avenue : C.rue} stroke-width={t.grande ? 22 : 17} stroke-linecap="round" />
-  {/each}
+  <g fill="none" stroke-linecap="round">
+    <path d={RUES_D} stroke={C.bordure} stroke-width="21" />
+    <path d={AVENUES_D} stroke={C.bordureAvenue} stroke-width="26" />
+    <path d={RUES_D} stroke={C.rue} stroke-width="17" />
+    <path d={AVENUES_D} stroke={C.avenue} stroke-width="22" />
+  </g>
 
   <g font-size="11" fill={C.nom} text-anchor="middle" aria-hidden="true">
     <text x={px([9, 5])[0]} y={px([9, 5])[1] + 4}>Avenue des Platanes</text>

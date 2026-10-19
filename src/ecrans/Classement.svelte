@@ -104,9 +104,9 @@
   .bacs { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin: 12px 0; }
   .bacs button, .gare button {
     display: flex; flex-direction: column; align-items: center; gap: 4px;
-    border-radius: var(--rayon); border-color: var(--trait); padding: 10px;
+    border-radius: var(--rayon); border-color: var(--trait); padding: 10px; background: var(--panneau); color: var(--marque);
   }
-  .bacs button { border: 2px solid var(--nuit); font-weight: 800; text-transform: uppercase; font-size: 15px; letter-spacing: 0.03em; }
+  .bacs button { background: var(--panneau); color: var(--marque); border: 2px solid var(--contour); font-weight: 800; text-transform: uppercase; font-size: 15px; letter-spacing: 0.03em; }
   .bacs button.actif { background: var(--jaune); }
   .bacs svg { width: 100%; max-width: 140px; height: auto; }
   .gare { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }

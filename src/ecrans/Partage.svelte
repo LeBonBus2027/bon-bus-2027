@@ -38,10 +38,11 @@
   // Simples liens vers les pages de partage des réseaux : aucun de leurs scripts n'est chargé ici.
   const reseaux = $derived([
     { nom: "WhatsApp", url: `https://wa.me/?text=${e(`${texte} ${lien}`)}` },
-    { nom: "Facebook", url: `https://www.facebook.com/sharer/sharer.php?u=${e(lien)}` },
+    // Facebook et LinkedIn refusent tout texte prérempli : on le copie au clic, il n'y a plus qu'à le coller.
+    { nom: "Facebook", url: `https://www.facebook.com/sharer/sharer.php?u=${e(lien)}`, copie: true },
     { nom: "X", url: `https://x.com/intent/post?text=${e(texte)}&url=${e(lien)}` },
     { nom: "Bluesky", url: `https://bsky.app/intent/compose?text=${e(`${texte} ${lien}`)}` },
-    { nom: "LinkedIn", url: `https://www.linkedin.com/sharing/share-offsite/?url=${e(lien)}` },
+    { nom: "LinkedIn", url: `https://www.linkedin.com/sharing/share-offsite/?url=${e(lien)}`, copie: true },
     { nom: "Telegram", url: `https://t.me/share/url?url=${e(lien)}&text=${e(texte)}` },
   ]);
 
@@ -120,6 +121,15 @@
     }
   }
 
+  /** Avant d'ouvrir Facebook ou LinkedIn : copie du texte (le lien, lui, est transmis au réseau). */
+  async function copierAvant(r: { copie?: boolean }) {
+    if (!r.copie) return;
+    try {
+      await navigator.clipboard.writeText(texte);
+      message = "Ton texte est copié : colle-le dans ta publication.";
+    } catch { /* presse-papiers indisponible (page non sécurisée) : le lien est partagé sans texte */ }
+  }
+
   async function copier() {
     try {
       await navigator.clipboard.writeText(`${texte} ${lien}`);
@@ -148,7 +158,7 @@
   <p><button class="principal" onclick={partager} disabled={enCours}>{enCours ? "Préparation…" : "Partager"}</button></p>
   <ul class="reseaux" aria-label="Partager sur un réseau">
     {#each reseaux as r (r.nom)}
-      <li><a class="reseau" href={r.url} target="_blank" rel="noopener noreferrer">{r.nom}</a></li>
+      <li><a class="reseau" href={r.url} target="_blank" rel="noopener noreferrer" onclick={() => copierAvant(r)}>{r.nom}</a></li>
     {/each}
     <li><button class="reseau" onclick={copier}>Copier le lien</button></li>
     <li><button class="reseau" onclick={telecharger}>Télécharger l'image</button></li>
@@ -165,7 +175,7 @@
   .reseaux { list-style: none; padding: 0; margin: 4px 0 12px; display: flex; flex-wrap: wrap; gap: 8px; }
   .reseau {
     display: inline-flex; align-items: center; min-height: 44px; padding: 8px 14px; border-radius: 999px;
-    border: 2px solid var(--nuit); background: #fff; color: var(--nuit); text-decoration: none; font-size: 16px; font-weight: 700;
+    border: 2px solid var(--contour); background: var(--fond); color: var(--encre); text-decoration: none; font-size: 16px; font-weight: 700;
   }
   label { display: inline-flex; align-items: center; gap: 8px; min-height: 48px; }
   input { width: 22px; height: 22px; }

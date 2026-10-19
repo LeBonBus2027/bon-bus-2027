@@ -17,7 +17,35 @@
   --lien: #1565c0;             /* contraste 5,7:1 sur blanc */
   --rouge: #c62828;
   --rayon: 8px;
+  --marque: #0b1f3a;           /* bleu nuit de marque : fonds du bandeau, texte sur jaune ; ne change pas en mode sombre */
+  --contour: var(--encre);     /* bordures des boutons et panneaux */
+  --panneau: #ffffff;          /* fond des cartes à bus (toujours clair, comme un panneau) */
+  --surligne: linear-gradient(transparent 58%, var(--jaune) 58%);
   color-scheme: light;
+}
+
+/* Mode sombre : suit le réglage du téléphone ou de l'ordinateur. Les bus et la carte restent sur fond clair. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fond: #0e1726;
+    --carte: #17243a;
+    --encre: #e9eef5;
+    --discret: #b4c0d0;
+    --trait: #33465f;
+    --lien: #8ab4ff;
+    --bleu: #8ab4ff;
+    --contour: #e9eef5;
+    --surligne: linear-gradient(transparent 84%, var(--jaune) 84%);
+    color-scheme: dark;
+  }
+}
+
+/* Contraste renforcé (réglage d'accessibilité du système) : plus de gris, bordures pleines. */
+@media (prefers-contrast: more) {
+  :root { --discret: var(--encre); --trait: var(--encre); }
+  button, .boite, .info { border-width: 3px; }
+  .info { border-color: var(--encre); }
+  .boite { border: 3px solid var(--encre); }
 }
 
 * { box-sizing: border-box; }
@@ -47,24 +75,29 @@ button {
   min-height: 48px;
   padding: 10px 18px;
   border-radius: 6px;
-  border: 2px solid var(--nuit);
+  border: 2px solid var(--contour);
   background: var(--fond);
-  color: var(--nuit);
+  color: var(--encre);
   font-weight: 700;
   cursor: pointer;
 }
 button.principal {
-  background: var(--jaune); border-color: var(--jaune); color: var(--nuit);
+  background: var(--jaune); border-color: var(--jaune); color: var(--marque);
   font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; padding: 12px 22px;
 }
-button.principal:hover:not(:disabled) { border-color: var(--nuit); }
+button.principal:hover:not(:disabled) { border-color: var(--contour); }
 button.discret { border-color: var(--trait); color: var(--discret); font-weight: 600; }
 button:disabled { opacity: 0.4; cursor: default; }
 button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px solid var(--bleu); outline-offset: 2px; }
+summary { cursor: pointer; }
 
 .boite { background: var(--carte); border-radius: var(--rayon); padding: 16px; }
-/* Encadré d'information : trait jaune à gauche, comme un panneau. */
-.info { background: var(--carte); border-left: 6px solid var(--jaune); padding: 10px 14px; border-radius: 0 var(--rayon) var(--rayon) 0; }
+/* Encadré d'information : pictogramme « i » rond, comme un panneau d'information voyageurs. */
+.info { display: flex; gap: 12px; align-items: flex-start; background: var(--carte); border: 2px solid var(--trait); border-radius: var(--rayon); padding: 10px 14px; }
+.info::before {
+  content: "i"; flex: none; width: 26px; height: 26px; border-radius: 50%; margin-top: 1px;
+  display: grid; place-items: center; background: var(--jaune); color: var(--marque); font-weight: 900; font-style: normal;
+}
 .discret { color: var(--discret); }
 .petit { font-size: 15.5px; }
 .rangee { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }

@@ -65,7 +65,7 @@
 <style>
   .message { font-size: 20px; font-weight: 600; margin-top: 16px; }
   .morale { font-weight: 800; }
-  .morale span { background: linear-gradient(transparent 58%, var(--jaune) 58%); }
+  .morale span { background: var(--surligne); }
   .tableau { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; font-size: 16.5px; background: var(--carte); border-radius: var(--rayon); }
   th { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; }
@@ -74,9 +74,14 @@
   td.qui { display: grid; grid-template-columns: 40px 1fr; column-gap: 10px; align-items: center; }
   td.qui :global(.photo) { grid-row: span 2; }
   .fin { margin-top: 28px; }
-  .metaphore { margin: 12px 0; padding: 12px 16px; border-left: 4px solid var(--accent); background: var(--carte); border-radius: 0 var(--rayon) var(--rayon) 0; font-size: 19px; font-style: italic; }
+  /* La métaphore s'affiche comme la girouette d'un bus : texte jaune à chasse fixe sur bleu nuit (contraste 11:1). */
+  .metaphore {
+    margin: 12px 0; padding: 14px 16px; border-radius: var(--rayon); background: var(--marque); color: var(--jaune);
+    font-family: ui-monospace, "Cascadia Mono", Consolas, "Courier New", monospace; font-size: 17px; font-weight: 700; line-height: 1.45;
+    box-shadow: inset 0 0 0 3px #13294a;
+  }
   .note { margin: 12px 0; }
   .pourquoi { display: block; margin-top: 4px; min-height: 40px; padding: 6px 12px; font-size: 15px; border-color: var(--trait); }
   .fin h2 { margin-top: 0; }
-  .bouton { display: inline-flex; align-items: center; min-height: 48px; padding: 10px 18px; border-radius: 999px; background: var(--nuit); color: var(--jaune); text-decoration: none; font-weight: 900; text-transform: uppercase; letter-spacing: 0.04em; }
+  .bouton { display: inline-flex; align-items: center; min-height: 48px; padding: 10px 18px; border-radius: 999px; background: var(--marque); color: var(--jaune); border: 2px solid var(--jaune); text-decoration: none; font-weight: 900; text-transform: uppercase; letter-spacing: 0.04em; }
 </style>

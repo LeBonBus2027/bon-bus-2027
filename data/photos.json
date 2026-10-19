@@ -33,7 +33,7 @@
     "auteur": "DeuxSevres79",
     "date": "2018-09-08",
     "page": "https://commons.wikimedia.org/wiki/File:Delphine_Batho_(cropped).png",
-    "local": "photos/batho.png"
+    "local": "photos/batho.jpg"
   },
   "bertrand": {
     "wikidata": "Q203793",
@@ -159,7 +159,7 @@
     "auteur": "AkramAmri",
     "date": "2026-07-01",
     "page": "https://commons.wikimedia.org/wiki/File:Fabien_Roussel.png",
-    "local": "photos/roussel.png",
+    "local": "photos/roussel.jpg",
     "cadrage": {
       "zoom": 1.9,
       "x": 50,

@@ -97,9 +97,9 @@
 </footer>
 
 <style>
-  .bandeau { background: var(--nuit); color: #fff; border-bottom: 4px solid var(--jaune); }
+  .bandeau { background: var(--marque); color: #fff; border-bottom: 4px solid var(--jaune); }
   .bandeau .interieur { max-width: 760px; margin: 0 auto; padding: 10px 16px; display: flex; align-items: center; gap: 10px; }
-  .pastille { width: 30px; height: 30px; border-radius: 50%; background: var(--jaune); color: var(--nuit); display: grid; place-items: center; font-weight: 900; }
+  .pastille { width: 30px; height: 30px; border-radius: 50%; background: var(--jaune); color: var(--marque); display: grid; place-items: center; font-weight: 900; }
   .bandeau .nom { margin-left: auto; font-weight: 800; }
   footer { max-width: 760px; margin: 0 auto; padding: 16px 16px 32px; color: var(--discret); font-size: 15px; border-top: 4px solid var(--jaune); }
   footer p { margin-bottom: 4px; }
