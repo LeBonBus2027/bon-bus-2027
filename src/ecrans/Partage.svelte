@@ -115,7 +115,7 @@
     if (!r.copie) return;
     try {
       await navigator.clipboard.writeText(texte);
-      message = "Ton texte est copié : colle-le dans ta publication.";
+      message = "Ton texte est copié : colle-le dans ta publication.";
     } catch { /* presse-papiers indisponible (page non sécurisée) : le lien est partagé sans texte */ }
   }
 
@@ -144,8 +144,12 @@
 
 <div class="boite partage">
   <h2>Partage ton trajet</h2>
-  {#if apercu}<img class="apercu" src={apercu} alt="Aperçu de ton ticket de bus à partager : ton plus beau bus et celui qui te ramène, tels que tu les imaginais et tels qu'ils sont vraiment pour toi." />{/if}
+  {#if apercu}<img class="apercu" src={apercu} alt="Aperçu de ton ticket de bus à partager : ton plus beau bus et celui qui te ramène, tels que tu les imaginais et tels qu'ils sont vraiment pour toi." />{/if}
   <p><button class="principal" onclick={partager} disabled={enCours}>{enCours ? "Préparation…" : "Partager"}</button></p>
+  <label><input type="checkbox" bind:checked={avecNoms} /> Afficher les noms des candidats</label>
+  <p class="discret petit">Sans les noms, ton partage ne dévoile pas tes préférences : il donne juste envie d'essayer. Le lien mène à l'accueil, jamais à ton résultat.</p>
+  <details>
+    <summary>Choisir un réseau, copier le lien ou télécharger l'image</summary>
   <ul class="reseaux" aria-label="Partager sur un réseau">
     {#each reseaux as r (r.nom)}
       <li><a class="reseau" href={r.url} target="_blank" rel="noopener noreferrer" onclick={() => copierAvant(r)}>{r.nom}</a></li>
@@ -153,8 +157,7 @@
     <li><button class="reseau" onclick={copier}>Copier le lien</button></li>
     <li><button class="reseau" onclick={telecharger}>Télécharger l'image</button></li>
   </ul>
-  <label><input type="checkbox" bind:checked={avecNoms} /> Afficher les noms des candidats</label>
-  <p class="discret petit">Sans les noms, ton partage ne dévoile pas tes préférences : il donne juste envie d'essayer. Le lien mène à l'accueil, jamais à ton résultat.</p>
+  </details>
   {#if message}<p role="status">{message}</p>{/if}
   <div class="cache" aria-hidden="true">
     {#each NIVEAUX as n (n.cle)}
@@ -174,6 +177,7 @@
   label { display: inline-flex; align-items: center; gap: 8px; min-height: 48px; }
   input { width: 22px; height: 22px; }
   .partage p:last-of-type { margin-bottom: 0; }
+  summary { min-height: 48px; padding: 12px 0; font-weight: 700; color: var(--lien); }
   .cache { position: absolute; width: 1px; height: 1px; overflow: hidden; left: -9999px; }
-  .apercu { display: block; width: 100%; max-width: 360px; height: auto; margin: 0 auto 14px; border-radius: var(--rayon); box-shadow: 0 6px 20px rgb(11 31 58 / 0.18); }
+  .apercu { display: block; width: 100%; max-width: 220px; height: auto; margin: 0 auto 14px; border-radius: var(--rayon); box-shadow: 0 6px 20px rgb(11 31 58 / 0.18); }
 </style>

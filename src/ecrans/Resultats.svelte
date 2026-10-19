@@ -8,6 +8,12 @@
   import AvantApres from "./AvantApres.svelte";
   import Partage from "./Partage.svelte";
 
+  /*
+   * Page récap, dans l'ordre de priorité du message (pour qu'il ne se dilue pas) :
+   * 1. le verdict (quel bus te rapproche le plus) ; 2. l'écart entre ton ressenti et la réalité (peinture grattée) ;
+   * 3. la leçon (girouette, morale) ; 4. l'appel à voter ; 5. le partage ; 6. le détail bus par bus ;
+   * 7. pour aller plus loin (affiner, priorités, rétroviseur), replié ou en retrait ; 8. recommencer.
+   */
   let { revelation, classement, bacs, horsSelection, onPourquoi, onRecommencer, onAffiner, restantes = 0, outils }: {
     revelation: Revelation;
     classement: readonly Classe<Candidat>[];
@@ -19,40 +25,25 @@
     onAffiner?: (mode: "cible" | "tout") => void;
     /** Nombre de questions pas encore posées. */
     restantes?: number;
-    /** Outils interactifs (priorités, rétroviseur), placés juste après le résultat. */
+    /** Outils interactifs (priorités, rétroviseur), dans « Pour aller plus loin ». */
     outils?: Snippet;
     onRecommencer: () => void;
   } = $props();
 </script>
 
+<h2 id="titre-recap" class="etiquette-signal recap" tabindex="-1">Ton récap</h2>
 <p class="message">{revelation.message}</p>
 
-<AvantApres focus={revelation.focus} {bacs} {onPourquoi} />
+<AvantApres focus={revelation.focus} {bacs} {onPourquoi} compact />
 
-{#if onAffiner && restantes > 0}
-  {@const minutes = Math.max(1, Math.round((restantes * 6) / 60))}
-  <div class="boite affiner">
-    <h2>Affine ton résultat</h2>
-    <p>Tu n'as répondu qu'à une partie des questions : ton résultat peut encore bouger.</p>
-    {#if restantes > 10}
-      <p class="rangee">
-        <button class="principal" onclick={() => onAffiner("cible")}>10 questions ciblées</button>
-        <button onclick={() => onAffiner("tout")}>Les {restantes} restantes</button>
-      </p>
-      <p class="discret petit">Les 10 questions ciblées sont celles où tes bus les plus proches ne sont pas d'accord entre eux (environ 1 minute). Les {restantes} restantes donnent le résultat le plus précis (environ {minutes} minutes).</p>
-    {:else}
-      <p><button class="principal" onclick={() => onAffiner("tout")}>Les {restantes} dernières questions</button></p>
-    {/if}
-  </div>
-{/if}
-<blockquote class="metaphore">{revelation.metaphore}</blockquote>
+<blockquote class="girouette">{revelation.metaphore}</blockquote>
 <p class="morale"><span>Aucun bus ne te dépose pile devant chez toi. Prends celui qui te rapproche le plus.</span></p>
 
-{@render outils?.()}
-
-{#if horsSelection}
-  <p class="boite note">À noter : le bus de {horsSelection.candidat.nom}, que tu n'avais pas ajouté à ta gare, se serait arrêté encore plus près ({arrets(horsSelection.trajet.arrets)}).</p>
-{/if}
+<div class="boite conduis">
+  <h2>Maintenant, c'est toi qui conduis</h2>
+  <p>Ton vote, c'est une voix de plus dans le bus qui te rapproche le plus. Avant tout, vérifie ton inscription sur les listes électorales : ça prend deux minutes.</p>
+  <p><a class="bouton" href="https://www.service-public.fr/particuliers/vosdroits/R51788" target="_blank" rel="noopener noreferrer">Vérifier mon inscription</a></p>
+</div>
 
 <Partage {revelation} {bacs} />
 
@@ -81,20 +72,35 @@
   </table>
 </div>
 <p class="discret petit">Le nom de chaque candidat mène à ses positions sourcées sur MonVote2027.</p>
+{#if horsSelection}
+  <p class="info petit">Le bus de {horsSelection.candidat.nom}, que tu n'avais pas ajouté à ta gare, se serait arrêté encore plus près ({arrets(horsSelection.trajet.arrets)}).</p>
+{/if}
 
-<div class="boite fin">
-  <h2>Maintenant, c'est toi qui conduis</h2>
-  <p>Ton vote, c'est une voix de plus dans le bus qui te rapproche le plus. Avant tout, vérifie ton inscription sur les listes électorales : ça prend deux minutes.</p>
-  <p class="rangee">
-    <a class="bouton" href="https://www.service-public.fr/particuliers/vosdroits/R51788" target="_blank" rel="noopener noreferrer">Vérifier mon inscription</a>
-    <button class="discret" onclick={onRecommencer}>Recommencer</button>
-  </p>
-</div>
+<h2>Pour aller plus loin</h2>
+{#if onAffiner && restantes > 0}
+  {@const minutes = Math.max(1, Math.round((restantes * 6) / 60))}
+  <div class="boite affiner">
+    <h3>Affine ton résultat</h3>
+    <p>Tu n'as répondu qu'à une partie des questions : ton résultat peut encore bouger.</p>
+    {#if restantes > 10}
+      <p class="rangee">
+        <button class="principal" onclick={() => onAffiner("cible")}>10 questions ciblées</button>
+        <button onclick={() => onAffiner("tout")}>Les {restantes} restantes</button>
+      </p>
+      <p class="discret petit">Les 10 questions ciblées sont celles où tes bus les plus proches ne sont pas d'accord entre eux (environ 1 minute). Les {restantes} restantes donnent le résultat le plus précis (environ {minutes} minutes).</p>
+    {:else}
+      <p><button class="principal" onclick={() => onAffiner("tout")}>Les {restantes} dernières questions</button></p>
+    {/if}
+  </div>
+{/if}
+{@render outils?.()}
+
+<p class="recommencer"><button class="discret" onclick={onRecommencer}>Recommencer</button></p>
 
 <style>
-  .message { font-size: 20px; font-weight: 600; margin-top: 16px; }
-  .morale { font-weight: 800; }
-  .morale span { background: var(--surligne); }
+  .recap { margin: 20px 0 4px; color: var(--discret); }
+  .recap:focus { outline: none; }
+  .message { font-size: 20px; font-weight: 600; }
   .tableau { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; font-size: 16.5px; background: var(--carte); border-radius: var(--rayon); }
   th { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; }
@@ -102,18 +108,13 @@
   td span { display: block; }
   td.qui { display: grid; grid-template-columns: 40px 1fr; column-gap: 10px; align-items: center; }
   td.qui :global(.photo) { grid-row: span 2; }
-  .fin { margin-top: 28px; }
-  .affiner { margin: 16px 0; }
-  .affiner h2 { margin-top: 0; }
+  .conduis { margin: 20px 0 16px; border-left: 6px solid var(--jaune); }
+  .conduis h2 { margin-top: 0; }
+  .conduis p:last-child { margin-bottom: 0; }
+  .affiner { margin: 0 0 10px; }
+  .affiner h3 { margin: 0 0 6px; font-size: 19px; }
   .affiner p:last-child { margin-bottom: 0; }
-  /* La métaphore s'affiche comme la girouette d'un bus : texte jaune à chasse fixe sur bleu nuit (contraste 11:1). */
-  .metaphore {
-    margin: 12px 0; padding: 14px 16px; border-radius: var(--rayon); background: var(--marque); color: var(--jaune);
-    font-family: ui-monospace, "Cascadia Mono", Consolas, "Courier New", monospace; font-size: 17px; font-weight: 700; line-height: 1.45;
-    box-shadow: inset 0 0 0 3px #13294a;
-  }
-  .note { margin: 12px 0; }
   .pourquoi { display: block; margin-top: 4px; min-height: 40px; padding: 6px 12px; font-size: 15px; border-color: var(--trait); }
-  .fin h2 { margin-top: 0; }
+  .recommencer { margin-top: 24px; }
   .bouton { display: inline-flex; align-items: center; min-height: 48px; padding: 10px 18px; border-radius: 999px; background: var(--marque); color: var(--jaune); border: 2px solid var(--jaune); text-decoration: none; font-weight: 900; text-transform: uppercase; letter-spacing: 0.04em; }
 </style>

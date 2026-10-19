@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { auditAccessibilite, classerTout, repondreTout, surveiller } from "./outils";
+import { allerAuRecap, auditAccessibilite, classerTout, repondreTout, surveiller } from "./outils";
 
 test.describe("parcours complet", () => {
   test("version rapide, de l'accueil au message final", async ({ page }) => {
@@ -24,7 +24,17 @@ test.describe("parcours complet", () => {
     await expect(page.getByText("20 réponses sur 20")).toBeVisible();
     await page.getByRole("button", { name: "Faire partir les bus" }).click();
 
+    // Diaporama dans le cadre de la carte : le verdict, la peinture grattée, la morale.
     await expect(page.getByRole("heading", { name: "Terminus !" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Tout le monde descend" })).toBeVisible();
+    await auditAccessibilite(page, "diaporama");
+    await page.getByRole("button", { name: "Gratter la peinture" }).click();
+    await expect(page.getByRole("heading", { name: "On a gratté la peinture" })).toBeFocused();
+    await page.getByRole("button", { name: "Suivant", exact: true }).click();
+    await expect(page.locator(".diapo .girouette")).not.toBeEmpty();
+    await page.getByRole("button", { name: "Voir mon récap" }).click();
+    await expect(page.getByRole("heading", { name: "Ton récap" })).toBeFocused();
+    await expect(page.locator(".diapo")).toHaveCount(0);
     await expect(page.getByRole("heading", { name: "On a gratté la peinture" })).toBeVisible();
     await expect(page.locator(".message")).not.toBeEmpty();
     await expect(page.getByText("Aucun bus ne te dépose pile devant chez toi.")).toBeVisible();
@@ -46,6 +56,7 @@ test.describe("parcours complet", () => {
     await page.getByRole("button", { name: /Version rapide/ }).click();
     await repondreTout(page, 20);
     await page.getByRole("button", { name: "Faire partir les bus" }).click();
+    await allerAuRecap(page);
     await page.getByRole("button", { name: "Recommencer" }).click();
     await expect(page.getByRole("heading", { name: "Quel bus te ramène chez toi ?" })).toBeVisible();
     await page.getByRole("button", { name: "C'est parti" }).click();
@@ -138,6 +149,7 @@ test("chaque bus explique sa position, depuis le tableau ou la carte", async ({ 
   await page.getByRole("button", { name: /Version rapide/ }).click();
   await repondreTout(page, 20);
   await page.getByRole("button", { name: "Faire partir les bus" }).click();
+  await allerAuRecap(page);
   await expect(page.getByRole("heading", { name: "Terminus !" })).toBeVisible();
 
   // Depuis le tableau.
@@ -172,8 +184,31 @@ test("le mode sombre reste lisible (contrastes WCAG AA)", async ({ page }) => {
   await auditAccessibilite(page, "question sombre");
   await repondreTout(page, 20);
   await page.getByRole("button", { name: "Faire partir les bus" }).click();
+  await allerAuRecap(page);
   await expect(page.getByRole("heading", { name: "Terminus !" })).toBeVisible();
   await auditAccessibilite(page, "résultats sombres");
+});
+
+test("le bouton de l'accueil force le mode sombre ou clair", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "light" });
+  await page.goto("/");
+  const fond = () => page.evaluate(() => getComputedStyle(document.body).backgroundColor);
+  const bouton = page.getByRole("button", { name: "Mode sombre" });
+  expect(await fond()).toBe("rgb(255, 255, 255)");
+  await expect(bouton).toHaveAttribute("aria-pressed", "false");
+  await bouton.click();
+  await expect(bouton).toHaveAttribute("aria-pressed", "true");
+  expect(await fond()).toBe("rgb(14, 23, 38)");
+  await auditAccessibilite(page, "accueil sombre forcé");
+  // Le choix tient pour tout le parcours…
+  await page.getByRole("button", { name: "C'est parti" }).click();
+  expect(await fond()).toBe("rgb(14, 23, 38)");
+  // … et l'emporte sur le réglage du système dans les deux sens.
+  await page.emulateMedia({ colorScheme: "dark" });
+  await page.goto("/");
+  await expect(page.getByRole("button", { name: "Mode sombre" })).toHaveAttribute("aria-pressed", "true");
+  await page.getByRole("button", { name: "Mode sombre" }).click();
+  expect(await fond()).toBe("rgb(255, 255, 255)");
 });
 
 test("le ticket de bus à partager s'affiche en aperçu, avec ou sans noms", async ({ page }) => {
@@ -186,6 +221,7 @@ test("le ticket de bus à partager s'affiche en aperçu, avec ou sans noms", asy
   await page.getByRole("button", { name: /Version rapide/ }).click();
   await repondreTout(page, 20);
   await page.getByRole("button", { name: "Faire partir les bus" }).click();
+  await allerAuRecap(page);
   const apercu = page.getByRole("img", { name: /Aperçu de ton ticket/ });
   await expect(apercu).toBeVisible();
   const taille = await apercu.evaluate((img: HTMLImageElement) => [img.naturalWidth, img.naturalHeight]);
@@ -248,6 +284,8 @@ test("le rétroviseur rejoue le trajet étape par étape", async ({ page }) => {
   await page.getByRole("button", { name: /Version rapide/ }).click();
   await repondreTout(page, 20);
   await page.getByRole("button", { name: "Faire partir les bus" }).click();
+  await allerAuRecap(page);
+  await page.getByText("Revoir le trajet question par question").click();
   const curseur = page.getByLabel("Rétroviseur : rejoue le trajet");
   await expect(curseur).toHaveValue("20");
   await curseur.fill("0");
@@ -272,6 +310,8 @@ test("« Ce qui compte pour toi » : jusqu'à 3 thèmes qui comptent double", as
   await page.getByRole("button", { name: /Version rapide/ }).click();
   await repondreTout(page, 20);
   await page.getByRole("button", { name: "Faire partir les bus" }).click();
+  await allerAuRecap(page);
+  await page.getByText("Certains sujets comptent plus pour toi ?").click();
   const groupe = page.getByRole("group", { name: "Ce qui compte pour toi" });
   const themes = groupe.getByRole("button");
   await expect(themes.first()).toBeVisible();
@@ -296,6 +336,7 @@ test("« Affine ton résultat » : 10 questions ciblées de plus après la versi
   await page.getByRole("button", { name: /Version rapide/ }).click();
   await repondreTout(page, 20);
   await page.getByRole("button", { name: "Faire partir les bus" }).click();
+  await allerAuRecap(page);
   await expect(page.getByRole("heading", { name: "Affine ton résultat" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Les 80 restantes" })).toBeVisible();
   await page.getByRole("button", { name: "10 questions ciblées" }).click();
@@ -303,8 +344,10 @@ test("« Affine ton résultat » : 10 questions ciblées de plus après la versi
   await repondreTout(page, 10);
   await expect(page.getByText("30 réponses sur 30")).toBeVisible();
   await page.getByRole("button", { name: "Faire partir les bus" }).click();
+  await allerAuRecap(page);
   await expect(page.getByRole("heading", { name: "Terminus !" })).toBeVisible();
   // Le rétroviseur rejoue maintenant thème par thème (plus de 20 questions).
+  await page.getByText("Revoir le trajet question par question").click();
   await expect(page.getByLabel("Rétroviseur : rejoue le trajet")).not.toHaveValue("30");
   expect(problemes).toEqual([]);
 });
@@ -318,11 +361,13 @@ test("« Affine ton résultat » : répondre à toutes les questions restantes",
   await page.getByRole("button", { name: /Version rapide/ }).click();
   await repondreTout(page, 20);
   await page.getByRole("button", { name: "Faire partir les bus" }).click();
+  await allerAuRecap(page);
   await page.getByRole("button", { name: "Les 80 restantes" }).click();
   await expect(page.getByText(/Question 21 sur 100/)).toBeVisible();
   await repondreTout(page, 80);
   await expect(page.getByText("100 réponses sur 100")).toBeVisible();
   await page.getByRole("button", { name: "Faire partir les bus" }).click();
+  await allerAuRecap(page);
   await expect(page.getByRole("heading", { name: "Terminus !" })).toBeVisible();
   // Plus aucune question à ajouter : le bloc disparaît.
   await expect(page.getByRole("heading", { name: "Affine ton résultat" })).toHaveCount(0);

@@ -24,9 +24,13 @@
   color-scheme: light;
 }
 
-/* Mode sombre : suit le réglage du téléphone ou de l'ordinateur. Les bus et la carte restent sur fond clair. */
+/*
+ * Mode sombre : suit le réglage du téléphone ou de l'ordinateur, sauf si le bouton de l'accueil l'a forcé
+ * (data-theme="light" ou "dark" sur <html>, gardé en mémoire le temps de la visite seulement).
+ * Les bus et la carte restent sur fond clair.
+ */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --fond: #0e1726;
     --carte: #17243a;
     --encre: #e9eef5;
@@ -38,6 +42,18 @@
     --surligne: linear-gradient(transparent 84%, var(--jaune) 84%);
     color-scheme: dark;
   }
+}
+:root[data-theme="dark"] {
+  --fond: #0e1726;
+  --carte: #17243a;
+  --encre: #e9eef5;
+  --discret: #b4c0d0;
+  --trait: #33465f;
+  --lien: #8ab4ff;
+  --bleu: #8ab4ff;
+  --contour: #e9eef5;
+  --surligne: linear-gradient(transparent 84%, var(--jaune) 84%);
+  color-scheme: dark;
 }
 
 /* Contraste renforcé (réglage d'accessibilité du système) : plus de gris, bordures pleines. */
@@ -102,6 +118,16 @@ summary { cursor: pointer; }
 .petit { font-size: 15.5px; }
 .rangee { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* La morale de fin, surlignée en jaune. */
+.morale { font-weight: 800; }
+.morale span { background: var(--surligne); }
+/* La métaphore s'affiche comme la girouette d'un bus : texte jaune à chasse fixe sur bleu nuit (contraste 11:1). */
+.girouette {
+  margin: 12px 0; padding: 14px 16px; border-radius: var(--rayon); background: var(--marque); color: var(--jaune);
+  font-family: ui-monospace, "Cascadia Mono", Consolas, "Courier New", monospace; font-size: 17px; font-weight: 700; line-height: 1.45;
+  box-shadow: inset 0 0 0 3px #13294a;
+}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: 0.01ms !important; }

@@ -1,5 +1,6 @@
 <script lang="ts">
   import Bus from "../lib/Bus.svelte";
+  import { choisirTheme, themeActuel } from "../lib/theme";
 
   /** noms = null : parcours solo ; deux prénoms : mode duo (chacun son tour sur le même téléphone). */
   let { onCommencer }: { onCommencer: (noms: [string, string] | null) => void } = $props();
@@ -7,11 +8,28 @@
   let duo = $state(false);
   let nom1 = $state("");
   let nom2 = $state("");
+  let theme = $state(themeActuel());
+  // Tant qu'on n'a rien forcé, le bouton suit le réglage du système, même s'il change pendant la visite.
+  $effect(() => {
+    const systeme = matchMedia("(prefers-color-scheme: dark)");
+    const suivre = () => { theme = themeActuel(); };
+    systeme.addEventListener("change", suivre);
+    return () => systeme.removeEventListener("change", suivre);
+  });
+  function basculerTheme() {
+    theme = themeActuel() === "sombre" ? "clair" : "sombre";
+    choisirTheme(theme);
+  }
   const propre = (n: string, defaut: string) => n.trim().slice(0, 24) || defaut;
 </script>
 
 <div class="hero">
-  <p class="etiquette-signal">Présidentielle 2027</p>
+  <div class="haut">
+    <p class="etiquette-signal">Présidentielle 2027</p>
+    <button class="theme" onclick={basculerTheme} aria-pressed={theme === "sombre"}>
+      <span aria-hidden="true">{theme === "sombre" ? "☀" : "☾"}</span> Mode sombre
+    </button>
+  </div>
   <h1 tabindex="-1">Quel bus te ramène chez toi ?</h1>
 </div>
 
@@ -51,6 +69,10 @@
 <style>
   .hero { background: var(--marque); color: #fff; margin: -20px -16px 16px; padding: 24px 16px 22px; border-bottom: 6px solid var(--jaune); }
   .hero p { color: var(--jaune); margin: 0 0 6px; }
+  .haut { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .haut p { margin: 0; }
+  .theme { min-height: 44px; padding: 6px 14px; font-size: 15px; border-radius: 999px; background: transparent; color: #fff; border-color: rgb(255 255 255 / 0.6); }
+  .theme[aria-pressed="true"] { background: var(--jaune); border-color: var(--jaune); color: var(--marque); }
   .hero h1 { margin: 0; }
   .trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 8px 0 16px; background: var(--panneau); border-radius: var(--rayon); padding: 6px; }
   .trio svg { width: 100%; height: auto; }

@@ -38,3 +38,9 @@ export async function repondreTout(page: Page, nb: number) {
     await page.getByRole("group", { name: "Ta réponse" }).getByRole("button", { name: reponses[(i * 3) % 5], exact: true }).click();
   }
 }
+
+/** Saute le diaporama de fin pour arriver directement sur la page récap. */
+export async function allerAuRecap(page: Page) {
+  await page.getByRole("button", { name: "Passer au récap" }).click();
+  await expect(page.getByRole("heading", { name: "Ton récap" })).toBeVisible();
+}

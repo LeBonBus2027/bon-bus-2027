@@ -13,6 +13,7 @@
   import { melanger } from "../lib/aleatoire";
   import { niveauReel, rejeu, reveler } from "../lib/revelation";
   import { aPied, GARE, HAUTEUR, LARGEUR, lignes, MAISON, positionBus, px } from "../lib/ville";
+  import Diaporama from "./Diaporama.svelte";
   import Explication from "./Explication.svelte";
   import Priorites from "./Priorites.svelte";
   import Resultats from "./Resultats.svelte";
@@ -66,7 +67,9 @@
 
   let distances = $state<Record<string, number>>(Object.fromEntries(mesBus.map(c => [c.id, R0])));
   let vue = $state<Vue>(PORTRAIT ? cadrer([px(MAISON)[0], px(GARE)[0]], [px(MAISON)[1], px(GARE)[1]], 70, MIN_SUIVI, RATIO) : [0, 0, LARGEUR, HAUTEUR]);
-  let phase = $state<"pret" | "route" | "fin">("pret");
+  // diapo : révélation pas à pas dans la fenêtre de la carte ; fin : carte libre et page récap.
+  let phase = $state<"pret" | "route" | "diapo" | "fin">("pret");
+  const arrive = $derived(phase === "diapo" || phase === "fin");
   let statut = $state("Tous les bus attendent à la gare.");
   let selectionne = $state<string | null>(null);
   // Après l'arrivée, la peinture est grattée : chaque bus prend l'apparence de ce qu'il vaut vraiment pour toi.
@@ -80,11 +83,11 @@
 
   const bus = $derived(mesBus.map(c => ({
     id: c.id, niveau: gratte ? niveauReel(trajets.get(c.id)!.arrets) : bacs[c.id] ?? "inconnu", ligne: ligneDe(c.id), d: distances[c.id]!,
-    voie: voie(c.id), attenue: phase === "fin" && !enAvant.has(c.id),
+    voie: voie(c.id), attenue: arrive && !enAvant.has(c.id),
   })));
 
   // À l'arrivée : étiquettes et trajet à pied pour les bus mis en avant, plus celui que tu as touché.
-  const montres = $derived(phase !== "fin" || enMouvement || (curseur !== null && curseur < NB_ETAPES) ? [] : classement.filter(c => enAvant.has(c.candidat.id) || c.candidat.id === selectionne));
+  const montres = $derived(!arrive || enMouvement || (curseur !== null && curseur < NB_ETAPES) ? [] : classement.filter(c => enAvant.has(c.candidat.id) || c.candidat.id === selectionne));
   const pietons = $derived<Pieton[]>(montres.map(c => ({
     id: c.candidat.id, points: aPied(ligneDe(c.candidat.id), c.trajet.distance), accent: c === revelation.meilleur,
   })));
@@ -108,17 +111,33 @@
       await deplacer(id => trajets.get(id)!.etapes[p.index] ?? R0, duree, PORTRAIT ? () => suivre() : undefined);
     }
     for (const c of mesBus) distances[c.id] = trajets.get(c.id)!.distance;
-    statut = matchMedia("(pointer: coarse)").matches
-      ? "Terminus, tout le monde descend. Deux doigts pour déplacer la carte, touche un bus pour savoir pourquoi il s'arrête là."
-      : "Terminus, tout le monde descend. Fais glisser la carte et clique sur un bus pour savoir pourquoi il s'arrête là.";
     passer = false;
-    phase = "fin";
+    statut = "";
+    phase = "diapo";
     await tick();
+    // Le diaporama s'ouvre sous la ville : on remonte le cadre en haut de l'écran pour voir les deux.
+    document.querySelector(".carte")?.scrollIntoView({ behavior: mouvementReduit() ? "auto" : "smooth", block: "start" });
     await recentrer();
-    // Un temps pour voir les bus tels que tu les imaginais… puis on gratte la peinture.
-    await new Promise(fin => setTimeout(fin, mouvementReduit() ? 0 : 900));
+  }
+
+  /** Diaporama : on gratte la peinture, et on laisse le temps de voir les bus changer sur la carte. */
+  async function gratter() {
     gratte = true;
-    statut = `On a gratté la peinture : chaque bus montre maintenant ce qu'il vaut vraiment pour toi, selon l'endroit où il s'arrête. ${statut.slice(statut.indexOf(".") + 2)}`;
+    await new Promise(fin => setTimeout(fin, mouvementReduit() ? 0 : 1400));
+  }
+
+  /** Fin du diaporama : la carte devient libre et la page récap s'affiche. */
+  async function terminer() {
+    gratte = true;
+    phase = "fin";
+    statut = matchMedia("(pointer: coarse)").matches
+      ? "Chaque bus montre ce qu'il vaut vraiment pour toi. Deux doigts pour déplacer la carte, touche un bus pour savoir pourquoi il s'arrête là."
+      : "Chaque bus montre ce qu'il vaut vraiment pour toi. Fais glisser la carte et clique sur un bus pour savoir pourquoi il s'arrête là.";
+    await tick();
+    const recap = document.getElementById("titre-recap");
+    recap?.focus({ preventScroll: true });
+    recap?.scrollIntoView({ behavior: mouvementReduit() ? "auto" : "smooth", block: "start" });
+    await recentrer();
   }
 
   /** Caméra : cadre la maison, la gare et tous les bus, en suivant doucement leur progression. */
@@ -183,7 +202,7 @@
   });
 </script>
 
-<h1 tabindex="-1">{phase === "fin" ? "Terminus !" : "Le grand départ"}</h1>
+<h1 tabindex="-1">{arrive ? "Terminus !" : "Le grand départ"}</h1>
 <div class="boite carte">
   <Carte {bus} bind:vue ratio={RATIO} {pietons} {etiquettes} interactive={phase === "fin"} {selectionne} onChoisir={choisir} />
   {#if phase === "fin"}
@@ -192,6 +211,9 @@
       <button onclick={() => (vue = zoomer(vue, 1.4, RATIO))} aria-label="Dézoomer">−</button>
       <button onclick={recentrer} aria-label="Recentrer sur chez toi">⌂</button>
     </div>
+  {/if}
+  {#if phase === "diapo"}
+    <Diaporama {revelation} {bacs} {gratte} onGratter={gratter} onFin={terminer} />
   {/if}
 </div>
 <p class="rangee statut">
@@ -210,8 +232,14 @@
   <Resultats {revelation} {classement} {bacs} {horsSelection} onPourquoi={choisir} {onRecommencer}
     onAffiner={onAffiner ? affiner : undefined} restantes={restantes.length}>
     {#snippet outils()}
-    <Priorites themes={THEMES} bind:prioritaires max={MAX_PRIORITES} onChange={glisser} />
-    <Retroviseur bind:curseur passages={r.passages} ordre={r.ordre} {reponses} {trajets} bus={mesBus} {parId} onRejouer={rejouer} />
+    <details class="outil">
+      <summary>Certains sujets comptent plus pour toi ?</summary>
+      <Priorites themes={THEMES} bind:prioritaires max={MAX_PRIORITES} onChange={glisser} />
+    </details>
+    <details class="outil">
+      <summary>Revoir le trajet question par question</summary>
+      <Retroviseur bind:curseur passages={r.passages} ordre={r.ordre} {reponses} {trajets} bus={mesBus} {parId} onRejouer={rejouer} />
+    </details>
     {/snippet}
   </Resultats>
 {/if}
@@ -221,4 +249,8 @@
   .commandes { position: absolute; right: 8px; top: 8px; display: flex; flex-direction: column; gap: 6px; }
   .commandes button { width: 48px; min-height: 48px; padding: 0; font-size: 22px; line-height: 1; box-shadow: 0 1px 4px rgb(0 0 0 / 0.15); }
   .statut { justify-content: space-between; color: var(--discret); margin-top: 8px; min-height: 48px; }
+  /* Outils repliés de la page récap : ils ne s'ouvrent que si on en a envie. */
+  .outil { border: 2px solid var(--trait); border-radius: var(--rayon); margin: 0 0 10px; background: var(--carte); }
+  .outil summary { min-height: 48px; padding: 12px 14px; font-weight: 700; }
+  .outil :global(.boite) { margin: 0; padding-top: 4px; }
 </style>
