@@ -26,6 +26,9 @@
 <p>À la fin, la distance vaut {R0} × (1 − somme des pas ÷ 2n), où n est le nombre de questions répondues. Un bus d'accord avec toi sur tout, à la même intensité, arrive devant ta porte ; un bus opposé sur tout finit au terminus, {2 * R0} arrêts plus loin. Les questions passées ne comptent pas. Il faut au moins {MIN_REPONSES} réponses.</p>
 <p>Si un candidat n'a pas de position sur plus de {Math.round((1 - COUVERTURE_MIN) * 100)} % des questions auxquelles tu as répondu, son résultat porte la mention « position incomplète ».</p>
 
+<h2>Ce qui compte pour toi</h2>
+<p>À l'arrivée, tu peux choisir jusqu'à 3 grands thèmes qui comptent double : chaque question de ces thèmes pèse alors deux pas au lieu d'un, pour tous les candidats de la même façon. La distance devient {R0} × (1 − somme des pas pondérés ÷ 2 × somme des poids). Sans thème choisi, on retrouve exactement la règle de base. MonVote2027 propose un réglage du même esprit sur sa page de résultats.</p>
+
 <h2>Pourquoi nos résultats peuvent différer de MonVote2027</h2>
 <p>MonVote2027 calcule un pourcentage avec une formule linéaire. Nous utilisons leur tableau de concordance qualitative, qui distingue mieux « plutôt pour » de « plutôt contre ». Le classement peut donc légèrement différer. Pour ne pas afficher deux chiffres contradictoires, nous affichons des arrêts plutôt que leur pourcentage.</p>
 

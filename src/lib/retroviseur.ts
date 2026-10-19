@@ -25,7 +25,7 @@ export interface Mouvement { id: string; pas: number }
 export function mouvements(trajets: ReadonlyMap<string, Trajet>, passages: readonly Passage[], k: number): Mouvement[] {
   return [...trajets.entries()]
     .map(([id, t]) => {
-      const n = t.etapes.length || 1;
+      const n = t.poids || t.etapes.length || 1;
       const ecart = distanceA(t, passages, k - 1) - distanceA(t, passages, k);
       return { id, pas: Math.round((ecart * 2 * n) / R0) };
     })

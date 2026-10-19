@@ -3,7 +3,7 @@
   import Carte, { type Etiquette, type Pieton } from "../lib/Carte.svelte";
   import { tirageCrypto } from "../lib/aleatoire";
   import { classer, R0, trajet, type Reponse } from "../lib/calcul";
-  import { candidats, positions, questions } from "../lib/donnees";
+  import { candidats, grandTheme, positions, questions } from "../lib/donnees";
   import type { Niveau } from "../lib/niveaux";
   import { arrets, niveauReel, rejeu, reveler } from "../lib/revelation";
   import { placer } from "../lib/etiquettes";
@@ -29,19 +29,33 @@
   const LIGNES = lignes(candidats.map(c => c.id));   // toujours les 21 : chaque candidat garde sa ligne
   const parId = new Map(questions.map(q => [q.id, q]));
 
-  // Tout est calculé une fois au départ (les réponses ne changent plus) : l'animation ne fait que rejouer ce résultat.
+  // Les réponses ne changent plus : l'animation ne fait que rejouer le résultat.
   // Le calcul porte sur tous les candidats, pour signaler un candidat non ajouté qui t'aurait déposé plus près.
-  const { r, classement, revelation, horsSelection } = untrack(() => {
-    const r = rejeu(ordre, reponses, parId);
-    const tous = classer(candidats, c => trajet(r.ordre, reponses, positions[c.id] ?? {}), tirageCrypto);
+  const r = untrack(() => rejeu(ordre, reponses, parId));
+  const mesBus = untrack(() => candidats.filter(c => c.id in bacs));
+  // Tirés une fois pour toutes : ni le départage des ex-aequo ni la métaphore ne changent quand on modifie ses priorités.
+  const CLES = new Map(candidats.map(c => [c.id, tirageCrypto()]));
+  const GRAINE_METAPHORE = tirageCrypto();
+
+  // « Ce qui compte pour toi » : jusqu'à 3 grands thèmes dont les questions comptent double.
+  const THEMES = [...new Set(r.ordre.map(q => grandTheme(parId.get(q)!)))];
+  const MAX_PRIORITES = 3;
+  let prioritaires = $state<string[]>([]);
+
+  const calcul = $derived.by(() => {
+    const poids = (q: string) => (prioritaires.includes(grandTheme(parId.get(q)!)) ? 2 : 1);
+    let i = 0;
+    const tous = classer(candidats, c => trajet(r.ordre, reponses, positions[c.id] ?? {}, poids), () => CLES.get(candidats[i++]!.id)!);
     const classement = tous.filter(c => c.candidat.id in bacs);
     const autre = tous.find(c => !(c.candidat.id in bacs));
     const horsSelection = autre && autre.trajet.distance < classement[0]!.trajet.distance ? autre : undefined;
-    return { r, classement, revelation: reveler(classement, bacs), horsSelection };
+    return { classement, revelation: reveler(classement, bacs, () => GRAINE_METAPHORE), horsSelection };
   });
-  const mesBus = classement.map(c => c.candidat);
-  const trajets = new Map(classement.map(c => [c.candidat.id, c.trajet]));
-  const enAvant = new Set(revelation.focus.map(f => f.candidat.id));
+  const classement = $derived(calcul.classement);
+  const revelation = $derived(calcul.revelation);
+  const horsSelection = $derived(calcul.horsSelection);
+  const trajets = $derived(new Map(classement.map(c => [c.candidat.id, c.trajet])));
+  const enAvant = $derived(new Set(revelation.focus.map(f => f.candidat.id)));
   const voies = new Map(mesBus.map((c, i) => [c.id, ((i % 5) - 2) * 3]));
   const ligneDe = (id: string) => LIGNES[id]!;
 
@@ -55,6 +69,7 @@
   let passer = false;
   // Rétroviseur : null = position finale ; k = rejouer l'état après la k-ième étape (0 = départ).
   let curseur = $state<number | null>(null);
+  let enMouvement = $state(false);
   const NB_ETAPES = r.passages.length;
 
   const bus = $derived(mesBus.map(c => ({
@@ -63,7 +78,7 @@
   })));
 
   // À l'arrivée : étiquettes et trajet à pied pour les bus mis en avant, plus celui que tu as touché.
-  const montres = $derived(phase !== "fin" || (curseur !== null && curseur < NB_ETAPES) ? [] : classement.filter(c => enAvant.has(c.candidat.id) || c.candidat.id === selectionne));
+  const montres = $derived(phase !== "fin" || enMouvement || (curseur !== null && curseur < NB_ETAPES) ? [] : classement.filter(c => enAvant.has(c.candidat.id) || c.candidat.id === selectionne));
   const pietons = $derived<Pieton[]>(montres.map(c => ({
     id: c.candidat.id, points: aPied(ligneDe(c.candidat.id), c.trajet.distance), accent: c === revelation.meilleur,
   })));
@@ -166,6 +181,22 @@
     vue = [x + (w - nw) / 2, y + (h - nh) / 2, nw, nh];
   }
 
+  /** Coche ou décoche un sujet prioritaire (ou remet tout à égalité) : les bus glissent vers leurs nouvelles positions. */
+  function basculer(theme: string) {
+    prioritaires = prioritaires.includes(theme) ? prioritaires.filter(t => t !== theme) : [...prioritaires, theme].slice(0, MAX_PRIORITES);
+    glisser();
+  }
+
+  async function glisser() {
+    curseur = null;
+    const depart = { ...distances };
+    enMouvement = true;
+    await animer(700, t => {
+      for (const c of mesBus) distances[c.id] = depart[c.id]! + (trajets.get(c.id)!.distance - depart[c.id]!) * t;
+    });
+    enMouvement = false;
+  }
+
   function rejouer(k: number) {
     curseur = Math.max(0, Math.min(NB_ETAPES, k));
     for (const c of mesBus) distances[c.id] = distanceA(trajets.get(c.id)!, r.passages, curseur);
@@ -221,6 +252,20 @@
 </p>
 
 {#if phase === "fin"}
+  <div class="priorites boite">
+    <h2 class="etiquette-signal" id="titre-priorites">Ce qui compte pour toi</h2>
+    <p>Choisis jusqu'à {MAX_PRIORITES} sujets qui comptent double. Les bus bougent en direct.</p>
+    <div class="themes" role="group" aria-labelledby="titre-priorites">
+      {#each THEMES as t (t)}
+        {@const actif = prioritaires.includes(t)}
+        <button class:actif aria-pressed={actif} disabled={!actif && prioritaires.length >= MAX_PRIORITES} onclick={() => basculer(t)}>{t}</button>
+      {/each}
+    </div>
+    {#if prioritaires.length}
+      <p class="discret petit">Ces sujets comptent double : {prioritaires.join(", ")}. <button class="lien" onclick={() => { prioritaires = []; glisser(); }}>Tout remettre à égalité</button></p>
+    {/if}
+  </div>
+
   <div class="retroviseur boite">
     <label for="retroviseur" class="etiquette-signal">Rétroviseur : rejoue le trajet</label>
     <div class="curseur">
@@ -246,6 +291,13 @@
   .carte { padding: 0; overflow: hidden; position: relative; }
   .commandes { position: absolute; right: 8px; top: 8px; display: flex; flex-direction: column; gap: 6px; }
   .commandes button { width: 48px; min-height: 48px; padding: 0; font-size: 22px; line-height: 1; box-shadow: 0 1px 4px rgb(0 0 0 / 0.15); }
+  .priorites { margin: 4px 0 12px; }
+  .priorites h2 { margin: 0 0 4px; }
+  .priorites p { margin: 0 0 8px; }
+  .themes { display: flex; flex-wrap: wrap; gap: 6px; }
+  .themes button { min-height: 44px; padding: 6px 12px; font-size: 15px; border-radius: 999px; }
+  .themes button.actif { background: var(--jaune); border-color: var(--jaune); color: var(--marque); }
+  .lien { min-height: 32px; padding: 0; border: none; background: none; color: var(--lien); text-decoration: underline; font-weight: 600; font-size: inherit; }
   .retroviseur { margin: 4px 0 14px; }
   .retroviseur p { margin: 8px 0 0; }
   .curseur { display: flex; align-items: center; gap: 8px; margin-top: 6px; }

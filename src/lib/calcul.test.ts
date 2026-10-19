@@ -101,3 +101,27 @@ describe("classer", () => {
     for (const n of Object.values(premiers)) expect(n / 6000).toBeGreaterThan(0.3);
   });
 });
+
+describe("trajet pondéré (« Ce qui compte pour toi »)", () => {
+  const qs = ["q1", "q2"];
+  const reponses = { q1: 2, q2: 2 } as Record<string, Reponse>;
+  const positions = { q1: 2, q2: -2 } as Record<string, Position>;
+
+  it("sans pondération, redonne exactement la règle de base", () => {
+    expect(trajet(qs, reponses, positions, () => 1).distance).toBe(trajet(qs, reponses, positions).distance);
+    expect(trajet(qs, reponses, positions).distance).toBe(R0);   // +2 puis −2 : retour à la gare
+  });
+
+  it("une question qui compte double tire le bus de son côté", () => {
+    const plusProche = trajet(qs, reponses, positions, q => (q === "q1" ? 2 : 1));
+    const plusLoin = trajet(qs, reponses, positions, q => (q === "q2" ? 2 : 1));
+    expect(plusProche.distance).toBeLessThan(R0);
+    expect(plusLoin.distance).toBeGreaterThan(R0);
+    expect(plusProche.distance + plusLoin.distance).toBeCloseTo(2 * R0);
+  });
+
+  it("reste entre la porte et le terminus", () => {
+    const t = trajet(qs, { q1: 2, q2: 2 }, { q1: 2, q2: 2 }, () => 3);
+    expect(t.distance).toBe(0);
+  });
+});

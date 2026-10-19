@@ -38,6 +38,8 @@ export interface Trajet {
   /** Part des questions répondues sur lesquelles le candidat a une position. */
   couverture: number;
   incomplet: boolean;
+  /** Somme des poids des questions répondues (= leur nombre sans pondération). */
+  poids?: number;
 }
 
 /**
@@ -45,30 +47,32 @@ export interface Trajet {
  * @param ordre identifiants des questions dans l'ordre de rejeu
  * @param reponses réponses de l'utilisateur par question
  * @param positions positions du candidat par question
+ * @param poids poids de chaque question (« Ce qui compte pour toi ») ; 1 par défaut, ce qui redonne la règle de base
  */
 export function trajet(
   ordre: readonly string[],
   reponses: Readonly<Record<string, Reponse>>,
   positions: Readonly<Record<string, Position>>,
+  poids: (q: string) => number = () => 1,
 ): Trajet {
   const repondues = ordre.filter(q => (reponses[q] ?? null) !== null);
-  const n = repondues.length;
-  if (n === 0) return { etapes: [], distance: R0, arrets: R0, couverture: 0, incomplet: true };
+  const n = repondues.reduce((s, q) => s + poids(q), 0);
+  if (repondues.length === 0) return { etapes: [], distance: R0, arrets: R0, couverture: 0, incomplet: true, poids: 0 };
 
   let somme = 0;
   let couvertes = 0;
   const etapes = repondues.map(q => {
     const p = positions[q] ?? null;
     if (p !== null) couvertes++;
-    somme += pas(reponses[q] ?? null, p);
+    somme += pas(reponses[q] ?? null, p) * poids(q);
     return distanceDepuisSomme(somme, n);
   });
   const distance = distanceDepuisSomme(somme, n);
-  const couverture = couvertes / n;
-  return { etapes, distance, arrets: Math.round(distance), couverture, incomplet: couverture < COUVERTURE_MIN };
+  const couverture = couvertes / repondues.length;
+  return { etapes, distance, arrets: Math.round(distance), couverture, incomplet: couverture < COUVERTURE_MIN, poids: n };
 }
 
-/** r = R0 × (1 − Σpas ÷ 2n), calculé en une fois pour éviter toute dérive d'arrondi. */
+/** r = R0 × (1 − Σ(pas × poids) ÷ 2·Σpoids), calculé en une fois pour éviter toute dérive d'arrondi. */
 function distanceDepuisSomme(somme: number, n: number): number {
   return R0 * (1 - somme / (2 * n));
 }

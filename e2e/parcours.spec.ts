@@ -261,3 +261,27 @@ test("le rétroviseur rejoue le trajet étape par étape", async ({ page }) => {
   await auditAccessibilite(page, "rétroviseur");
   expect(problemes).toEqual([]);
 });
+
+test("« Ce qui compte pour toi » : jusqu'à 3 thèmes qui comptent double", async ({ page }) => {
+  const problemes = surveiller(page);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await page.getByRole("button", { name: "C'est parti" }).click();
+  await classerTout(page);
+  await page.getByRole("button", { name: /place aux questions/ }).click();
+  await page.getByRole("button", { name: /Version rapide/ }).click();
+  await repondreTout(page, 20);
+  await page.getByRole("button", { name: "Faire partir les bus" }).click();
+  const groupe = page.getByRole("group", { name: "Ce qui compte pour toi" });
+  const themes = groupe.getByRole("button");
+  await expect(themes.first()).toBeVisible();
+  expect(await themes.count()).toBeGreaterThan(3);
+  for (let i = 0; i < 3; i++) await themes.nth(i).click();
+  for (let i = 0; i < 3; i++) await expect(themes.nth(i)).toHaveAttribute("aria-pressed", "true");
+  await expect(themes.nth(3)).toBeDisabled();
+  await expect(page.getByText(/Ces sujets comptent double/)).toBeVisible();
+  await auditAccessibilite(page, "priorités");
+  await page.getByRole("button", { name: "Tout remettre à égalité" }).click();
+  await expect(groupe.locator("[aria-pressed=true]")).toHaveCount(0);
+  expect(problemes).toEqual([]);
+});
