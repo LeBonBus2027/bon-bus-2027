@@ -1,12 +1,15 @@
 <script lang="ts">
+  import { untrack } from "svelte";
   import { tirerQuestions } from "../lib/tirage";
   import { MIN_REPONSES, type Reponse } from "../lib/calcul";
   import { grandTheme, questions } from "../lib/donnees";
 
-  let { reponses = $bindable(), ordre = $bindable(), format = $bindable(), onFini }: {
+  let { reponses = $bindable(), ordre = $bindable(), format = $bindable(), debut = 0, onFini }: {
     reponses: Record<string, Reponse>;
     ordre: string[];
     format: 20 | 100 | null;
+    /** Question où reprendre (après « Affine ton résultat », on reprend après les questions déjà posées). */
+    debut?: number;
     onFini: () => void;
   } = $props();
 
@@ -18,7 +21,7 @@
     { valeur: -2, libelle: "Pas du tout d'accord" },
   ];
 
-  let index = $state(0);
+  let index = $state(untrack(() => debut));
   let titre: HTMLHeadingElement | undefined = $state();
   const parId = new Map(questions.map(q => [q.id, q]));
   const courante = $derived(parId.get(ordre[index] ?? ""));

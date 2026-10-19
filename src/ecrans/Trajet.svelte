@@ -1,26 +1,31 @@
 <script lang="ts">
   import { onMount, tick, untrack } from "svelte";
-  import Carte, { type Etiquette, type Pieton } from "../lib/Carte.svelte";
+  import Carte, { type Pieton } from "../lib/Carte.svelte";
   import { tirageCrypto } from "../lib/aleatoire";
+  import { animer, mouvementReduit } from "../lib/animation";
   import { classer, R0, trajet, type Reponse } from "../lib/calcul";
+  import { cadrer, entre, zoomer, type Vue } from "../lib/camera";
   import { candidats, grandTheme, positions, questions } from "../lib/donnees";
+  import { etiquettesPour } from "../lib/etiquettesCarte";
   import type { Niveau } from "../lib/niveaux";
-  import { arrets, niveauReel, rejeu, reveler } from "../lib/revelation";
-  import { placer } from "../lib/etiquettes";
+  import { distanceA } from "../lib/retroviseur";
+  import { questionsPourAffiner } from "../lib/affiner";
+  import { niveauReel, rejeu, reveler } from "../lib/revelation";
   import { aPied, GARE, HAUTEUR, LARGEUR, lignes, MAISON, positionBus, px } from "../lib/ville";
   import Explication from "./Explication.svelte";
-  import { distanceA, libelleReponse, mouvements } from "../lib/retroviseur";
-  import { urlPhoto } from "../lib/Photo.svelte";
+  import Priorites from "./Priorites.svelte";
   import Resultats from "./Resultats.svelte";
+  import Retroviseur from "./Retroviseur.svelte";
 
-  let { bacs, reponses, ordre, onRecommencer }: {
+  let { bacs, reponses, ordre, onRecommencer, onAffiner }: {
     bacs: Record<string, Niveau>;
     reponses: Record<string, Reponse>;
     ordre: string[];
     onRecommencer: () => void;
+    /** Reçoit les 10 questions choisies pour départager les bus les plus proches. */
+    onAffiner?: (ids: string[]) => void;
   } = $props();
 
-  type Vue = [number, number, number, number];
   // Sur mobile, cadre en portrait qui suit les bus ; sur grand écran, toute la ville d'un coup d'œil.
   const PORTRAIT = matchMedia("(max-width: 600px)").matches;
   const RATIO = PORTRAIT ? 0.8 : LARGEUR / HAUTEUR;
@@ -29,8 +34,6 @@
   const LIGNES = lignes(candidats.map(c => c.id));   // toujours les 21 : chaque candidat garde sa ligne
   const parId = new Map(questions.map(q => [q.id, q]));
 
-  // Les réponses ne changent plus : l'animation ne fait que rejouer le résultat.
-  // Le calcul porte sur tous les candidats, pour signaler un candidat non ajouté qui t'aurait déposé plus près.
   const r = untrack(() => rejeu(ordre, reponses, parId));
   const mesBus = untrack(() => candidats.filter(c => c.id in bacs));
   // Tirés une fois pour toutes : ni le départage des ex-aequo ni la métaphore ne changent quand on modifie ses priorités.
@@ -58,9 +61,10 @@
   const enAvant = $derived(new Set(revelation.focus.map(f => f.candidat.id)));
   const voies = new Map(mesBus.map((c, i) => [c.id, ((i % 5) - 2) * 3]));
   const ligneDe = (id: string) => LIGNES[id]!;
+  const voie = (id: string) => voies.get(id)!;
 
   let distances = $state<Record<string, number>>(Object.fromEntries(mesBus.map(c => [c.id, R0])));
-  let vue = $state<Vue>(PORTRAIT ? cadrer([px(MAISON)[0], px(GARE)[0]], [px(MAISON)[1], px(GARE)[1]], 70, MIN_SUIVI) : [0, 0, LARGEUR, HAUTEUR]);
+  let vue = $state<Vue>(PORTRAIT ? cadrer([px(MAISON)[0], px(GARE)[0]], [px(MAISON)[1], px(GARE)[1]], 70, MIN_SUIVI, RATIO) : [0, 0, LARGEUR, HAUTEUR]);
   let phase = $state<"pret" | "route" | "fin">("pret");
   let statut = $state("Tous les bus attendent à la gare.");
   let selectionne = $state<string | null>(null);
@@ -71,10 +75,11 @@
   let curseur = $state<number | null>(null);
   let enMouvement = $state(false);
   const NB_ETAPES = r.passages.length;
+  const arreter = () => passer;
 
   const bus = $derived(mesBus.map(c => ({
     id: c.id, niveau: gratte ? niveauReel(trajets.get(c.id)!.arrets) : bacs[c.id] ?? "inconnu", ligne: ligneDe(c.id), d: distances[c.id]!,
-    voie: voies.get(c.id)!, attenue: phase === "fin" && !enAvant.has(c.id),
+    voie: voie(c.id), attenue: phase === "fin" && !enAvant.has(c.id),
   })));
 
   // À l'arrivée : étiquettes et trajet à pied pour les bus mis en avant, plus celui que tu as touché.
@@ -82,40 +87,15 @@
   const pietons = $derived<Pieton[]>(montres.map(c => ({
     id: c.candidat.id, points: aPied(ligneDe(c.candidat.id), c.trajet.distance), accent: c === revelation.meilleur,
   })));
-  const etiquettes = $derived<Etiquette[]>(placerEtiquettes(montres));
+  const etiquettes = $derived(etiquettesPour(montres, ligneDe, voie, revelation.meilleur.candidat.id));
 
-  function placerEtiquettes(liste: typeof classement): Etiquette[] {
-    const infos = liste.map(f => {
-      const p = positionBus(ligneDe(f.candidat.id), f.trajet.distance, voies.get(f.candidat.id)!);
-      // Nom de famille seulement : pastilles plus courtes, donc zoom plus serré (le tableau garde les noms complets).
-      const nom = f.candidat.nom.slice(f.candidat.nom.indexOf(" ") + 1);
-      const texte = `${nom} · ${arrets(f.trajet.arrets)}`;
-      return { id: f.candidat.id, x: p.x, y: p.y, largeur: texte.length * 10.4 + 26 + (urlPhoto(f.candidat.id) ? 32 : 0), texte };
-    });
-    const [mx, my] = px(MAISON), [gx, gy] = px(GARE);
-    const places = placer(infos, [
-      { x1: mx - 60, y1: my - 60, x2: mx + 60, y2: my + 34 },
-      { x1: gx - 20, y1: gy - 40, x2: gx + 140, y2: gy + 20 },
-    ]);
-    return infos.map((info, i) => ({
-      id: info.id, x: places[i]!.x, y: places[i]!.y, largeur: info.largeur, texte: info.texte,
-      cible: { x: info.x, y: info.y }, accent: info.id === revelation.meilleur.candidat.id,
-    }));
-  }
-
-  const reduit = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const doux = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
-  function animer(ms: number, pas: (t: number) => void): Promise<void> {
-    return new Promise(fin => {
-      if (passer || reduit()) { pas(1); fin(); return; }
-      const t0 = performance.now();
-      const image = (now: number) => {
-        const t = Math.min(1, (now - t0) / ms);
-        pas(doux(t));
-        if (t < 1 && !passer) requestAnimationFrame(image); else { pas(1); fin(); }
-      };
-      requestAnimationFrame(image);
-    });
+  /** Déplace tous les bus vers des distances cibles, en douceur. */
+  async function deplacer(cible: (id: string) => number, ms: number, chaqueImage?: () => void) {
+    const depart = { ...distances };
+    await animer(ms, t => {
+      for (const c of mesBus) distances[c.id] = depart[c.id]! + (cible(c.id) - depart[c.id]!) * t;
+      chaqueImage?.();
+    }, arreter);
   }
 
   async function partir() {
@@ -124,14 +104,7 @@
     for (const p of r.passages) {
       if (passer) break;
       statut = p.libelle;
-      const depart = { ...distances };
-      await animer(duree, t => {
-        for (const c of mesBus) {
-          const but = trajets.get(c.id)!.etapes[p.index] ?? R0;
-          distances[c.id] = depart[c.id]! + (but - depart[c.id]!) * t;
-        }
-        if (PORTRAIT) suivre();
-      });
+      await deplacer(id => trajets.get(id)!.etapes[p.index] ?? R0, duree, PORTRAIT ? () => suivre() : undefined);
     }
     for (const c of mesBus) distances[c.id] = trajets.get(c.id)!.distance;
     statut = matchMedia("(pointer: coarse)").matches
@@ -142,7 +115,7 @@
     await tick();
     await recentrer();
     // Un temps pour voir les bus tels que tu les imaginais… puis on gratte la peinture.
-    await new Promise(r => setTimeout(r, reduit() ? 0 : 900));
+    await new Promise(fin => setTimeout(fin, mouvementReduit() ? 0 : 900));
     gratte = true;
     statut = `On a gratté la peinture : chaque bus montre maintenant ce qu'il vaut vraiment pour toi, selon l'endroit où il s'arrête. ${statut.slice(statut.indexOf(".") + 2)}`;
   }
@@ -153,17 +126,7 @@
       const p = positionBus(ligneDe(c.id), distances[c.id]!, 0);
       return [p.x, p.y] as [number, number];
     })];
-    const cible = cadrer(pts.map(p => p[0]), pts.map(p => p[1]), 70, MIN_SUIVI);
-    vue = vue.map((v, i) => v + (cible[i]! - v) * lissage) as Vue;
-  }
-
-  /** Plus petit cadre aux proportions de la carte qui contient ces points. */
-  function cadrer(xs: number[], ys: number[], marge: number, largeurMin: number): Vue {
-    let w = Math.max(...xs) - Math.min(...xs) + 2 * marge, h = Math.max(...ys) - Math.min(...ys) + 2 * marge;
-    if (w / h < RATIO) w = h * RATIO; else h = w / RATIO;
-    if (w < largeurMin) { w = largeurMin; h = w / RATIO; }
-    const cx = (Math.max(...xs) + Math.min(...xs)) / 2, cy = (Math.max(...ys) + Math.min(...ys)) / 2;
-    return [cx - w / 2, cy - h / 2, w, h];
+    vue = entre(vue, cadrer(pts.map(p => p[0]), pts.map(p => p[1]), 70, MIN_SUIVI, RATIO), lissage);
   }
 
   /** Recadre sur ta maison et les bus étiquetés. */
@@ -171,29 +134,21 @@
     const [mx, my] = px(MAISON);
     const xs = [mx - 70, mx + 70, ...etiquettes.flatMap(e => [e.x - e.largeur / 2, e.x + e.largeur / 2, e.cible.x - 34, e.cible.x + 34])];
     const ys = [my - 70, my + 40, ...etiquettes.flatMap(e => [e.y - 20, e.y + 20, e.cible.y - 24, e.cible.y + 24])];
-    const de = [...vue] as Vue, vers = cadrer(xs, ys, 30, MIN_ZOOM);
-    await animer(900, t => { vue = de.map((v, i) => v + (vers[i]! - v) * t) as Vue; });
+    const de = [...vue] as Vue, vers = cadrer(xs, ys, 30, MIN_ZOOM, RATIO);
+    await animer(900, t => { vue = entre(de, vers, t); }, arreter);
   }
 
-  function zoom(f: number) {
-    const [x, y, w, h] = vue;
-    const nw = Math.min(2400, Math.max(240, w * f)), nh = nw / RATIO;
-    vue = [x + (w - nw) / 2, y + (h - nh) / 2, nw, nh];
-  }
-
-  /** Coche ou décoche un sujet prioritaire (ou remet tout à égalité) : les bus glissent vers leurs nouvelles positions. */
-  function basculer(theme: string) {
-    prioritaires = prioritaires.includes(theme) ? prioritaires.filter(t => t !== theme) : [...prioritaires, theme].slice(0, MAX_PRIORITES);
-    glisser();
-  }
-
+  /** Après un changement de priorités : les bus glissent vers leurs nouvelles positions. */
+  let carteMontree = false;
   async function glisser() {
+    // Au premier changement, on remonte à la carte pour voir les bus bouger (une seule fois, pour ne pas gêner ensuite).
+    if (!carteMontree) {
+      carteMontree = true;
+      document.querySelector(".carte")?.scrollIntoView({ behavior: mouvementReduit() ? "auto" : "smooth", block: "start" });
+    }
     curseur = null;
-    const depart = { ...distances };
     enMouvement = true;
-    await animer(700, t => {
-      for (const c of mesBus) distances[c.id] = depart[c.id]! + (trajets.get(c.id)!.distance - depart[c.id]!) * t;
-    });
+    await deplacer(id => trajets.get(id)!.distance, 700);
     enMouvement = false;
   }
 
@@ -202,29 +157,16 @@
     for (const c of mesBus) distances[c.id] = distanceA(trajets.get(c.id)!, r.passages, curseur);
   }
 
-  const nomCourt = (id: string) => { const n = mesBus.find(c => c.id === id)?.nom ?? id; return n.slice(n.indexOf(" ") + 1); };
-  const pasTexte = (p: number) => `${Math.abs(p)} pas`;
-  /** Ce qui s'est passé à l'étape affichée par le rétroviseur. */
-  const etapeTexte = $derived.by(() => {
-    const k = curseur ?? NB_ETAPES;
-    if (k === 0) return "Départ : tous les bus attendent à la gare.";
-    const p = r.passages[k - 1]!;
-    const q = NB_ETAPES === r.ordre.length ? parId.get(r.ordre[p.index]!) : undefined;
-    const quoi = q ? `« ${q.texte} » Ta réponse : ${libelleReponse(reponses[q.id])}.` : `${p.libelle}.`;
-    const m = mouvements(trajets, r.passages, k);
-    const avance = m[0], recule = m.at(-1);
-    const bouge = [
-      avance && avance.pas > 0 ? `Le bus de ${nomCourt(avance.id)} avance le plus (${pasTexte(avance.pas)}).` : "",
-      recule && recule.pas < 0 ? `Celui de ${nomCourt(recule.id)} recule le plus (${pasTexte(recule.pas)}).` : "",
-    ].filter(Boolean).join(" ") || "Aucun bus ne bouge.";
-    return `Étape ${k} sur ${NB_ETAPES} : ${quoi} ${bouge}`;
-  });
+  /** 10 questions de plus, là où les 3 bus les plus proches divergent le plus. */
+  function affiner() {
+    onAffiner?.(questionsPourAffiner(ordre, classement.slice(0, 3).map(c => c.candidat.id), positions, questions));
+  }
 
   /** Touché sur la carte ou « Pourquoi ? » dans le tableau. */
   async function choisir(id: string) {
     selectionne = id;
     await tick();
-    document.getElementById("titre-explication")?.scrollIntoView({ behavior: reduit() ? "auto" : "smooth", block: "nearest" });
+    document.getElementById("titre-explication")?.scrollIntoView({ behavior: mouvementReduit() ? "auto" : "smooth", block: "nearest" });
   }
 
   const choisi = $derived(selectionne ? classement.find(c => c.candidat.id === selectionne) : undefined);
@@ -240,8 +182,8 @@
   <Carte {bus} bind:vue ratio={RATIO} {pietons} {etiquettes} interactive={phase === "fin"} {selectionne} onChoisir={choisir} />
   {#if phase === "fin"}
     <div class="commandes">
-      <button onclick={() => zoom(0.7)} aria-label="Zoomer">+</button>
-      <button onclick={() => zoom(1.4)} aria-label="Dézoomer">−</button>
+      <button onclick={() => (vue = zoomer(vue, 0.7, RATIO))} aria-label="Zoomer">+</button>
+      <button onclick={() => (vue = zoomer(vue, 1.4, RATIO))} aria-label="Dézoomer">−</button>
       <button onclick={recentrer} aria-label="Recentrer sur chez toi">⌂</button>
     </div>
   {/if}
@@ -251,32 +193,7 @@
   {#if phase === "route"}<button class="discret" onclick={() => (passer = true)}>Passer l'animation</button>{/if}
 </p>
 
-{#if phase === "fin"}
-  <div class="priorites boite">
-    <h2 class="etiquette-signal" id="titre-priorites">Ce qui compte pour toi</h2>
-    <p>Choisis jusqu'à {MAX_PRIORITES} sujets qui comptent double. Les bus bougent en direct.</p>
-    <div class="themes" role="group" aria-labelledby="titre-priorites">
-      {#each THEMES as t (t)}
-        {@const actif = prioritaires.includes(t)}
-        <button class:actif aria-pressed={actif} disabled={!actif && prioritaires.length >= MAX_PRIORITES} onclick={() => basculer(t)}>{t}</button>
-      {/each}
-    </div>
-    {#if prioritaires.length}
-      <p class="discret petit">Ces sujets comptent double : {prioritaires.join(", ")}. <button class="lien" onclick={() => { prioritaires = []; glisser(); }}>Tout remettre à égalité</button></p>
-    {/if}
-  </div>
 
-  <div class="retroviseur boite">
-    <label for="retroviseur" class="etiquette-signal">Rétroviseur : rejoue le trajet</label>
-    <div class="curseur">
-      <button onclick={() => rejouer((curseur ?? NB_ETAPES) - 1)} aria-label="Étape précédente" disabled={curseur === 0}>◀</button>
-      <input id="retroviseur" type="range" min="0" max={NB_ETAPES} step="1" value={curseur ?? NB_ETAPES}
-        oninput={e => rejouer(Number(e.currentTarget.value))} aria-valuetext={`Étape ${curseur ?? NB_ETAPES} sur ${NB_ETAPES}`} />
-      <button onclick={() => rejouer((curseur ?? NB_ETAPES) + 1)} aria-label="Étape suivante" disabled={curseur === null || curseur === NB_ETAPES}>▶</button>
-    </div>
-    <p aria-live="polite">{etapeTexte}</p>
-  </div>
-{/if}
 
 {#if choisi}
   <Explication candidat={choisi.candidat} trajet={choisi.trajet} bac={bacs[choisi.candidat.id] ?? "inconnu"}
@@ -284,24 +201,18 @@
 {/if}
 
 {#if phase === "fin"}
-  <Resultats {revelation} {classement} {bacs} {horsSelection} onPourquoi={choisir} {onRecommencer} />
+  <Resultats {revelation} {classement} {bacs} {horsSelection} onPourquoi={choisir} {onRecommencer}
+    onAffiner={onAffiner && r.ordre.length < questions.length ? affiner : undefined}>
+    {#snippet outils()}
+    <Priorites themes={THEMES} bind:prioritaires max={MAX_PRIORITES} onChange={glisser} />
+    <Retroviseur bind:curseur passages={r.passages} ordre={r.ordre} {reponses} {trajets} bus={mesBus} {parId} onRejouer={rejouer} />
+    {/snippet}
+  </Resultats>
 {/if}
 
 <style>
   .carte { padding: 0; overflow: hidden; position: relative; }
   .commandes { position: absolute; right: 8px; top: 8px; display: flex; flex-direction: column; gap: 6px; }
   .commandes button { width: 48px; min-height: 48px; padding: 0; font-size: 22px; line-height: 1; box-shadow: 0 1px 4px rgb(0 0 0 / 0.15); }
-  .priorites { margin: 4px 0 12px; }
-  .priorites h2 { margin: 0 0 4px; }
-  .priorites p { margin: 0 0 8px; }
-  .themes { display: flex; flex-wrap: wrap; gap: 6px; }
-  .themes button { min-height: 44px; padding: 6px 12px; font-size: 15px; border-radius: 999px; }
-  .themes button.actif { background: var(--jaune); border-color: var(--jaune); color: var(--marque); }
-  .lien { min-height: 32px; padding: 0; border: none; background: none; color: var(--lien); text-decoration: underline; font-weight: 600; font-size: inherit; }
-  .retroviseur { margin: 4px 0 14px; }
-  .retroviseur p { margin: 8px 0 0; }
-  .curseur { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
-  .curseur input { flex: 1; min-width: 0; height: 44px; accent-color: var(--jaune); }
-  .curseur button { width: 48px; padding: 0; flex: none; }
   .statut { justify-content: space-between; color: var(--discret); margin-top: 8px; min-height: 48px; }
 </style>

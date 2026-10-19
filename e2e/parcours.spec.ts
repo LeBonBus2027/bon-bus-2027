@@ -285,3 +285,25 @@ test("« Ce qui compte pour toi » : jusqu'à 3 thèmes qui comptent double", as
   await expect(groupe.locator("[aria-pressed=true]")).toHaveCount(0);
   expect(problemes).toEqual([]);
 });
+
+test("« Affine ton résultat » : 10 questions ciblées de plus après la version rapide", async ({ page }) => {
+  const problemes = surveiller(page);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await page.getByRole("button", { name: "C'est parti" }).click();
+  await classerTout(page);
+  await page.getByRole("button", { name: /place aux questions/ }).click();
+  await page.getByRole("button", { name: /Version rapide/ }).click();
+  await repondreTout(page, 20);
+  await page.getByRole("button", { name: "Faire partir les bus" }).click();
+  await expect(page.getByRole("heading", { name: "Affine ton résultat" })).toBeVisible();
+  await page.getByRole("button", { name: "10 questions de plus" }).click();
+  await expect(page.getByText(/Question 21 sur 30/)).toBeVisible();
+  await repondreTout(page, 10);
+  await expect(page.getByText("30 réponses sur 30")).toBeVisible();
+  await page.getByRole("button", { name: "Faire partir les bus" }).click();
+  await expect(page.getByRole("heading", { name: "Terminus !" })).toBeVisible();
+  // Le rétroviseur rejoue maintenant thème par thème (plus de 20 questions).
+  await expect(page.getByLabel("Rétroviseur : rejoue le trajet")).not.toHaveValue("30");
+  expect(problemes).toEqual([]);
+});

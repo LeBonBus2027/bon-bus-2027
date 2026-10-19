@@ -1,20 +1,26 @@
 <script lang="ts">
-  import { tick } from "svelte";
+  import { onMount, tick } from "svelte";
   import { melanger } from "./lib/aleatoire";
   import type { Reponse } from "./lib/calcul";
-  import { candidats, meta, retenusParDefaut } from "./lib/donnees";
+  import { candidats, meta, retenusParDefaut } from "./lib/candidats";
   import type { Niveau } from "./lib/niveaux";
   import Accueil from "./ecrans/Accueil.svelte";
   import Classement from "./ecrans/Classement.svelte";
-  import Questionnaire from "./ecrans/Questionnaire.svelte";
-  import Trajet from "./ecrans/Trajet.svelte";
-  import Duo from "./ecrans/Duo.svelte";
   import Relais from "./ecrans/Relais.svelte";
   import type { Partie } from "./lib/duo";
-  import APropos from "./pages/APropos.svelte";
-  import Confidentialite from "./pages/Confidentialite.svelte";
-  import MentionsLegales from "./pages/MentionsLegales.svelte";
-  import Methode from "./pages/Methode.svelte";
+
+  // Chargement à la demande : l'accueil et le classement s'affichent sans attendre le reste
+  // (questions, positions, carte, ticket…), qu'on précharge discrètement juste après.
+  const ECRANS = {
+    questionnaire: () => import("./ecrans/Questionnaire.svelte"),
+    trajet: () => import("./ecrans/Trajet.svelte"),
+    duo: () => import("./ecrans/Duo.svelte"),
+  };
+  onMount(() => {
+    const precharger = () => { ECRANS.questionnaire(); ECRANS.trajet(); };
+    const id = setTimeout(precharger, 1200);
+    return () => clearTimeout(id);
+  });
 
   type Etape = "accueil" | "classement" | "questionnaire" | "relais" | "trajet";
 
@@ -26,6 +32,8 @@
   let reponses = $state<Record<string, Reponse>>({});
   let ordreQuestions = $state<string[]>([]);
   let format = $state<20 | 100 | null>(null);
+  // Après « Affine ton résultat » : le questionnaire reprend à la première nouvelle question.
+  let debutQuestions = $state(0);
   // Mode duo : deux personnes jouent tour à tour sur le même téléphone ; le premier tour est gardé de côté.
   let duo = $state<{ noms: [string, string]; joueur: 0 | 1; premier: Partie | null } | null>(null);
 
@@ -49,7 +57,19 @@
   }
 
   // Pages annexes : simple ancre dans l'adresse ; le parcours en cours est conservé pendant la lecture.
-  const PAGES = { methode: Methode, confidentialite: Confidentialite, "mentions-legales": MentionsLegales, "a-propos": APropos } as const;
+  const PAGES = {
+    methode: () => import("./pages/Methode.svelte"),
+    confidentialite: () => import("./pages/Confidentialite.svelte"),
+    "mentions-legales": () => import("./pages/MentionsLegales.svelte"),
+    "a-propos": () => import("./pages/APropos.svelte"),
+  } as const;
+
+  /** Donne le focus au titre de l'écran dès qu'il est affiché (les écrans chargés à la demande arrivent un peu après). */
+  function focaliser(selecteur: string, essais = 60) {
+    const el = document.querySelector<HTMLElement>(selecteur);
+    if (el) el.focus();
+    else if (essais > 0) requestAnimationFrame(() => focaliser(selecteur, essais - 1));
+  }
   type NomPage = keyof typeof PAGES;
   const lirePage = () => (location.hash.slice(1) in PAGES ? (location.hash.slice(1) as NomPage) : null);
   let page = $state<NomPage | null>(lirePage());
@@ -58,7 +78,7 @@
       page = lirePage();
       await tick();
       window.scrollTo(0, 0);
-      document.querySelector<HTMLElement>(page ? "#page h1" : "#parcours h1")?.focus();
+      focaliser(page ? "#page h1" : "#parcours h1");
     };
     window.addEventListener("hashchange", surChangement);
     return () => window.removeEventListener("hashchange", surChangement);
@@ -68,7 +88,13 @@
     etape = vers;
     await tick();
     window.scrollTo(0, 0);
-    document.querySelector<HTMLElement>("#parcours h1")?.focus();
+    focaliser("#parcours h1");
+  }
+
+  function affiner(ids: string[]) {
+    debutQuestions = ordreQuestions.length;
+    ordreQuestions = [...ordreQuestions, ...ids];
+    aller("questionnaire");
   }
 
   function recommencer() {
@@ -77,6 +103,7 @@
     reponses = {};
     ordreQuestions = [];
     format = null;
+    debutQuestions = 0;
     duo = null;
     aller("accueil");
   }
@@ -92,10 +119,9 @@
 
 <main>
   {#if page}
-    {@const Page = PAGES[page]}
     <div id="page">
       <p><a href="#retour">← Revenir au site</a></p>
-      <Page />
+      {#await PAGES[page]() then { default: Page }}<Page />{/await}
     </div>
   {/if}
   <!-- Le parcours reste monté (masqué) pendant la lecture d'une page : rien n'est perdu ni rejoué. -->
@@ -110,11 +136,17 @@
   {:else if etape === "classement"}
     <Classement bind:ordre={ordreCandidats} bind:bacs onFini={() => aller("questionnaire")} />
   {:else if etape === "questionnaire"}
-    <Questionnaire bind:reponses bind:ordre={ordreQuestions} bind:format onFini={finQuestions} />
+    {#await ECRANS.questionnaire() then { default: Questionnaire }}
+      <Questionnaire bind:reponses bind:ordre={ordreQuestions} bind:format debut={debutQuestions} onFini={finQuestions} />
+    {/await}
   {:else if duo?.premier}
-    <Duo noms={duo.noms} parties={[duo.premier, { bacs, reponses, ordre: ordreQuestions }]} onRecommencer={recommencer} />
+    {#await ECRANS.duo() then { default: Duo }}
+      <Duo noms={duo.noms} parties={[duo.premier, { bacs, reponses, ordre: ordreQuestions }]} onRecommencer={recommencer} />
+    {/await}
   {:else}
-    <Trajet {bacs} {reponses} ordre={ordreQuestions} onRecommencer={recommencer} />
+    {#await ECRANS.trajet() then { default: Trajet }}
+      <Trajet {bacs} {reponses} ordre={ordreQuestions} onRecommencer={recommencer} onAffiner={affiner} />
+    {/await}
   {/if}
   </div>
 </main>

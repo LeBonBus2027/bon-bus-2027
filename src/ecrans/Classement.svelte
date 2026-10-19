@@ -2,7 +2,7 @@
   import { untrack } from "svelte";
   import Bus from "../lib/Bus.svelte";
   import Photo from "../lib/Photo.svelte";
-  import { candidats, selection, type Candidat } from "../lib/donnees";
+  import { candidats, selection, type Candidat } from "../lib/candidats";
   import { NIVEAUX, BAC, type Niveau } from "../lib/niveaux";
 
   let { ordre = $bindable(), bacs = $bindable(), onFini }: {

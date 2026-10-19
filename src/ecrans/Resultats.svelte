@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { Snippet } from "svelte";
   import type { Classe } from "../lib/calcul";
   import type { Candidat } from "../lib/donnees";
   import { BAC, NIVEAUX, type Niveau } from "../lib/niveaux";
@@ -7,13 +8,17 @@
   import AvantApres from "./AvantApres.svelte";
   import Partage from "./Partage.svelte";
 
-  let { revelation, classement, bacs, horsSelection, onPourquoi, onRecommencer }: {
+  let { revelation, classement, bacs, horsSelection, onPourquoi, onRecommencer, onAffiner, outils }: {
     revelation: Revelation;
     classement: readonly Classe<Candidat>[];
     bacs: Record<string, Niveau>;
     /** Candidat non ajouté qui t'aurait déposé plus près que tous tes bus. */
     horsSelection?: Classe<Candidat>;
     onPourquoi: (id: string) => void;
+    /** Présent seulement après une version rapide (et hors mode duo) : propose 10 questions de plus. */
+    onAffiner?: () => void;
+    /** Outils interactifs (priorités, rétroviseur), placés juste après le résultat. */
+    outils?: Snippet;
     onRecommencer: () => void;
   } = $props();
 </script>
@@ -21,8 +26,18 @@
 <p class="message">{revelation.message}</p>
 
 <AvantApres focus={revelation.focus} {bacs} {onPourquoi} />
+
+{#if onAffiner}
+  <div class="boite affiner">
+    <h2>Affine ton résultat</h2>
+    <p>Tu n'as répondu qu'à une partie des questions : ton résultat peut encore bouger. Réponds à 10 questions de plus, choisies parmi celles où tes bus les plus proches ne sont pas d'accord entre eux.</p>
+    <p><button class="principal" onclick={onAffiner}>10 questions de plus</button></p>
+  </div>
+{/if}
 <blockquote class="metaphore">{revelation.metaphore}</blockquote>
 <p class="morale"><span>Aucun bus ne te dépose pile devant chez toi. Prends celui qui te rapproche le plus.</span></p>
+
+{@render outils?.()}
 
 {#if horsSelection}
   <p class="boite note">À noter : le bus de {horsSelection.candidat.nom}, que tu n'avais pas ajouté à ta gare, se serait arrêté encore plus près ({arrets(horsSelection.trajet.arrets)}).</p>
@@ -77,6 +92,9 @@
   td.qui { display: grid; grid-template-columns: 40px 1fr; column-gap: 10px; align-items: center; }
   td.qui :global(.photo) { grid-row: span 2; }
   .fin { margin-top: 28px; }
+  .affiner { margin: 16px 0; }
+  .affiner h2 { margin-top: 0; }
+  .affiner p:last-child { margin-bottom: 0; }
   /* La métaphore s'affiche comme la girouette d'un bus : texte jaune à chasse fixe sur bleu nuit (contraste 11:1). */
   .metaphore {
     margin: 12px 0; padding: 14px 16px; border-radius: var(--rayon); background: var(--marque); color: var(--jaune);

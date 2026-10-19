@@ -1,0 +1,71 @@
+# Import hebdomadaire des positions publiées par MonVote2027 (cahier des charges, section 3).
+# Rien n'est publié automatiquement : si les données ont changé, une pull request est ouverte avec la liste
+# des positions modifiées, à relire et valider avant fusion.
+# Avant d'activer : épingler chaque action sur un SHA de commit (protection de la chaîne d'approvisionnement).
+name: Import MonVote2027
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"   # chaque lundi à 6 h UTC
+  workflow_dispatch:       # ou à la main, depuis l'onglet Actions
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: import-monvote
+  cancel-in-progress: false
+
+jobs:
+  importer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+
+      - name: Importer les données
+        run: node scripts/import-monvote.mjs | tee rapport-import.txt
+
+      - name: Y a-t-il du nouveau ?
+        id: diff
+        run: |
+          if git diff --quiet -- data/; then echo "change=non" >> "$GITHUB_OUTPUT"; else echo "change=oui" >> "$GITHUB_OUTPUT"; fi
+
+      # Les pull requests ouvertes avec le jeton du workflow ne relancent pas la CI : on vérifie donc ici.
+      - name: Contrôles (neutralité, types, tests unitaires)
+        if: steps.diff.outputs.change == 'oui'
+        run: |
+          node scripts/verifier-neutralite.mjs
+          npm run check
+          npm test
+
+      - name: Ouvrir une pull request à relire
+        if: steps.diff.outputs.change == 'oui'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          branche="import-monvote-$(date +%Y-%m-%d)"
+          git config user.name "import-monvote[bot]"
+          git config user.email "import-monvote@users.noreply.github.com"
+          git switch -c "$branche"
+          git add data/
+          git commit -m "Import MonVote2027 du $(date +%d/%m/%Y)"
+          git push -u origin "$branche"
+          {
+            echo "Import automatique des positions publiées par MonVote2027."
+            echo
+            echo '```'
+            cat rapport-import.txt
+            echo '```'
+            echo
+            echo "À vérifier avant de fusionner :"
+            echo "- [ ] chaque position modifiée correspond bien à la page source du candidat sur monvote2027.fr"
+            echo "- [ ] aucun candidat ajouté ou retiré par erreur"
+          } > corps-pr.md
+          gh pr create --title "Import MonVote2027 du $(date +%d/%m/%Y)" --body-file corps-pr.md --base main --head "$branche"

@@ -15,6 +15,23 @@ import { fileURLToPath } from "node:url";
 
 const URL_DONNEES = "https://monvote2027.fr/donnees";
 const SORTIE = fileURLToPath(new URL("../data/monvote.json", import.meta.url));
+
+/**
+ * Le site charge les données en deux temps : candidats.json (léger, dès l'accueil) et questions.json
+ * (questions et positions, à partir du questionnaire). monvote.json reste la référence complète.
+ */
+function ecrireDecoupage(d) {
+  const ecrire = (nom, contenu) => writeFileSync(fileURLToPath(new URL(`../data/${nom}`, import.meta.url)), JSON.stringify(contenu, null, 2) + "\n");
+  ecrire("candidats.json", { meta: d.meta, candidats: d.candidats });
+  ecrire("questions.json", { questions: d.questions, positions: d.positions });
+}
+
+// --decouper : réécrit seulement les deux fichiers découpés à partir de monvote.json, sans rien télécharger.
+if (process.argv.includes("--decouper")) {
+  ecrireDecoupage(JSON.parse(readFileSync(SORTIE, "utf8")));
+  console.log("Découpage écrit : data/candidats.json et data/questions.json");
+  process.exit(0);
+}
 const ATTENDU = { candidats: 21, questions: 100, rapides: 20 };
 const NIVEAUX = {
   "Tout à fait pour": 2,
@@ -72,7 +89,11 @@ function analyser(html) {
   if (rapides !== ATTENDU.rapides) throw new Error(`${rapides} questions du quiz rapide au lieu de ${ATTENDU.rapides}`);
 
   questions.sort((a, b) => a.numero - b.numero);
-  return { candidats: [...candidats.values()].sort((a, b) => a.id.localeCompare(b.id)), questions, positions };
+  // Ordre stable (candidats par identifiant, questions par numéro) : l'empreinte ne change pas
+  // si MonVote2027 réordonne simplement sa page.
+  const positionsTriees = Object.fromEntries(Object.keys(positions).sort().map(cid =>
+    [cid, Object.fromEntries(questions.map(q => [q.id, positions[cid][q.id]]))]));
+  return { candidats: [...candidats.values()].sort((a, b) => a.id.localeCompare(b.id)), questions, positions: positionsTriees };
 }
 
 function differences(avant, apres) {
@@ -117,6 +138,7 @@ const sortie = {
   ...contenu,
 };
 writeFileSync(SORTIE, JSON.stringify(sortie, null, 2) + "\n");
+ecrireDecoupage(sortie);
 
 console.log(`Import écrit : ${contenu.candidats.length} candidats, ${contenu.questions.length} questions.`);
 console.log(`Empreinte : ${empreinte}`);

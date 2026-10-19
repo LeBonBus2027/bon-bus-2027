@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { candidats } from "../lib/donnees";
+  import { candidats } from "../lib/candidats";
   import { PHOTOS } from "../lib/Photo.svelte";
 </script>
 

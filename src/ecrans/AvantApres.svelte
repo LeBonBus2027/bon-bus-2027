@@ -25,7 +25,7 @@
       <li style:--retard="{i * 0.15}s">
         <button class="carte-bus" onclick={() => onPourquoi(f.candidat.id)}>
           <span class="qui"><Photo id={f.candidat.id} taille={40} /><strong>{f.candidat.nom}</strong></span>
-          <span class="bus">
+          <span class="bus" aria-hidden="true">
             <span class="etat">
               <svg viewBox="-34 -8 240 112" aria-hidden="true"><Bus niveau={avant} /></svg>
               <span class="etiquette-signal">Tu voyais</span>
@@ -36,7 +36,7 @@
               <span class="etiquette-signal">Pour toi · {arrets(f.trajet.arrets)}</span>
             </span>
           </span>
-          <span class="visually-hidden">Tu voyais : {nomBus(avant)}. Pour toi : {nomBus(apres)}. Voir pourquoi.</span>
+          <span class="visually-hidden">Tu voyais : {nomBus(avant)}. Pour toi : {nomBus(apres)}, {arrets(f.trajet.arrets)}. Voir pourquoi.</span>
         </button>
       </li>
     {/each}

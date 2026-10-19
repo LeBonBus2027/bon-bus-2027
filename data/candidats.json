@@ -1,0 +1,138 @@
+{
+  "meta": {
+    "source": "MonVote2027",
+    "url": "https://monvote2027.fr/donnees",
+    "licence": "Licence ouverte (nom exact à confirmer auprès de l'éditeur)",
+    "attribution": "Questions et positionnements : MonVote2027 (monvote2027.fr)",
+    "date_import": "2026-10-18",
+    "empreinte": "f41e2a49c6139bbd5b69494a4e30cee93521174bd77feb3f267ef4f237a91f98"
+  },
+  "candidats": [
+    {
+      "id": "arthaud",
+      "nom": "Nathalie Arthaud",
+      "parti": "Lutte Ouvrière",
+      "url_source": "https://monvote2027.fr/candidat/arthaud"
+    },
+    {
+      "id": "asselineau",
+      "nom": "François Asselineau",
+      "parti": "Union Populaire Républicaine",
+      "url_source": "https://monvote2027.fr/candidat/asselineau"
+    },
+    {
+      "id": "attal",
+      "nom": "Gabriel Attal",
+      "parti": "Renaissance",
+      "url_source": "https://monvote2027.fr/candidat/attal"
+    },
+    {
+      "id": "batho",
+      "nom": "Delphine Batho",
+      "parti": "Génération Écologie",
+      "url_source": "https://monvote2027.fr/candidat/batho"
+    },
+    {
+      "id": "bertrand",
+      "nom": "Xavier Bertrand",
+      "parti": "Nous France",
+      "url_source": "https://monvote2027.fr/candidat/bertrand"
+    },
+    {
+      "id": "branco",
+      "nom": "Juan Branco",
+      "parti": "Les Ruches",
+      "url_source": "https://monvote2027.fr/candidat/branco"
+    },
+    {
+      "id": "cazeneuve",
+      "nom": "Bernard Cazeneuve",
+      "parti": "La Convention",
+      "url_source": "https://monvote2027.fr/candidat/cazeneuve"
+    },
+    {
+      "id": "devillepin",
+      "nom": "Dominique de Villepin",
+      "parti": "La France Humaniste",
+      "url_source": "https://monvote2027.fr/candidat/devillepin"
+    },
+    {
+      "id": "dupont_aignan",
+      "nom": "Nicolas Dupont-Aignan",
+      "parti": "Debout la France",
+      "url_source": "https://monvote2027.fr/candidat/dupont_aignan"
+    },
+    {
+      "id": "glucksmann",
+      "nom": "Raphaël Glucksmann",
+      "parti": "Place Publique",
+      "url_source": "https://monvote2027.fr/candidat/glucksmann"
+    },
+    {
+      "id": "kazib",
+      "nom": "Anasse Kazib",
+      "parti": "Révolution Permanente",
+      "url_source": "https://monvote2027.fr/candidat/kazib"
+    },
+    {
+      "id": "le_pen",
+      "nom": "Marine Le Pen",
+      "parti": "Rassemblement National",
+      "url_source": "https://monvote2027.fr/candidat/le_pen"
+    },
+    {
+      "id": "lisnard",
+      "nom": "David Lisnard",
+      "parti": "Nouvelle Énergie",
+      "url_source": "https://monvote2027.fr/candidat/lisnard"
+    },
+    {
+      "id": "melenchon",
+      "nom": "Jean-Luc Mélenchon",
+      "parti": "La France Insoumise",
+      "url_source": "https://monvote2027.fr/candidat/melenchon"
+    },
+    {
+      "id": "philippe",
+      "nom": "Édouard Philippe",
+      "parti": "Horizons",
+      "url_source": "https://monvote2027.fr/candidat/philippe"
+    },
+    {
+      "id": "philippot",
+      "nom": "Florian Philippot",
+      "parti": "Les Patriotes",
+      "url_source": "https://monvote2027.fr/candidat/philippot"
+    },
+    {
+      "id": "retailleau",
+      "nom": "Bruno Retailleau",
+      "parti": "Les Républicains",
+      "url_source": "https://monvote2027.fr/candidat/retailleau"
+    },
+    {
+      "id": "roussel",
+      "nom": "Fabien Roussel",
+      "parti": "Parti Communiste Français",
+      "url_source": "https://monvote2027.fr/candidat/roussel"
+    },
+    {
+      "id": "ruffin",
+      "nom": "François Ruffin",
+      "parti": "Debout !",
+      "url_source": "https://monvote2027.fr/candidat/ruffin"
+    },
+    {
+      "id": "tondelier",
+      "nom": "Marine Tondelier",
+      "parti": "Europe Écologie Les Verts",
+      "url_source": "https://monvote2027.fr/candidat/tondelier"
+    },
+    {
+      "id": "zemmour",
+      "nom": "Éric Zemmour",
+      "parti": "Reconquête",
+      "url_source": "https://monvote2027.fr/candidat/zemmour"
+    }
+  ]
+}
