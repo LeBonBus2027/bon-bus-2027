@@ -13,11 +13,8 @@
 </ul>
 
 <h2>Les journaux de l'hébergeur</h2>
-<p>Comme tout site, notre hébergeur peut enregistrer techniquement l'adresse IP et l'heure des visites, pour la sécurité du service. Ces journaux ne contiennent aucune réponse ni aucun résultat. <span class="a-completer">[À compléter : nom de l'hébergeur et durée de conservation.]</span></p>
+<p>Comme tout site, notre hébergeur, Cloudflare, traite techniquement l'adresse IP des visiteurs pour acheminer les pages et protéger le service contre les attaques. Nous n'avons activé aucun journal ni aucune statistique de visite. Ces traitements ne contiennent aucune réponse ni aucun résultat.</p>
 
 <h2>Les liens vers d'autres sites</h2>
 <p>Les liens vers MonVote2027 et vers service-public.fr ouvrent ces sites dans un nouvel onglet. Ils ont leurs propres règles de confidentialité.</p>
 
-<style>
-  .a-completer { background: #fff3c4; }
-</style>

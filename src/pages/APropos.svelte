@@ -13,7 +13,7 @@
 <h2>Merci</h2>
 <ul>
   <li><a href="https://monvote2027.fr" target="_blank" rel="noopener noreferrer">MonVote2027</a>, pour son travail de recensement et de sourçage des positions.</li>
-  <li>@4deux_93, pour la métaphore.</li>
+  <li><a href="https://www.tiktok.com/@4deux_93" target="_blank" rel="noopener noreferrer">@4deux_93</a>, pour la métaphore.</li>
 </ul>
 
 <h2>Crédits photos</h2>
@@ -28,11 +28,9 @@
 <h2>Signaler un problème</h2>
 <ul>
   <li>Une position de candidat te semble fausse : signale-la à <a href="https://monvote2027.fr/contact" target="_blank" rel="noopener noreferrer">MonVote2027</a>, qui la vérifiera.</li>
-  <li>Un bug ou une faille de sécurité sur ce site : <span class="a-completer">[À compléter : adresse mail du projet]</span>.</li>
 </ul>
 
 <style>
-  .a-completer { background: #fff3c4; }
   .credits li { margin-bottom: 4px; }
   .credits a { display: inline-block; min-height: 24px; }
 </style>
