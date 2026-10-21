@@ -5,12 +5,13 @@
   import Afficheur from "./Afficheur.svelte";
   import AvantApres from "./AvantApres.svelte";
   import Bilan from "./Bilan.svelte";
+  import Partage from "./Partage.svelte";
   import { affairesPubliees, chargerJustice, fiche, ISSUE, nombre, type Justice } from "../lib/justice";
   import Photo from "../lib/Photo.svelte";
 
   /**
    * Révélation pas à pas, dans le cadre de la carte (juste sous la ville), avant la page récap :
-   * 1. où s'arrêtent les bus, 2. la peinture grattée, 3. pour rappel, ce que dit la justice, 4. la girouette et la morale.
+   * 1. où s'arrêtent les bus, 2. la peinture grattée, 3. pour rappel, ce que dit la justice, 4. la girouette et la morale, 5. le partage.
    * L'ordre suit la priorité du message : le verdict, puis l'écart entre ressenti et réalité, puis la leçon.
    */
   let { revelation, bacs, gratte, onGratter, onFin }: {
@@ -22,7 +23,7 @@
     onFin: () => void;
   } = $props();
 
-  const NB = 4;
+  const NB = 5;
   let etape = $state(0);
   let occupe = $state(false);
   let titre = $state<HTMLElement>();
@@ -43,8 +44,8 @@
     else await aller(etape + 1);
   }
 
-  const TITRES = ["Tout le monde descend", "On a gratté la peinture", "Pour rappel", "Morale de l'histoire"];
-  const BOUTONS = $derived([gratte ? "Suivant" : "Gratter la peinture", "Suivant", "Suivant", "Voir mon récap"]);
+  const TITRES = ["Tout le monde descend", "On a gratté la peinture", "Pour rappel", "Morale de l'histoire", "Partage ton trajet"];
+  const BOUTONS = $derived([gratte ? "Suivant" : "Gratter la peinture", "Suivant", "Suivant", "Suivant", "Voir mon récap"]);
 
   // « Pour rappel » : ce que dit la justice sur les mêmes candidats que la peinture grattée.
   let justice = $state<Justice | null>(null);
@@ -106,10 +107,13 @@
         {/if}
       {/if}
       <p class="discret petit"><span aria-hidden="true">●</span> décision définitive · <span aria-hidden="true">○</span> pas encore définitive : la présomption d'innocence s'applique. Le détail, les sources et les décisions visant leur parti sont dans ton récap.</p>
-    {:else}
+    {:else if etape === 3}
       <blockquote class="girouette">{revelation.metaphore}</blockquote>
       <p class="morale"><span>Aucun bus ne te dépose pile devant chez toi. Prends celui qui te rapproche le plus.</span></p>
       <Bilan {revelation} {bacs} />
+    {:else}
+      <p class="petit">Ton ticket de bus, prêt à partager. Sans les noms, il ne dit rien de tes préférences : juste de quoi donner envie d'essayer.</p>
+      <Partage {revelation} {bacs} titre={false} />
     {/if}
   </div>
 

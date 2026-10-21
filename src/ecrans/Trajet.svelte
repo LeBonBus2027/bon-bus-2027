@@ -220,6 +220,13 @@
   <span aria-live="polite">{statut}</span>
   {#if phase === "route"}<button class="discret" onclick={() => (passer = true)}>Passer l'animation</button>{/if}
 </p>
+{#if phase === "fin"}
+  <!-- Juste sous la carte : le rétroviseur rejoue le trajet sur la carte elle-même. -->
+  <details class="outil">
+    <summary>Revoir le trajet question par question</summary>
+    <Retroviseur bind:curseur passages={r.passages} ordre={r.ordre} {reponses} {trajets} bus={mesBus} {parId} onRejouer={rejouer} />
+  </details>
+{/if}
 
 
 
@@ -235,10 +242,6 @@
     <details class="outil">
       <summary>Certains sujets comptent plus pour toi ?</summary>
       <Priorites themes={THEMES} bind:prioritaires max={MAX_PRIORITES} onChange={glisser} />
-    </details>
-    <details class="outil">
-      <summary>Revoir le trajet question par question</summary>
-      <Retroviseur bind:curseur passages={r.passages} ordre={r.ordre} {reponses} {trajets} bus={mesBus} {parId} onRejouer={rejouer} />
     </details>
     {/snippet}
   </Resultats>

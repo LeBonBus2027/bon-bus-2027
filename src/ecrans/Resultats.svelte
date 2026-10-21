@@ -5,6 +5,7 @@
   import { BAC, NIVEAUX, type Niveau } from "../lib/niveaux";
   import { arrets, type Revelation } from "../lib/revelation";
   import Photo from "../lib/Photo.svelte";
+  import Afficheur from "./Afficheur.svelte";
   import AvantApres from "./AvantApres.svelte";
   import Justice from "./Justice.svelte";
   import Partage from "./Partage.svelte";
@@ -33,6 +34,7 @@
 </script>
 
 <h2 id="titre-recap" class="etiquette-signal recap" tabindex="-1">Ton récap</h2>
+<Afficheur podium={revelation.podium} total={classement.length} />
 <p class="message">{revelation.message}</p>
 
 <AvantApres focus={revelation.focus} {bacs} peinture={revelation.peinture} {onPourquoi} compact />

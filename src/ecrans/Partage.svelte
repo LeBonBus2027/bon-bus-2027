@@ -4,7 +4,11 @@
   import { effet, type Revelation } from "../lib/revelation";
   import { dessinerTicket, type LigneTicket } from "../lib/ticket";
 
-  let { revelation, bacs }: { revelation: Revelation; bacs: Record<string, Niveau> } = $props();
+  let { revelation, bacs, titre = true }: {
+    revelation: Revelation; bacs: Record<string, Niveau>;
+    /** false quand le titre est déjà donné autour (diaporama). */
+    titre?: boolean;
+  } = $props();
 
   let avecNoms = $state(false);
   let enCours = $state(false);
@@ -143,8 +147,8 @@
   }
 </script>
 
-<div class="boite partage">
-  <h2>Partage ton trajet</h2>
+<div class="boite partage" class:nu={!titre}>
+  {#if titre}<h2>Partage ton trajet</h2>{/if}
   {#if apercu}<img class="apercu" src={apercu} alt="Aperçu de ton ticket de bus à partager : ton coup de cœur et celui qui te ramène, tels que tu les imaginais et tels qu'ils sont vraiment pour toi." />{/if}
   <p><button class="principal" onclick={partager} disabled={enCours}>{enCours ? "Préparation…" : "Partager"}</button></p>
   <label><input type="checkbox" bind:checked={avecNoms} /> Afficher les noms des candidats</label>
@@ -169,6 +173,9 @@
 
 <style>
   .partage { margin: 16px 0; }
+  /* Dans le diaporama : pas de boîte autour, le ticket un peu plus grand. */
+  .nu { margin: 0; padding: 0; background: none; }
+  .nu .apercu { max-width: 260px; }
   h2 { margin-top: 0; }
   .reseaux { list-style: none; padding: 0; margin: 4px 0 12px; display: flex; flex-wrap: wrap; gap: 8px; }
   .reseau {

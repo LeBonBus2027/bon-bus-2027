@@ -39,6 +39,10 @@ test.describe("parcours complet", () => {
     await expect(page.locator(".diapo .girouette")).not.toBeEmpty();
     await expect(page.locator(".diapo .bilan .ticket")).not.toHaveCount(0);
     await auditAccessibilite(page, "morale");
+    await page.getByRole("button", { name: "Suivant", exact: true }).click();
+    await expect(page.getByRole("heading", { name: "Partage ton trajet" })).toBeFocused();
+    await expect(page.locator(".diapo").getByRole("img", { name: /Aperçu de ton ticket/ })).toBeVisible();
+    await auditAccessibilite(page, "partage");
     await page.getByRole("button", { name: "Voir mon récap" }).click();
     await expect(page.getByRole("heading", { name: "Ton récap" })).toBeFocused();
     await expect(page.locator(".diapo")).toHaveCount(0);

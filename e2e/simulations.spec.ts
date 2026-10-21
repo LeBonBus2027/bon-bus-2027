@@ -131,6 +131,8 @@ for (let s = 1; s <= NB; s++) {
     const tickets = await page.locator(".diapo .bilan .ticket").evaluateAll(l => l.map(t => ({
       titre: t.querySelector(".titre")!.textContent!, nom: t.querySelector(".qui strong")!.textContent!,
     })));
+    await page.getByRole("button", { name: "Suivant", exact: true }).click();
+    await expect(page.getByRole("heading", { name: "Partage ton trajet" })).toBeFocused();
     await page.getByRole("button", { name: "Voir mon récap" }).click();
     await expect(page.getByRole("heading", { name: "Ton récap" })).toBeVisible();
 
