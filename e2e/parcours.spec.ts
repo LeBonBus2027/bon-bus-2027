@@ -432,3 +432,40 @@ test("onglet resté ouvert pendant une mise à jour : on propose de recharger au
   await expect(page.getByRole("alert")).toContainText("Une nouvelle version du site est en ligne");
   await expect(page.getByRole("button", { name: "Recharger la page" })).toBeVisible();
 });
+
+test("« Ce que dit la justice » : un clic sur une décision ouvre le contexte et les sources", async ({ page }) => {
+  const problemes = surveiller(page);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await page.getByRole("button", { name: "C'est parti" }).click();
+  await classerTout(page);
+  await page.getByRole("button", { name: /place aux questions/ }).click();
+  await page.getByRole("button", { name: /Version rapide/ }).click();
+  await repondreTout(page, 20);
+  await page.getByRole("button", { name: "Faire partir les bus" }).click();
+  await allerAuRecap(page);
+  const carte = page.locator(".fiche-justice").filter({ has: page.getByRole("heading", { name: "Marine Le Pen" }) });
+  const decision = carte.locator("details").first();
+  await expect(decision.locator(".detail")).toBeHidden();
+  await decision.locator("summary").click();
+  await expect(decision.locator(".detail")).toBeVisible();
+  await expect(decision.locator(".affaire")).not.toBeEmpty();
+  await expect(decision.locator(".sources a[href^='https://']").first()).toBeVisible();
+  await auditAccessibilite(page, "décision dépliée");
+  expect(problemes).toEqual([]);
+});
+
+test("« De quoi parle-t-on ? » : texte simple, et texte d'origine de MonVote2027 à la demande", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "C'est parti" }).click();
+  await classerTout(page);
+  await page.getByRole("button", { name: /place aux questions/ }).click();
+  await page.getByRole("button", { name: /Version rapide/ }).click();
+  const aide = page.locator("details.aide");
+  await aide.locator("> summary").click();
+  await expect(aide.locator("> p")).not.toBeEmpty();
+  await aide.locator(".origine summary").click();
+  await expect(aide.locator(".origine p")).not.toBeEmpty();
+  expect(await aide.locator("> p").innerText()).not.toBe(await aide.locator(".origine p").innerText());
+  await auditAccessibilite(page, "aide dépliée");
+});

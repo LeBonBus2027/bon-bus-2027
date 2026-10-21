@@ -45,7 +45,7 @@
   </ul>
 {:else}
   <ul class="cartes">
-    {#each affaires as a, i (`${i}-${a.affaire}`)}<DecisionLigne affaire={a} avecPrecision />{/each}
+    {#each affaires as a, i (`${i}-${a.affaire}`)}<DecisionLigne affaire={a} avecPrecision depliable />{/each}
   </ul>
 {/if}
 
@@ -62,7 +62,7 @@
         </ul>
       {:else}
         <ul class="cartes">
-          {#each parti.affaires as a, i (`${i}-${a.personne}-${a.affaire}`)}<DecisionLigne affaire={a} avecPersonne avecPrecision />{/each}
+          {#each parti.affaires as a, i (`${i}-${a.personne}-${a.affaire}`)}<DecisionLigne affaire={a} avecPersonne avecPrecision depliable />{/each}
         </ul>
       {/if}
     </details>

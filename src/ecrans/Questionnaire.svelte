@@ -3,6 +3,10 @@
   import { tirerQuestions } from "../lib/tirage";
   import { MIN_REPONSES, type Reponse } from "../lib/calcul";
   import { grandTheme, questions } from "../lib/donnees";
+  // « De quoi parle-t-on ? » en mots simples, relu par rapport au texte de MonVote2027 (même sens, aucun ajout).
+  // Fichier séparé : l'import des données MonVote ne l'écrase pas.
+  import aidesSimples from "../../data/aides-simples.json";
+  const SIMPLES = aidesSimples as Record<string, string>;
 
   let { reponses = $bindable(), ordre = $bindable(), format = $bindable(), debut = 0, onFini }: {
     reponses: Record<string, Reponse>;
@@ -72,7 +76,10 @@
 
   <h1 tabindex="-1" bind:this={titre} class="question">{courante.texte}</h1>
   {#if courante.aide}
-    <details class="petit"><summary>De quoi parle-t-on ?</summary><p>{courante.aide}</p></details>
+    <details class="petit aide"><summary>De quoi parle-t-on ?</summary>
+      <p>{SIMPLES[courante.id] ?? courante.aide}</p>
+      {#if SIMPLES[courante.id]}<details class="origine"><summary>Texte d'origine (MonVote2027)</summary><p>{courante.aide}</p></details>{/if}
+    </details>
   {/if}
 
   <div class="choix" role="group" aria-label="Ta réponse">
@@ -108,6 +115,9 @@
   .barre div { height: 100%; background: var(--accent); transform-origin: left; transition: transform 0.3s; }
   .question { font-size: clamp(22px, 5vw, 28px); }
   details { margin-bottom: 12px; color: var(--discret); }
+  .aide > p { color: var(--encre); font-size: 16px; line-height: 1.5; }
+  .origine { margin: 0; }
+  .origine summary { font-weight: 600; font-size: 14.5px; }
   .choix { display: grid; gap: 8px; margin: 16px 0 12px; }
   .choix button { border-radius: var(--rayon); text-align: left; }
   .choix button.actif { background: var(--encre); color: var(--fond); }
