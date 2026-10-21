@@ -5,6 +5,7 @@
   import { candidats, meta, retenusParDefaut } from "./lib/candidats";
   import type { Niveau } from "./lib/niveaux";
   import Accueil from "./ecrans/Accueil.svelte";
+  import Bus from "./lib/Bus.svelte";
   import Classement from "./ecrans/Classement.svelte";
   import Relais from "./ecrans/Relais.svelte";
   import type { Partie } from "./lib/duo";
@@ -107,13 +108,21 @@
     duo = null;
     aller("accueil");
   }
+
+  /** Le logo ramène à l'accueil ; si un parcours est en cours, on demande d'abord (il serait effacé). */
+  function versAccueil(ev: MouseEvent) {
+    const enCours = etape !== "accueil" && (Object.keys(bacs).length > 0 || duo !== null);
+    if (enCours && !confirm("Revenir à l'accueil ? Ton parcours en cours sera effacé.")) { ev.preventDefault(); return; }
+    if (etape !== "accueil") recommencer();
+  }
 </script>
 
 <header class="bandeau">
   <div class="interieur">
-    <span class="pastille" aria-hidden="true">B</span>
-    <span class="etiquette-signal">Ligne 2027</span>
-    <span class="nom">Le Bon Bus</span>
+    <a class="logo" href="#retour" onclick={versAccueil}>
+      <svg viewBox="-34 -8 240 112" aria-hidden="true"><Bus niveau="adore" /></svg>
+      <span class="marque">LeBonBus<span>2027</span></span><span class="visually-hidden">, retour à l'accueil</span>
+    </a>
   </div>
 </header>
 
@@ -163,8 +172,13 @@
 <style>
   .bandeau { background: var(--marque); color: #fff; border-bottom: 4px solid var(--jaune); }
   .bandeau .interieur { max-width: 760px; margin: 0 auto; padding: 10px 16px; display: flex; align-items: center; gap: 10px; }
-  .pastille { width: 30px; height: 30px; border-radius: 50%; background: var(--jaune); color: var(--marque); display: grid; place-items: center; font-weight: 900; }
-  .bandeau .nom { margin-left: auto; font-weight: 800; }
+  /* Logo : le car de luxe et le nom ; tout le bloc ramène à l'accueil. */
+  .logo { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; color: #fff; text-decoration: none; border-radius: var(--rayon); }
+  .logo svg { width: 54px; height: auto; flex: none; }
+  .marque { font-size: 23px; font-weight: 900; letter-spacing: -0.01em; line-height: 1; }
+  .marque span { color: var(--jaune); }
+  .logo:hover .marque { text-decoration: underline; text-decoration-color: var(--jaune); text-underline-offset: 4px; }
+  .logo:focus-visible { outline: 3px solid var(--jaune); outline-offset: 3px; }
   footer { max-width: 760px; margin: 0 auto; padding: 16px 16px 32px; color: var(--discret); font-size: 15px; border-top: 4px solid var(--jaune); }
   footer p { margin-bottom: 4px; }
   footer nav { margin-top: 8px; line-height: 2.4; }

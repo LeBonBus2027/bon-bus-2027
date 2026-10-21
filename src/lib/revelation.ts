@@ -98,8 +98,8 @@ function rangement(niveau: Niveau | undefined) {
 }
 
 /**
- * Bus mis en avant : les 3 plus proches, ton plus beau bus (le plus éloigné s'il y en a plusieurs)
- * et ton épave (la plus proche s'il y en a plusieurs).
+ * Bus mis en avant (« Gratter la peinture ») : les 3 plus proches, tous les bus de ton plus beau bac, puis ton épave
+ * (la plus proche s'il y en a plusieurs). Ton plus beau bus est le plus éloigné de ce bac.
  */
 export function reveler(classement: readonly Classe<Candidat>[], bacs: Readonly<Record<string, Niveau>>, tirage: () => number = tirageCrypto): Revelation {
   const meilleur = classement[0]!;
@@ -107,7 +107,8 @@ export function reveler(classement: readonly Classe<Candidat>[], bacs: Readonly<
   const haut = presents[0], bas = presents.length > 1 ? presents.at(-1) : undefined;
   const beau = haut ? classement.filter(c => bacs[c.candidat.id] === haut).at(-1) : undefined;
   const epave = bas ? classement.find(c => bacs[c.candidat.id] === bas) : undefined;
-  const focus = [...new Set([...classement.slice(0, 3), beau, epave].filter((c): c is Classe<Candidat> => !!c))];
+  const dansLeHaut = haut ? classement.filter(c => bacs[c.candidat.id] === haut) : [];
+  const focus = [...new Set([...classement.slice(0, 3), ...dansLeHaut, epave].filter((c): c is Classe<Candidat> => !!c))];
   const rappel = classement.filter((c, i) => i < 3 || (!!haut && bacs[c.candidat.id] === haut));
 
   const n = meilleur.candidat.nom, nm = meilleur.trajet.arrets;

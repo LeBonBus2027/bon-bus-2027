@@ -87,11 +87,14 @@ for (let s = 1; s <= NB; s++) {
       }
     };
     await classerCeuxAffiches();
-    // De 0 à 14 candidats ajoutés depuis « Ajouter un candidat ».
+    // De 0 à 14 candidats ajoutés depuis « Ajouter des candidats », cochés en une ou deux fois.
     const ajouts = s % 4 === 1 ? 0 : s % 4 === 0 ? 14 : 1 + Math.floor(alea() * 13);
-    for (let k = 0; k < ajouts; k++) {
-      await page.getByText(/^Ajouter un candidat/).click();
-      await un(await page.locator(".ajout li button").all()).click();
+    for (const lot of ajouts > 1 && alea() < 0.5 ? [Math.ceil(ajouts / 2), Math.floor(ajouts / 2)] : [ajouts]) {
+      if (!lot) continue;
+      await page.getByText(/^Ajouter des candidats/).click();
+      const cases = [...(await page.locator(".ajout input[type=checkbox]").all())].sort(() => alea() - 0.5).slice(0, lot);
+      for (const c of cases) await c.check();
+      await page.locator(".ajouter .principal").click();
       await classerCeuxAffiches();
     }
     await expect(page.getByRole("heading", { name: "Ta gare routière" })).toBeVisible();
@@ -164,7 +167,12 @@ for (let s = 1; s <= NB; s++) {
     tab.forEach((t, k) => expect(t.bus, ctx).toBe(BUS[peint[k]!]));
     const peinture = Object.fromEntries(tab.map((t, k) => [t.nom, peint[k]!]));
 
-    // 2. « On a gratté la peinture » : bus de ta gare, bonne peinture, bon effet.
+    // 2. « On a gratté la peinture » : les 3 plus proches, tout ton plus beau bac et ton épave ; bonne peinture, bon effet.
+    const hautVu = BEAUTE.find(n => tab.some(t => bacs[t.nom] === n));
+    const basVu = [...BEAUTE].reverse().find(n => tab.some(t => bacs[t.nom] === n));
+    const vus = new Set([...tab.slice(0, 3).map(t => t.nom), ...tab.filter(t => bacs[t.nom] === hautVu).map(t => t.nom)]);
+    if (basVu !== hautVu) vus.add(tab.find(t => bacs[t.nom] === basVu)!.nom);
+    expect(new Set(noms2), ctx).toEqual(vus);
     noms2.forEach((nom, k) => {
       const r = resumes2[k]!;
       expect(nom in bacs, ctx).toBe(true);

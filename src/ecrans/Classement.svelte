@@ -29,9 +29,14 @@
     titre?.focus();
   }
 
-  function ajouter(c: Candidat) {
-    ordre.push(c);
-    index = ordre.length - 1;
+  // « Ajouter des candidats » : on coche ceux qu'on veut, puis on les ajoute d'un coup ; ils passent ensuite un par un dans les bacs.
+  let coches = $state<string[]>([]);
+  function ajouter() {
+    const nouveaux = autres.filter(c => coches.includes(c.id));
+    if (!nouveaux.length) return;
+    index = ordre.length;
+    ordre.push(...nouveaux);
+    coches = [];
     titre?.focus();
   }
 </script>
@@ -84,13 +89,24 @@
 
   {#if autres.length}
     <details class="boite ajout">
-      <summary>Ajouter un candidat ({autres.length} autres)</summary>
-      <p class="discret petit">Ces candidats sont sous {selection.seuil} % dans la moyenne des sondages, ou n'y figurent pas. Ajoute ceux que tu veux voir partir de la gare.</p>
+      <summary>Ajouter des candidats ({autres.length} autres)</summary>
+      <p class="discret petit">Ces candidats sont sous {selection.seuil} % dans la moyenne des sondages, ou n'y figurent pas. Coche ceux que tu veux voir partir de la gare, puis ajoute-les.</p>
       <ul>
         {#each autres as c (c.id)}
-          <li><button class="discret" onclick={() => ajouter(c)}><Photo id={c.id} taille={40} /> + {c.nom} <span>· {c.parti}</span></button></li>
+          <li>
+            <label class:coche={coches.includes(c.id)}>
+              <input type="checkbox" value={c.id} bind:group={coches} />
+              <Photo id={c.id} taille={40} /> <span class="nom">{c.nom}<span class="parti">{c.parti}</span></span>
+            </label>
+          </li>
         {/each}
       </ul>
+      <p class="ajouter">
+        <button class="principal" onclick={ajouter} disabled={!coches.length}>
+          {coches.length ? `Ajouter ${coches.length === 1 ? "ce candidat" : `ces ${coches.length} candidats`}` : "Coche au moins un candidat"}
+        </button>
+        {#if coches.length}<button class="discret" onclick={() => (coches = [])}>Tout décocher</button>{/if}
+      </p>
     </details>
   {/if}
 
@@ -115,7 +131,11 @@
   .ajout { margin-top: 24px; }
   .ajout summary { cursor: pointer; font-weight: 600; min-height: 32px; }
   .ajout ul { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 6px; }
-  .ajout button { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; border-radius: var(--rayon); color: var(--encre); }
-  .ajout button span { color: var(--discret); font-size: 15px; }
+  .ajout label { display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 4px 10px; border: 2px solid var(--trait); border-radius: var(--rayon); cursor: pointer; }
+  .ajout label.coche { border-color: var(--contour); background: var(--fond); box-shadow: inset 5px 0 0 var(--jaune); }
+  .ajout .nom { display: grid; font-weight: 600; line-height: 1.25; }
+  .ajout .parti { color: var(--discret); font-size: 14.5px; font-weight: 400; }
+  .ajout input { width: 24px; height: 24px; margin: 0; flex: none; accent-color: var(--marque); }
+  .ajouter { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 0; }
   .suite { margin-top: 24px; }
 </style>

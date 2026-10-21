@@ -18,8 +18,8 @@ await page.evaluate(() => {
   document.body.innerHTML = `
     <div style="width:1200px;height:630px;box-sizing:border-box;background:#fff;font-family:system-ui,sans-serif;color:#0b1f3a;display:flex;flex-direction:column">
       <div style="background:#0b1f3a;color:#fff;border-bottom:10px solid #ffcd00;padding:36px 64px 34px">
-        <div style="display:flex;align-items:center;gap:14px;font-weight:800;letter-spacing:.08em;font-size:22px;color:#ffcd00">
-          <span style="width:40px;height:40px;border-radius:50%;background:#ffcd00;color:#0b1f3a;display:grid;place-items:center;font-weight:900">B</span>LIGNE 2027</div>
+        <div style="display:flex;align-items:center;gap:14px;font-weight:900;font-size:34px;letter-spacing:-.01em">
+          <svg viewBox="-20 -6 230 110" width="76" height="36">${window.busMetro("adore")}</svg><span>LeBonBus<span style="color:#ffcd00">2027</span></span></div>
         <div style="font-size:74px;font-weight:900;line-height:1.05;margin-top:14px">Quel bus te ramène chez toi&nbsp;?</div>
       </div>
       <div style="display:flex;justify-content:space-around;align-items:flex-end;padding:34px 40px 0">${svg("adore")}${svg("bof")}${svg("jamais")}</div>

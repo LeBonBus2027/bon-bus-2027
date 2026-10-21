@@ -113,11 +113,11 @@ export async function dessinerTicket(
   ctx.fillStyle = NUIT; ctx.fillRect(x0, y0, w, 230);
   ctx.fillStyle = JAUNE; ctx.fillRect(x0, y0 + 230, w, 10);
   ctx.restore();
-  ctx.fillStyle = JAUNE; ctx.beginPath(); ctx.arc(x0 + 72, y0 + 66, 30, 0, 2 * Math.PI); ctx.fill();
-  ctx.fillStyle = NUIT; police(ctx, 900, 34); ctx.textAlign = "center"; ctx.fillText("B", x0 + 72, y0 + 78);
   ctx.textAlign = "left";
-  ctx.fillStyle = JAUNE; police(ctx, 800, 22, "3px"); ctx.fillText("TITRE DE TRANSPORT", x0 + 122, y0 + 54);
-  ctx.fillStyle = "#ffffff"; police(ctx, 900, 30, "1px"); ctx.fillText("LIGNE 2027 · LE BON BUS", x0 + 122, y0 + 90);
+  ctx.fillStyle = JAUNE; police(ctx, 800, 22, "3px"); ctx.fillText("TITRE DE TRANSPORT", x0 + 50, y0 + 54);
+  // Le nom : « LeBonBus » en blanc, « 2027 » en jaune.
+  police(ctx, 900, 36); ctx.fillStyle = "#ffffff"; ctx.fillText("LeBonBus", x0 + 50, y0 + 94);
+  ctx.fillStyle = JAUNE; ctx.fillText("2027", x0 + 50 + ctx.measureText("LeBonBus").width, y0 + 94);
   ctx.textAlign = "right"; ctx.fillStyle = JAUNE; police(ctx, 800, 22, "3px"); ctx.fillText("1 VOYAGE", x0 + w - 50, y0 + 54);
   ctx.textAlign = "left"; ctx.fillStyle = "#ffffff"; police(ctx, 900, 54);
   couper(ctx, "Quel bus te ramène chez toi ?", w - 110).forEach((l, i) => ctx.fillText(l, x0 + 50, y0 + 172 + i * 60));

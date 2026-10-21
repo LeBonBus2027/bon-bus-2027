@@ -136,18 +136,30 @@ test("les en-têtes de sécurité sont servis", async ({ request }) => {
   expect(h["cross-origin-opener-policy"]).toBe("same-origin");
 });
 
-test("on peut ajouter un candidat non retenu au départ", async ({ page }) => {
+test("on peut ajouter plusieurs candidats non retenus au départ, d'un coup", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "C'est parti" }).click();
   await classerTout(page);
-  await page.getByText(/Ajouter un candidat \(14 autres\)/).click();
-  const bouton = page.locator(".ajout button").first();
-  const nom = ((await bouton.textContent()) ?? "").replace("+", "").split("·")[0]!.trim();
-  await bouton.click();
-  await expect(page.getByRole("heading", { name: nom })).toBeVisible();
-  await expect(page.getByText("Candidat 8 sur 8")).toBeVisible();
-  await page.getByRole("button", { name: "Bof" }).click();
-  await expect(page.getByText(/Ajouter un candidat \(13 autres\)/)).toBeVisible();
+  await page.getByText(/Ajouter des candidats \(14 autres\)/).click();
+  const ajouter = page.locator(".ajouter .principal");
+  await expect(ajouter).toBeDisabled();
+  const cases = page.locator(".ajout input[type=checkbox]");
+  const noms = [];
+  for (const k of [0, 3, 5]) {
+    await cases.nth(k).check();
+    noms.push(await page.locator(".ajout label .nom").nth(k).evaluate(e => e.firstChild!.textContent!.trim()));
+  }
+  await expect(ajouter).toHaveText("Ajouter ces 3 candidats");
+  await auditAccessibilite(page, "ajout de candidats");
+  await ajouter.click();
+  // Ils passent ensuite un par un dans les bacs, dans l'ordre de la liste.
+  for (const [i, nom] of noms.entries()) {
+    await expect(page.getByRole("heading", { name: nom })).toBeVisible();
+    await expect(page.getByText(`Candidat ${8 + i} sur 10`)).toBeVisible();
+    await page.getByRole("button", { name: "Bof" }).click();
+  }
+  await expect(page.getByRole("heading", { name: "Ta gare routière" })).toBeVisible();
+  await expect(page.getByText(/Ajouter des candidats \(11 autres\)/)).toBeVisible();
 });
 
 test("chaque bus explique sa position, depuis le tableau ou la carte", async ({ page }) => {
@@ -382,4 +394,28 @@ test("« Affine ton résultat » : répondre à toutes les questions restantes",
   await expect(page.getByRole("heading", { name: "Terminus !" })).toBeVisible();
   // Plus aucune question à ajouter : le bloc disparaît.
   await expect(page.getByRole("heading", { name: "Affine ton résultat" })).toHaveCount(0);
+});
+
+test("le logo LeBonBus2027 ramène à l'accueil, après confirmation si un parcours est en cours", async ({ page }) => {
+  const problemes = surveiller(page);
+  await page.goto("/");
+  const logo = page.getByRole("link", { name: /^LeBonBus2027\s*, retour à l'accueil$/ });
+  await expect(logo).toBeVisible();
+  await page.getByRole("button", { name: "C'est parti" }).click();
+  await page.getByRole("group", { name: /Ton ressenti sur/ }).getByRole("button", { name: "Bof" }).click();
+  // Refus : on reste où on était, rien n'est perdu.
+  page.once("dialog", d => d.dismiss());
+  await logo.click();
+  await expect(page.getByText("Candidat 2 sur 7")).toBeVisible();
+  // Accord : retour à l'accueil, parcours effacé.
+  page.once("dialog", d => d.accept());
+  await logo.click();
+  await expect(page.getByRole("heading", { name: "Quel bus te ramène chez toi ?" })).toBeVisible();
+  await page.getByRole("button", { name: "C'est parti" }).click();
+  await expect(page.getByText("Candidat 1 sur 7")).toBeVisible();
+  // Depuis une page annexe aussi.
+  await page.goto("/#methode");
+  await page.getByRole("link", { name: /^LeBonBus2027\s*, retour à l'accueil$/ }).click();
+  await expect(page.getByRole("heading", { name: "Quel bus te ramène chez toi ?" })).toBeVisible();
+  expect(problemes).toEqual([]);
 });

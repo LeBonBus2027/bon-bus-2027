@@ -37,15 +37,17 @@ describe("reveler", () => {
 
   it("« Pour rappel » reprend tous les bus du plus beau bac, pas seulement le plus éloigné", () => {
     const r = reveler(classement, { a: "bof", b: "bof", c: "pas", d: "adore", e: "adore" });
-    expect(r.focus.map(c => c.candidat.id)).not.toContain("d");
     expect(r.haut).toBe("adore");
     expect(r.rappel.map(c => c.candidat.id)).toEqual(["a", "b", "c", "d", "e"]);
   });
 
-  it("met en avant 5 bus au plus, sans doublon", () => {
+  it("met en avant les 3 plus proches, tout ton plus beau bac et ton épave, sans doublon", () => {
     const r = reveler(classement, { a: "jamais", b: "adore", c: "bof", d: "pas", e: "bof" });
-    expect(r.focus.length).toBeLessThanOrEqual(5);
-    expect(new Set(r.focus).size).toBe(r.focus.length);
+    expect(r.focus.map(c => c.candidat.id)).toEqual(["a", "b", "c"]);
+    const r2 = reveler(classement, { a: "bof", b: "pas", c: "bof", d: "adore", e: "adore" });
+    expect(r2.focus.map(c => c.candidat.id)).toEqual(["a", "b", "c", "d", "e"]);
+    const r3 = reveler([...classement, cand("f", 15)], { a: "bof", b: "bof", c: "bof", d: "adore", e: "jamais", f: "adore" });
+    expect(r3.focus.map(c => c.candidat.id)).toEqual(["a", "b", "c", "d", "f", "e"]);
   });
 
   it("reste correct si tout le monde est inconnu", () => {

@@ -99,7 +99,11 @@ describe(`simulations (${N} parcours)`, () => {
       const ctx = `parcours ${i}`;
       expect(r.meilleur, ctx).toBe(p.classement[0]);
       expect(new Set(r.focus).size, ctx).toBe(r.focus.length);
-      expect(r.focus.length, ctx).toBeLessThanOrEqual(5);
+      const epave = p.classement.find(c => p.bacs[c.candidat.id] === ORDRE_BEAUTE.findLast(n => p.classement.some(x => p.bacs[x.candidat.id] === n)));
+      const vus = new Set([...p.classement.slice(0, 3), ...p.classement.filter(c => !!r.haut && p.bacs[c.candidat.id] === r.haut)]);
+      if (r.epave) vus.add(r.epave);
+      expect(new Set(r.focus), ctx).toEqual(vus);
+      if (r.epave) expect(r.epave, ctx).toBe(epave);
       const haut = ORDRE_BEAUTE.find(n => p.classement.some(c => p.bacs[c.candidat.id] === n));
       expect(r.haut, ctx).toBe(haut);
       if (r.beau) {

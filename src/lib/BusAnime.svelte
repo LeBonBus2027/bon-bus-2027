@@ -69,6 +69,6 @@
     .brille svg { filter: drop-shadow(0 0 5px #ffcd00); }
     .brille .eclat { opacity: 1; }
     .panne svg { transform: translateY(5px) rotate(5deg); filter: grayscale(0.7) brightness(0.85); }
-    .panne .fumee { opacity: 0.6; transform: translate(-6px, -18px); }
+    .panne .fumee { opacity: 0.6; transform: translate(-4px, -4px); }
   }
 </style>
