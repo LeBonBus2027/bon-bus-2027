@@ -7,18 +7,16 @@
   import Bus from "../lib/Bus.svelte";
   import Photo from "../lib/Photo.svelte";
   import Afficheur from "./Afficheur.svelte";
-  import AvantApres from "./AvantApres.svelte";
   import Justice from "./Justice.svelte";
   import { affairesPubliees, chargerJustice, nombre, type Justice as DonneesJustice } from "../lib/justice";
   import Partage from "./Partage.svelte";
 
   /*
-   * Page récap, dans l'ordre de priorité du message (pour qu'il ne se dilue pas) :
-   * 1. le verdict (quel bus te rapproche le plus) ; 2. l'écart entre ton ressenti et la réalité (peinture grattée) ;
-   * 3. la leçon (girouette, morale) ; 4. l'appel à voter ; 5. le partage ; 6. le détail bus par bus ;
-   * 7. pour aller plus loin (affiner, priorités, rétroviseur), replié ou en retrait ; 8. recommencer.
+   * Page récap, qui ne répète pas le diaporama (on peut le revoir d'un bouton) :
+   * 1. le verdict (afficheur, message, morale) ; 2. l'appel à voter ; 3. le partage, replié ;
+   * 4. le détail bus par bus ; 5. ce que dit la justice ; 6. pour aller plus loin ; 7. recommencer.
    */
-  let { revelation, classement, bacs, horsSelection, onPourquoi, onRecommencer, onAffiner, restantes = 0, outils }: {
+  let { revelation, classement, bacs, horsSelection, onPourquoi, onRecommencer, onRevoir, onAffiner, restantes = 0, outils }: {
     revelation: Revelation;
     classement: readonly Classe<Candidat>[];
     bacs: Record<string, Niveau>;
@@ -32,6 +30,8 @@
     /** Outils interactifs (priorités, rétroviseur), dans « Pour aller plus loin ». */
     outils?: Snippet;
     onRecommencer: () => void;
+    /** Relance le diaporama de fin (afficheur, peinture grattée, pour rappel, morale, partage). */
+    onRevoir: () => void;
   } = $props();
 
   // « Ce que dit la justice » : le nombre de décisions de chaque candidat, pour l'en-tête de sa carte.
@@ -44,10 +44,8 @@
 <Afficheur podium={revelation.podium} total={classement.length} />
 <p class="message">{revelation.message}</p>
 
-<AvantApres focus={revelation.focus} {bacs} peinture={revelation.peinture} {onPourquoi} compact />
-
-<blockquote class="girouette">{revelation.metaphore}</blockquote>
 <p class="morale"><span>Aucun bus ne te dépose pile devant chez toi. Prends celui qui te rapproche le plus.</span></p>
+<p><button class="revoir" onclick={onRevoir}>Revoir le diaporama</button></p>
 
 <div class="boite conduis">
   <h2>Maintenant, c'est toi qui conduis</h2>
@@ -55,7 +53,10 @@
   <p><a class="bouton" href="https://www.service-public.fr/particuliers/vosdroits/R51788" target="_blank" rel="noopener noreferrer">Vérifier mon inscription</a></p>
 </div>
 
-<Partage {revelation} {bacs} />
+<details class="boite partage-replie">
+  <summary>Partager mon ticket</summary>
+  <Partage {revelation} {bacs} titre={false} />
+</details>
 
 <h2>Tes bus</h2>
 <p class="discret petit">Où chaque bus s'arrête, de ta porte (à gauche) jusqu'au terminus (à droite), en passant par la gare d'où ils sont tous partis.</p>
@@ -167,6 +168,10 @@
   .affiner p:last-child { margin-bottom: 0; }
   .pourquoi { justify-self: end; min-height: 40px; padding: 6px 14px; font-size: 15px; border-color: var(--trait); }
   .recommencer { margin-top: 24px; }
+  .revoir { min-height: 44px; padding: 8px 16px; }
+  .partage-replie { margin: 0 0 20px; }
+  .partage-replie > summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; font-weight: 800; font-size: 18px; }
+  .partage-replie[open] > summary { margin-bottom: 12px; }
   .justice { display: grid; gap: 12px; }
   .fiche-justice { background: var(--carte); border-left: 5px solid var(--jaune); border-radius: var(--rayon); padding: 10px 12px; }
   .fiche-justice.vide { border-left-color: var(--trait); }

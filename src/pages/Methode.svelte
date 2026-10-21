@@ -35,6 +35,9 @@
 <h2>Pourquoi nos résultats peuvent différer de MonVote2027</h2>
 <p>MonVote2027 calcule un pourcentage avec une formule linéaire. Nous utilisons leur tableau de concordance qualitative, qui distingue mieux « plutôt pour » de « plutôt contre ». Le classement peut donc légèrement différer. Pour ne pas afficher deux chiffres contradictoires, nous affichons des arrêts plutôt que leur pourcentage.</p>
 
+<h2>Le diaporama de fin</h2>
+<p>« Pour rappel » montre ce que dit la justice sur les bus de ton plus beau bac et sur les 3 bus qui te rapprochent le plus. Si un bus de ton plus beau bac s'arrête plus loin que celui qui te rapproche le plus, il passe en premier : c'est ton « coup de cœur qui t'éloigne », repris dans la morale et sur ton ticket. Ces choix dépendent seulement de ton classement de départ et de tes réponses, jamais du candidat.</p>
+
 <h2>Ce que dit la justice</h2>
 <p>Avant le récap (« Pour rappel »), dans le récap et dans l'explication du trajet de chaque bus, le site montre les décisions de justice rendues à l'encontre du candidat lui-même, puis, repliées, celles qui visent des membres de son parti. Elles sont affichées à part et ne changent jamais le trajet des bus.</p>
 <ul>

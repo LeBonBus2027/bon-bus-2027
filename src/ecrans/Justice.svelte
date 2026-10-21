@@ -70,6 +70,9 @@
     <p class="discret petit">Aucune décision visant des membres de son parti ({parti.nom}) n'a été trouvée.</p>
   {/if}
 {/if}
+{#if justice && !parti && affaires !== undefined}
+  <p class="discret petit">Son parti n'est pas suivi par Poligraph : on ne sait pas s'il y a des décisions visant ses membres.</p>
+{/if}
 
 <style>
   .affaires { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }

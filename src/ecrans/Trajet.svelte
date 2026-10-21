@@ -126,6 +126,13 @@
     await new Promise(fin => setTimeout(fin, mouvementReduit() ? 0 : 1400));
   }
 
+  /** Depuis le récap : on rejoue le diaporama de fin, sous la carte. */
+  async function revoir() {
+    phase = "diapo";
+    await tick();
+    document.querySelector(".carte")?.scrollIntoView({ behavior: mouvementReduit() ? "auto" : "smooth", block: "start" });
+  }
+
   /** Fin du diaporama : la carte devient libre et la page récap s'affiche. */
   async function terminer() {
     gratte = true;
@@ -236,7 +243,7 @@
 {/if}
 
 {#if phase === "fin"}
-  <Resultats {revelation} {classement} {bacs} {horsSelection} onPourquoi={choisir} {onRecommencer}
+  <Resultats {revelation} {classement} {bacs} {horsSelection} onPourquoi={choisir} {onRecommencer} onRevoir={revoir}
     onAffiner={onAffiner ? affiner : undefined} restantes={restantes.length}>
     {#snippet outils()}
     <details class="outil">

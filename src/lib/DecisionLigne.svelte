@@ -29,6 +29,7 @@
       <summary class="ligne">{@render ligne()}<span class="ouvrir" aria-hidden="true"></span><span class="visually-hidden"> : voir le détail et les sources</span></summary>
       <div class="detail">
         <p class="affaire">{affaire.affaire}</p>
+        {#if affaire.origine}<p class="origine petit">{affaire.origine === "presse" ? "Vérifiée à la main dans la presse." : "D'après Poligraph (au moins deux sources), pas encore revérifiée à la main."}</p>{/if}
         <ol class="etapes">
           {#each affaire.decisions as d, i (i)}
             <li>
@@ -79,6 +80,7 @@
   .detail { margin: 10px 0 4px calc(8.4em + 10px); padding: 10px 12px; background: var(--fond); border-radius: var(--rayon); border: 1px solid var(--trait); font-size: 15px; }
   .detail p { margin: 0 0 8px; }
   .affaire { font-weight: 700; }
+  .origine { color: var(--discret); font-style: italic; }
   .etapes { margin: 0 0 8px; padding-left: 18px; display: grid; gap: 6px; }
   .etapes li { display: grid; gap: 1px; }
   .quand { font-weight: 700; }

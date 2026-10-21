@@ -16,6 +16,8 @@ export interface Affaire {
   note?: string;
   /** Personne visée (membres d'un parti). */
   personne?: string;
+  /** D'où vient la décision : vérifiée à la main dans la presse (data/justice.json) ou reprise de Poligraph. Ajouté au chargement. */
+  origine?: "presse" | "poligraph";
 }
 export interface Parti { sigle: string; nom: string; affaires: Affaire[] }
 export interface Justice {
@@ -27,14 +29,17 @@ export interface Justice {
 interface Main { meta: { date_recherche: string }; candidats: Record<string, Affaire[]> }
 interface Poligraph { meta: { date_export: string }; candidats: Record<string, Affaire[]>; partis: Record<string, { nom: string; candidats: string[]; affaires: Affaire[] }> }
 
+const marquer = (c: Record<string, Affaire[]>, origine: "presse" | "poligraph") =>
+  Object.fromEntries(Object.entries(c).map(([id, l]) => [id, l.map(a => ({ ...a, origine }))]));
+
 let chargement: Promise<Justice> | null = null;
 export const chargerJustice = () => (chargement ??= Promise.all([
   import("../../data/justice.json").then(m => m.default as unknown as Main),
   import("../../data/justice-poligraph.json").then(m => m.default as unknown as Poligraph),
 ]).then(([main, pg]) => ({
   date: [main.meta.date_recherche, pg.meta.date_export].sort().at(-1)!,
-  candidats: { ...pg.candidats, ...main.candidats },
-  partis: Object.fromEntries(Object.entries(pg.partis).flatMap(([sigle, p]) => p.candidats.map(id => [id, { sigle, nom: p.nom, affaires: p.affaires }]))),
+  candidats: { ...marquer(pg.candidats, "poligraph"), ...marquer(main.candidats, "presse") },
+  partis: Object.fromEntries(Object.entries(pg.partis).flatMap(([sigle, p]) => p.candidats.map(id => [id, { sigle, nom: p.nom, affaires: p.affaires.map(a => ({ ...a, origine: "poligraph" as const })) }]))),
 })));
 
 const derniere = (a: Affaire) => a.decisions.map(d => d.date).filter(Boolean).sort().at(-1) ?? "";

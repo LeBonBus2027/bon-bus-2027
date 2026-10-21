@@ -36,12 +36,34 @@ function graine(n: number) {
 /** Règles attendues, réécrites ici à partir de « Comment ça marche ». */
 const pas = (u: number, p: number | null) =>
   p === null || u === 0 || p === 0 ? 0 : Math.sign(u) === Math.sign(p) ? (u === p ? 2 : 1) : Math.abs(u) === 2 && Math.abs(p) === 2 ? -2 : -1;
-function distances(reponses: Map<string, number>) {
+/** Les 10 grands thèmes de MonVote2027 : une question est rangée selon sa première étiquette (recopié, pour rester indépendant). */
+const GRANDS_THEMES: Record<string, string> = {
+  immigration: "Immigration & laïcité", laicite: "Immigration & laïcité", securite: "Sécurité & justice", justice: "Sécurité & justice",
+  economie: "Économie & fiscalité", fiscal: "Économie & fiscalité", consommation: "Économie & fiscalité",
+  social: "Social & logement", logement: "Social & logement", outremer: "Social & logement", travail: "Travail & jeunesse", jeunesse: "Travail & jeunesse",
+  environnement: "Environnement & énergie", energie: "Environnement & énergie", transport: "Environnement & énergie", agriculture: "Environnement & énergie",
+  europe: "Europe & défense", defense: "Europe & défense", international: "Europe & défense", diplomatie: "Europe & défense",
+  democratie: "Démocratie & numérique", institutions: "Démocratie & numérique", numerique: "Démocratie & numérique", medias: "Démocratie & numérique",
+  education: "Éducation, culture & société", culture: "Éducation, culture & société", societe: "Éducation, culture & société", sante: "Santé",
+};
+const THEME = new Map((DONNEES.questions as { id: string; themes: string[] }[]).map(q => [q.id, GRANDS_THEMES[q.themes[0] ?? ""] ?? "Autres sujets"]));
+
+/**
+ * Distances selon « Comment ça marche » : d = 10 × (1 − s), s = Σpas ÷ 2n. Avec des thèmes qui comptent double,
+ * poussée b = Σ(pas × (poids − 1)) ÷ 2(n + Σ(poids − 1)), qui rapproche s de 1 si elle est positive, de −1 sinon.
+ */
+function distances(reponses: Map<string, number>, prioritaires: readonly string[] = []) {
   return Object.fromEntries(CANDIDATS.map(c => {
     const pos = DONNEES.positions[c.id] ?? {};
-    let somme = 0, couvertes = 0;
-    for (const [q, u] of reponses) { const p = pos[q] ?? null; if (p !== null) couvertes++; somme += pas(u, p); }
-    return [ns(c.nom), { d: 10 * (1 - somme / (2 * reponses.size)), couverture: couvertes / reponses.size }];
+    let somme = 0, couvertes = 0, bonus = 0, nBonus = 0;
+    for (const [q, u] of reponses) {
+      const p = pos[q] ?? null, k = pas(u, p), extra = prioritaires.includes(THEME.get(q)!) ? 1 : 0;
+      if (p !== null) couvertes++;
+      somme += k; bonus += k * extra; nBonus += extra;
+    }
+    const n = reponses.size, s = somme / (2 * n), b = nBonus ? bonus / (2 * (n + nBonus)) : 0;
+    const s2 = b >= 0 ? s + b * (1 - s) : s + b * (1 + s);
+    return [ns(c.nom), { d: 10 * (1 - s2), couverture: couvertes / n }];
   }));
 }
 function peinturesAttendues(arrets: number[]): string[] {
@@ -136,12 +158,17 @@ for (let s = 1; s <= NB; s++) {
     await page.getByRole("button", { name: "Voir mon récap" }).click();
     await expect(page.getByRole("heading", { name: "Ton récap" })).toBeVisible();
 
+
     // Le récap : la référence.
-    const lignes = await page.locator(".tes-bus > li").evaluateAll(lis => lis.map(li => ({
-      nom: li.querySelector(".nom")!.textContent!, bus: li.querySelector(".bus-apres")!.textContent!,
-      arrets: li.querySelector(".distance")!.firstChild!.textContent!, incomplet: li.textContent!.includes("position incomplète"),
-    })));
-    const tab = lignes.map(l => ({ ...l, nom: ns(l.nom), bus: ns(l.bus), a: /pile/.test(l.arrets) ? 0 : Number(l.arrets.match(/\d+/)![0]) }));
+    const lireTableau = async () => {
+      const lignes = await page.locator(".tes-bus > li").evaluateAll(lis => lis.map(li => ({
+        nom: li.querySelector(".nom")!.textContent!, bus: li.querySelector(".bus-apres")!.textContent!,
+        arrets: li.querySelector(".distance")!.firstChild!.textContent!, incomplet: li.textContent!.includes("position incomplète"),
+      })));
+      const tab = lignes.map(l => ({ ...l, nom: ns(l.nom), bus: ns(l.bus), a: /pile/.test(l.arrets) ? 0 : Number(l.arrets.match(/\d+/)![0]) }));
+      return tab;
+    };
+    const tab = await lireTableau();
     const ctx = JSON.stringify({ s, complete, bacs, tab: tab.map(t => [t.nom, t.a, t.bus]) });
 
     // 0. Le tableau contient exactement ta gare, aux distances recalculées ici ; « position incomplète » sous 60 % de couverture.
@@ -198,5 +225,25 @@ for (let s = 1; s <= NB; s++) {
     const meilleur = { titre: intuition ? "Ton intuition" : decu ? "La surprise" : "Ton bus", nom: tab[0]!.nom };
     const attenduTickets = decu ? [{ titre: "Ton coup de cœur", nom: decu }, meilleur] : [meilleur];
     expect(tickets.map(t => ({ titre: ns(t.titre), nom: ns(t.nom) })), ctx).toEqual(attenduTickets);
+    // Une fois sur trois : 1 à 3 thèmes qui comptent double (« Ce qui compte pour toi »), choisis au hasard.
+    const prioritaires: string[] = [];
+    if (s % 3 === 0) {
+      await page.getByText("Certains sujets comptent plus pour toi ?").click();
+      const boutons = [...(await page.locator(".priorites .themes button").all())].sort(() => alea() - 0.5).slice(0, 1 + Math.floor(alea() * 3));
+      for (const b of boutons) { prioritaires.push(ns(await b.innerText())); await b.click(); }
+      await expect(page.locator(".priorites .themes button[aria-pressed=true]")).toHaveCount(prioritaires.length);
+      await page.waitForTimeout(300);
+    }
+    if (prioritaires.length) {
+      // 5. Thèmes qui comptent double : le récap se recalcule avec la règle publiée, et la peinture suit le nouveau rang.
+      const tab2 = await lireTableau();
+      const calc2 = distances(reponses, prioritaires);
+      const ctx2 = JSON.stringify({ s, prioritaires, tab2: tab2.map(t => [t.nom, t.a, t.bus]) });
+      expect(tab2.map(t => t.nom).sort(), ctx2).toEqual(Object.keys(bacs).sort());
+      for (const t of tab2) expect(t.a, `${ctx2} · ${t.nom} : ${calc2[t.nom]!.d}`).toBe(Math.round(calc2[t.nom]!.d));
+      for (let k = 1; k < tab2.length; k++) expect(tab2[k]!.a, ctx2).toBeGreaterThanOrEqual(tab2[k - 1]!.a);
+      const peint2 = peinturesAttendues(tab2.map(t => t.a));
+      tab2.forEach((t, k) => expect(t.bus, ctx2).toBe(BUS[peint2[k]!]));
+    }
   });
 }

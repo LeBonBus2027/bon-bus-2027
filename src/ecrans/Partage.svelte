@@ -1,8 +1,9 @@
 <script lang="ts">
   import Bus from "../lib/Bus.svelte";
-  import { BAC, NIVEAUX, type Niveau } from "../lib/niveaux";
-  import { effet, type Revelation } from "../lib/revelation";
-  import { dessinerTicket, type LigneTicket } from "../lib/ticket";
+  import { NIVEAUX, type Niveau } from "../lib/niveaux";
+  import type { Revelation } from "../lib/revelation";
+  import { lignesPartage, lignesTicket } from "../lib/partage";
+  import { dessinerTicket } from "../lib/ticket";
 
   let { revelation, bacs, titre = true }: {
     revelation: Revelation; bacs: Record<string, Niveau>;
@@ -16,27 +17,11 @@
   // Un dessin caché de chaque bus, sérialisé en image pour le ticket.
   let dessins = $state<Partial<Record<Niveau, SVGSVGElement>>>({});
   let apercu = $state<string | null>(null);
-  const n = (k: number) => `${k} arrêt${k > 1 ? "s" : ""}`;
   // On partage l'accueil, jamais un résultat : ni réponse ni classement dans l'adresse.
   const lien = `${location.origin}${location.pathname}`;
   const APPEL = "Et toi, quel bus te ramène chez toi ?";
 
-  /** Texte partagé : sans nom de candidat par défaut (cahier des charges, section 2). */
-  function lignesTexte(): string[] {
-    const { meilleur, beau, intuition } = revelation;
-    const nomM = avecNoms ? ` (${meilleur.candidat.nom})` : "";
-    if (!beau) return [`Le bus qui me rapproche le plus${nomM} s'arrête à ${n(meilleur.trajet.arrets)} de chez moi.`];
-    if (intuition) return [`Mon bus préféré${nomM} est bien celui qui me rapproche le plus de chez moi : ${n(meilleur.trajet.arrets)}.`];
-    const nomB = avecNoms ? ` (${beau.candidat.nom})` : "";
-    const bac = bacs[meilleur.candidat.id];
-    return [
-      `Mon plus beau bus${nomB} s'arrête à ${n(beau.trajet.arrets)} de chez moi.`,
-      bac === "inconnu"
-        ? `Celui qui me ramenait le plus près${nomM}, je ne le connaissais même pas.`
-        : `Celui qui me ramenait le plus près${nomM}, je l'avais mis dans le bac « ${BAC[bac ?? "inconnu"]} ».`,
-    ];
-  }
-  const texte = $derived(`${lignesTexte().join(" ")} ${APPEL}`);
+  const texte = $derived(`${lignesPartage(revelation, bacs, avecNoms).join(" ")} ${APPEL}`);
   const e = encodeURIComponent;
 
   // Simples liens vers les pages de partage des réseaux : aucun de leurs scripts n'est chargé ici.
@@ -68,20 +53,9 @@
     }
   }
 
-  /** Contenu du ticket : bus imaginé → bus réel, sans nom par défaut. */
-  function lignesTicket(): LigneTicket[] {
-    const { meilleur, decu, intuition } = revelation;
-    const ligne = (titre: string, c: typeof meilleur): LigneTicket => ({
-      titre, nom: avecNoms ? c.candidat.nom : undefined,
-      avant: bacs[c.candidat.id] ?? "inconnu", apres: revelation.peinture[c.candidat.id] ?? "bof", arrets: c.trajet.arrets,
-      effet: effet(bacs[c.candidat.id] ?? "inconnu", revelation.peinture[c.candidat.id] ?? "bof"),
-    });
-    const lui = ligne(intuition ? "MON BUS PRÉFÉRÉ ME RAMÈNE BIEN" : "CELUI QUI ME RAMÈNE", meilleur);
-    return decu ? [ligne("MON COUP DE CŒUR", decu), lui] : [lui];
-  }
 
   async function creerImage(): Promise<File> {
-    const blob = await dessinerTicket(lignesTicket(), imageBus, location.host);
+    const blob = await dessinerTicket(lignesTicket(revelation, bacs, avecNoms), imageBus, location.host);
     return new File([blob], "mon-ticket-2027.png", { type: "image/png" });
   }
 

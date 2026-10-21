@@ -8,6 +8,7 @@ import { classer, pas, R0, trajet, type Classe, type Reponse, type Valeur } from
 import { candidats, positions, questions, type Candidat } from "./donnees";
 import { ORDRE_BEAUTE, type Niveau } from "./niveaux";
 import { effet, peintures, reveler, type Peinture } from "./revelation";
+import { lignesPartage, lignesTicket } from "./partage";
 
 /** Générateur pseudo-aléatoire à graine (mulberry32) : les simulations sont rejouables. */
 function graine(n: number) {
@@ -118,6 +119,30 @@ describe(`simulations (${N} parcours)`, () => {
       const attendu = p.classement.filter((c, k) => k < 3 || (!!haut && p.bacs[c.candidat.id] === haut));
       expect(r.rappel, ctx).toEqual(attendu);
       expect(r.peinture, ctx).toEqual(peintures(p.classement));
+    }
+  });
+});
+
+describe(`partage (${N} parcours)`, () => {
+  it("le texte et le ticket disent la même chose que le diaporama : coup de cœur, bus réel, effet", () => {
+    for (const { i, p } of simulations) {
+      const r = reveler(p.classement, p.bacs, () => 0.5);
+      const ctx = `parcours ${i}`;
+      for (const avecNoms of [false, true]) {
+        const texte = lignesPartage(r, p.bacs, avecNoms).join(" ");
+        expect(texte, ctx).not.toMatch(/plus beau bus/i);
+        expect(texte.includes("coup de cœur"), ctx).toBe(!!r.decu);
+        if (!avecNoms) for (const c of p.classement) expect(texte, ctx).not.toContain(c.candidat.nom);
+        if (avecNoms) expect(texte, ctx).toContain(r.meilleur.candidat.nom);
+        const ticket = lignesTicket(r, p.bacs, avecNoms);
+        expect(ticket.length, ctx).toBe(r.decu ? 2 : 1);
+        expect(ticket.at(-1)!.arrets, ctx).toBe(r.meilleur.trajet.arrets);
+        if (r.decu) expect(ticket[0], ctx).toMatchObject({ titre: "MON COUP DE CŒUR", arrets: r.decu.trajet.arrets });
+        for (const l of ticket) {
+          expect(l.nom === undefined, ctx).toBe(!avecNoms);
+          expect(l.effet, ctx).toBe(effet(l.avant, l.apres as Peinture));
+        }
+      }
     }
   });
 });

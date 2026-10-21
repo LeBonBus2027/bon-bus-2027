@@ -14,6 +14,9 @@
 <ul>
   <li><a href="https://monvote2027.fr" target="_blank" rel="noopener noreferrer">MonVote2027</a>, pour son travail de recensement et de sourçage des positions.</li>
   <li><a href="https://www.tiktok.com/@4deux_93" target="_blank" rel="noopener noreferrer">@4deux_93</a>, pour la métaphore.</li>
+  <li><a href="https://poligraph.fr" target="_blank" rel="noopener noreferrer">Poligraph</a>, observatoire citoyen, pour son recensement des affaires judiciaires des élus et des partis.</li>
+  <li><a href="https://casier-politique.fr" target="_blank" rel="noopener noreferrer">Casier politique</a>, pour son recensement des décisions de justice visant des responsables politiques.</li>
+  <li>Les journaux et sites cités en source de chaque décision de justice (lien sous chaque décision, dans « Ce que dit la justice »).</li>
 </ul>
 
 <h2>Crédits photos</h2>

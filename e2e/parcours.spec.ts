@@ -46,7 +46,7 @@ test.describe("parcours complet", () => {
     await page.getByRole("button", { name: "Voir mon récap" }).click();
     await expect(page.getByRole("heading", { name: "Ton récap" })).toBeFocused();
     await expect(page.locator(".diapo")).toHaveCount(0);
-    await expect(page.getByRole("heading", { name: "On a gratté la peinture" })).toBeVisible();
+    await expect(page.locator(".afficheur")).toBeVisible();   // le récap ne répète pas « On a gratté la peinture »
     await expect(page.locator(".message")).not.toBeEmpty();
     await expect(page.getByText("Aucun bus ne te dépose pile devant chez toi.")).toBeVisible();
     await expect(page.locator(".tes-bus > li")).toHaveCount(7);
@@ -249,6 +249,8 @@ test("le ticket de bus à partager s'affiche en aperçu, avec ou sans noms", asy
   await repondreTout(page, 20);
   await page.getByRole("button", { name: "Faire partir les bus" }).click();
   await allerAuRecap(page);
+  // Dans le récap, le partage est replié : un clic l'ouvre.
+  await page.getByText("Partager mon ticket", { exact: true }).click();
   const apercu = page.getByRole("img", { name: /Aperçu de ton ticket/ });
   await expect(apercu).toBeVisible();
   const taille = await apercu.evaluate((img: HTMLImageElement) => [img.naturalWidth, img.naturalHeight]);
@@ -290,7 +292,14 @@ test("mode duo : deux trajets sur le même téléphone, puis « Ensemble »", as
   await expect(page.getByRole("heading", { name: "Léa et Papa" })).toBeVisible();
   await expect(page.getByText("Entre vos deux maisons")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Le bus qui vous rapproche tous les deux" })).toBeVisible();
-  await expect(page.locator("tbody tr")).toHaveCount(7);
+  await expect(page.locator(".duo-bus > li")).toHaveCount(7);
+  await expect(page.locator(".ticket .jauge-personne")).toHaveCount(2);
+  // Le compromis : le bus qui laisse la personne la plus éloignée de vous deux le moins loin possible.
+  const pire = await page.locator(".duo-bus > li").evaluateAll(lis => lis.map(li =>
+    Math.max(...[...li.querySelectorAll(".arrets")].map(e => /pile/.test(e.textContent!) ? 0 : Number(e.textContent!.match(/\d+/)![0])))));
+  const compromis = await page.locator(".ticket .arrets").evaluateAll(l => Math.max(...l.map(e => /pile/.test(e.textContent!) ? 0 : Number(e.textContent!.match(/\d+/)![0]))));
+  expect(compromis).toBe(Math.min(...pire));
+  expect(pire[0]).toBe(compromis);
   await auditAccessibilite(page, "ensemble");
 
   await page.getByRole("tab", { name: "Trajet de Papa" }).click();
@@ -468,4 +477,24 @@ test("« De quoi parle-t-on ? » : texte simple, et texte d'origine de MonVote20
   await expect(aide.locator(".origine p")).not.toBeEmpty();
   expect(await aide.locator("> p").innerText()).not.toBe(await aide.locator(".origine p").innerText());
   await auditAccessibilite(page, "aide dépliée");
+});
+
+test("le récap ne répète pas le diaporama, mais permet de le revoir", async ({ page }) => {
+  const problemes = surveiller(page);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await page.getByRole("button", { name: "C'est parti" }).click();
+  await classerTout(page);
+  await page.getByRole("button", { name: /place aux questions/ }).click();
+  await page.getByRole("button", { name: /Version rapide/ }).click();
+  await repondreTout(page, 20);
+  await page.getByRole("button", { name: "Faire partir les bus" }).click();
+  await allerAuRecap(page);
+  await expect(page.locator(".afficheur")).toBeVisible();
+  await expect(page.locator(".avant-apres, .girouette")).toHaveCount(0);
+  await page.getByRole("button", { name: "Revoir le diaporama" }).click();
+  await expect(page.getByRole("heading", { name: "Tout le monde descend" })).toBeVisible();
+  await page.getByRole("button", { name: "Passer au récap" }).click();
+  await expect(page.getByRole("heading", { name: "Ton récap" })).toBeVisible();
+  expect(problemes).toEqual([]);
 });
