@@ -1,7 +1,7 @@
 <script lang="ts">
   import { tick } from "svelte";
   import { BAC, type Niveau } from "../lib/niveaux";
-  import type { Revelation } from "../lib/revelation";
+  import { arrets, type Revelation } from "../lib/revelation";
   import AvantApres from "./AvantApres.svelte";
   import { affairesPubliees, chargerJustice, fiche, ISSUE, nombre, type Justice } from "../lib/justice";
   import Photo from "../lib/Photo.svelte";
@@ -47,9 +47,11 @@
   // « Pour rappel » : ce que dit la justice sur les mêmes candidats que la peinture grattée.
   let justice = $state<Justice | null>(null);
   $effect(() => { chargerJustice().then(j => { justice = j; }); });
-  // D'abord les candidats visés par des décisions (dans l'ordre du classement), puis, ensemble, ceux qui n'en ont aucune.
+  // D'abord les candidats visés par des décisions, puis, ensemble, ceux qui n'en ont aucune.
+  // En tête : ton plus beau bus quand ce n'est pas lui qui te rapproche le plus ; ensuite l'ordre du classement.
   const rappel = $derived(justice ? revelation.rappel.map(f => ({ f, liste: affairesPubliees(justice!, f.candidat.id) ?? [] })) : null);
-  const avec = $derived(rappel?.filter(r => r.liste.length) ?? []);
+  const decu = $derived(revelation.beau && revelation.beau.trajet.arrets > revelation.meilleur.trajet.arrets ? revelation.beau : undefined);
+  const avec = $derived((rappel?.filter(r => r.liste.length) ?? []).sort((a, b) => Number(b.f === decu) - Number(a.f === decu)));
   const sans = $derived(rappel?.filter(r => !r.liste.length) ?? []);
 </script>
 
@@ -73,8 +75,9 @@
         {#if avec.length}
           <ul class="rappel">
             {#each avec as { f, liste } (f.candidat.id)}
-              <li class="fiche">
+              <li class="fiche" class:decu={f === decu}>
                 <p class="qui"><Photo id={f.candidat.id} taille={40} /> <strong>{f.candidat.nom}</strong> <span class="compte">{nombre(liste.length, "décision")}</span></p>
+                {#if f === decu && revelation.haut}<p class="chapeau">Tu l'avais mis dans le bac « {BAC[revelation.haut]} », mais son bus te laisse à {arrets(f.trajet.arrets)} de chez toi. En plus, voici ce que dit la justice à son sujet.</p>{/if}
                 <ul class="lignes">
                   {#each liste.slice(0, 3) as a, i (`${i}-${a.affaire}`)}
                     {@const l = fiche(a)}
@@ -128,6 +131,8 @@
   .rappel, .lignes, .aucune ul { list-style: none; padding: 0; margin: 0; }
   .rappel { display: grid; gap: 10px; margin-bottom: 10px; }
   .fiche { background: var(--carte); border-left: 5px solid var(--jaune); border-radius: var(--rayon); padding: 10px 12px; }
+  .fiche.decu { border-left-width: 8px; }
+  .chapeau { margin: 0 0 8px; font-weight: 600; }
   .qui { display: flex; align-items: center; gap: 10px; margin: 0 0 8px; font-size: 17px; }
   .compte { margin-left: auto; font-size: 13.5px; color: var(--discret); white-space: nowrap; }
   .lignes { display: grid; gap: 8px; }
