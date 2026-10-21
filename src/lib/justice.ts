@@ -78,5 +78,19 @@ export function resume(a: Affaire): string {
   return `${a.infraction} : ${issue} ${quand}`.trim() + statut;
 }
 
+export type Issue = "condamnation" | "relaxe" | "civil";
+export const ISSUE: Record<Issue, string> = { condamnation: "Condamnation", relaxe: "Relaxe", civil: "Décision civile" };
+/** Les mêmes éléments que resume(), séparés pour un affichage en étiquettes. */
+export function fiche(a: Affaire): { issue: Issue; infraction: string; quand: string; statut: string; definitive: boolean } {
+  const fond = [...a.decisions].reverse().find(d => FOND.test(d.issue)) ?? a.decisions.at(-1)!;
+  const date = [...a.decisions].reverse().find(d => d.date)?.date ?? "";
+  const issue: Issue = /diffamatoires/i.test(fond.issue) ? "civil" : /relaxe|non-lieu/i.test(fond.issue) ? "relaxe" : "condamnation";
+  // « relaxe en première instance » → « en première instance » ; « relaxe » seul n'apporte rien de plus que l'étiquette.
+  const tete = [issue, ISSUE[issue].toLowerCase()].find(t => a.statut.toLowerCase().startsWith(t));
+  const reste = tete ? a.statut.slice(tete.length).trim() : a.statut;
+  const definitive = a.definitive === true || /^(relaxe )?définitive/i.test(a.statut);
+  return { issue, infraction: a.infraction, quand: date ? dateJustice(date) : "", statut: reste ? reste[0]!.toUpperCase() + reste.slice(1) : "", definitive };
+}
+
 /** « 1 décision », « 3 décisions ». */
 export const nombre = (n: number, mot: string) => `${n} ${mot}${n > 1 ? "s" : ""}`;

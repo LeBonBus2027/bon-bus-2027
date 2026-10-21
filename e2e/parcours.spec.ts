@@ -32,7 +32,7 @@ test.describe("parcours complet", () => {
     await expect(page.getByRole("heading", { name: "On a gratté la peinture" })).toBeFocused();
     await page.getByRole("button", { name: "Suivant", exact: true }).click();
     await expect(page.getByRole("heading", { name: "Pour rappel" })).toBeFocused();
-    await expect(page.locator(".diapo .rappel > li")).not.toHaveCount(0);
+    await expect(page.locator(".diapo :is(.fiche, .aucune li)")).not.toHaveCount(0);
     await expect(page.locator(".diapo").getByText("Chargement…")).toHaveCount(0);
     await auditAccessibilite(page, "pour rappel");
     await page.getByRole("button", { name: "Suivant", exact: true }).click();

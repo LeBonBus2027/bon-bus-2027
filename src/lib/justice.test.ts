@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import brut from "../../data/justice.json";
 import { candidats } from "./candidats";
 import pgBrut from "../../data/justice-poligraph.json";
-import { affairesPubliees, dateJustice, resume, type Affaire } from "./justice";
+import { affairesPubliees, dateJustice, fiche, resume, type Affaire } from "./justice";
 
 const j = brut as unknown as { meta: unknown; candidats: Record<string, Affaire[]> };
 const pg = pgBrut as unknown as { candidats: Record<string, Affaire[]>; partis: Record<string, { candidats: string[]; affaires: Affaire[] }> };
@@ -61,5 +61,19 @@ describe("données « Ce que dit la justice »", () => {
     expect(dateJustice("2025-12-01")).toBe("1er décembre 2025");
     expect(dateJustice("2014-04")).toBe("avril 2014");
     expect(dateJustice("")).toBe("date non précisée");
+  });
+});
+
+describe("fiche", () => {
+  const base: Affaire = { affaire: "x", infraction: "Diffamation", decisions: [], statut: "", definitive: null, verification: "verifie", sources: [] };
+  it("sépare l'issue, la date et le statut, sans répéter l'issue", () => {
+    const f = fiche({ ...base, decisions: [{ date: "2026-01-20", juridiction: "", issue: "relaxe", peine: "" }], statut: "relaxe en première instance" });
+    expect(f).toEqual({ issue: "relaxe", infraction: "Diffamation", quand: "20 janvier 2026", statut: "En première instance", definitive: false });
+  });
+  it("classe les propos jugés diffamatoires au civil et garde l'issue de fond après un pourvoi rejeté", () => {
+    expect(fiche({ ...base, decisions: [{ date: "2022-06-29", juridiction: "", issue: "propos jugés diffamatoires", peine: "" }], statut: "décision civile en appel" })).toMatchObject({ issue: "civil", statut: "En appel" });
+    expect(fiche({ ...base, decisions: [{ date: "2021-09-24", juridiction: "", issue: "condamnation", peine: "" }], statut: "définitive" }).definitive).toBe(true);
+    const f = fiche({ ...base, decisions: [{ date: "2024-01-01", juridiction: "", issue: "condamnation", peine: "" }, { date: "2025-03-01", juridiction: "", issue: "pourvoi rejeté", peine: "" }], statut: "définitive", definitive: true });
+    expect(f).toMatchObject({ issue: "condamnation", quand: "1er mars 2025", statut: "Définitive", definitive: true });
   });
 });

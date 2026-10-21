@@ -3,7 +3,8 @@
   import { BAC, type Niveau } from "../lib/niveaux";
   import type { Revelation } from "../lib/revelation";
   import AvantApres from "./AvantApres.svelte";
-  import { affairesPubliees, chargerJustice, resume, type Justice } from "../lib/justice";
+  import { affairesPubliees, chargerJustice, fiche, ISSUE, nombre, type Justice } from "../lib/justice";
+  import Photo from "../lib/Photo.svelte";
 
   /**
    * Révélation pas à pas, dans le cadre de la carte (juste sous la ville), avant la page récap :
@@ -46,6 +47,10 @@
   // « Pour rappel » : ce que dit la justice sur les mêmes candidats que la peinture grattée.
   let justice = $state<Justice | null>(null);
   $effect(() => { chargerJustice().then(j => { justice = j; }); });
+  // D'abord les candidats visés par des décisions (dans l'ordre du classement), puis, ensemble, ceux qui n'en ont aucune.
+  const rappel = $derived(justice ? revelation.rappel.map(f => ({ f, liste: affairesPubliees(justice!, f.candidat.id) ?? [] })) : null);
+  const avec = $derived(rappel?.filter(r => r.liste.length) ?? []);
+  const sans = $derived(rappel?.filter(r => !r.liste.length) ?? []);
 </script>
 
 <section class="diapo" class:occupe aria-labelledby="titre-diapo">
@@ -63,21 +68,38 @@
       <AvantApres focus={revelation.focus} {bacs} compact titre={false} />
     {:else if etape === 2}
       <p class="petit">Ce que dit la justice sur {revelation.haut ? `tes bus « ${BAC[revelation.haut]} » et ` : ""}les 3 bus qui te rapprochent le plus. Ça ne change pas leur trajet.</p>
-      <ul class="rappel">
-        {#each revelation.rappel as f (f.candidat.id)}
-          {@const liste = justice ? affairesPubliees(justice, f.candidat.id) : undefined}
-          <li>
-            <strong>{f.candidat.nom}</strong>
-            {#if liste === undefined}<span class="discret petit">Chargement…</span>
-            {:else if !liste?.length}<span class="discret petit">Aucune décision de justice connue à son encontre.</span>
-            {:else}
-              <ul>{#each liste.slice(0, 3) as a, i (`${i}-${a.affaire}`)}<li>{resume(a)}</li>{/each}</ul>
-              {#if liste.length > 3}<span class="discret petit">et {liste.length - 3} autre{liste.length - 3 > 1 ? "s" : ""} dans ton récap</span>{/if}
-            {/if}
-          </li>
-        {/each}
-      </ul>
-      <p class="discret petit">Une décision non définitive laisse place à la présomption d'innocence. Le détail, les sources et les décisions visant leur parti sont dans ton récap.</p>
+      {#if !rappel}<p class="discret petit">Chargement…</p>
+      {:else}
+        {#if avec.length}
+          <ul class="rappel">
+            {#each avec as { f, liste } (f.candidat.id)}
+              <li class="fiche">
+                <p class="qui"><Photo id={f.candidat.id} taille={40} /> <strong>{f.candidat.nom}</strong> <span class="compte">{nombre(liste.length, "décision")}</span></p>
+                <ul class="lignes">
+                  {#each liste.slice(0, 3) as a, i (`${i}-${a.affaire}`)}
+                    {@const l = fiche(a)}
+                    <li>
+                      <span class="tag {l.issue}">{ISSUE[l.issue]}</span>
+                      <span class="corps">
+                        <span class="infraction">{l.infraction}</span>
+                        <span class="meta">{l.quand}{#if l.statut}<span class="statut" class:definitive={l.definitive}>{l.statut}</span>{/if}</span>
+                      </span>
+                    </li>
+                  {/each}
+                </ul>
+                {#if liste.length > 3}<p class="plus">+ {nombre(liste.length - 3, "autre décision")} dans ton récap</p>{/if}
+              </li>
+            {/each}
+          </ul>
+        {/if}
+        {#if sans.length}
+          <div class="aucune">
+            <p>{avec.length ? "Aucune décision de justice connue pour les autres :" : "Aucune décision de justice connue pour ces candidats :"}</p>
+            <ul>{#each sans as { f } (f.candidat.id)}<li><Photo id={f.candidat.id} taille={28} /> {f.candidat.nom}</li>{/each}</ul>
+          </div>
+        {/if}
+      {/if}
+      <p class="discret petit"><span aria-hidden="true">●</span> décision définitive · <span aria-hidden="true">○</span> pas encore définitive : la présomption d'innocence s'applique. Le détail, les sources et les décisions visant leur parti sont dans ton récap.</p>
     {:else}
       <blockquote class="girouette">{revelation.metaphore}</blockquote>
       <p class="morale"><span>Aucun bus ne te dépose pile devant chez toi. Prends celui qui te rapproche le plus.</span></p>
@@ -103,9 +125,30 @@
   .message { font-size: 18px; font-weight: 600; }
   .contenu > :last-child { margin-bottom: 0; }
   .nav { justify-content: flex-end; flex-wrap: nowrap; margin: 12px 0 0; }
-  .rappel { list-style: none; padding: 0; margin: 0 0 10px; display: grid; gap: 8px; }
-  .rappel > li > ul { margin: 2px 0 0; padding-left: 18px; font-size: 15.5px; }
-  .rappel > li > span { display: block; }
+  .rappel, .lignes, .aucune ul { list-style: none; padding: 0; margin: 0; }
+  .rappel { display: grid; gap: 10px; margin-bottom: 10px; }
+  .fiche { background: var(--carte); border-left: 5px solid var(--jaune); border-radius: var(--rayon); padding: 10px 12px; }
+  .qui { display: flex; align-items: center; gap: 10px; margin: 0 0 8px; font-size: 17px; }
+  .compte { margin-left: auto; font-size: 13.5px; color: var(--discret); white-space: nowrap; }
+  .lignes { display: grid; gap: 8px; }
+  .lignes li { display: grid; grid-template-columns: 8.4em 1fr; gap: 10px; align-items: start; }
+  .tag { display: inline-block; text-align: center; padding: 3px 6px; border-radius: 999px; font-size: 12.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.03em; border: 2px solid var(--contour); line-height: 1.2; }
+  .tag.condamnation { background: var(--encre); color: var(--fond); }
+  .tag.relaxe { background: transparent; color: var(--encre); }
+  .tag.civil { background: transparent; color: var(--encre); border-style: dashed; }
+  .corps { display: grid; gap: 2px; }
+  .infraction { font-weight: 700; line-height: 1.3; }
+  .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: 14.5px; color: var(--discret); }
+  .statut { display: inline-flex; align-items: center; gap: 5px; }
+  /* Rond plein : décision définitive ; rond vide : procédure encore ouverte, présomption d'innocence. */
+  .statut::before { content: ""; width: 8px; height: 8px; border-radius: 50%; border: 2px solid currentColor; }
+  .statut.definitive::before { background: currentColor; }
+  .plus { margin: 8px 0 0; font-size: 14px; color: var(--discret); }
+  .aucune { padding: 10px 12px; border: 2px dashed var(--trait); border-radius: var(--rayon); margin-bottom: 10px; }
+  .aucune p { margin: 0 0 8px; font-weight: 600; }
+  .aucune ul { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+  .aucune li { display: inline-flex; align-items: center; gap: 6px; }
+  @media (max-width: 420px) { .lignes li { grid-template-columns: 1fr; gap: 4px; } .tag { justify-self: start; } }
   .nav button { padding-inline: 14px; }
   @media (prefers-reduced-motion: reduce) { .contenu, .nav { transition: none; } }
 </style>
