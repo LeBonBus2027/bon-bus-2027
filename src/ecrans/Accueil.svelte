@@ -62,7 +62,9 @@
 <p class="info petit">Rien n'est enregistré : tout se passe dans ton navigateur et disparaît quand tu fermes la page. Pas de compte, pas de cookie, pas de pub.</p>
 
 <style>
-  .hero { background: var(--marque); color: #fff; margin: -20px -16px 16px; padding: 24px 16px 22px; border-bottom: 6px solid var(--jaune); }
+  /* Bandeau pleine largeur comme l'en-tête : le fond déborde de la colonne (border-image), sans créer de défilement horizontal. */
+  .hero { position: relative; background: var(--marque); color: #fff; margin: -20px -16px 22px; padding: 24px 16px 22px; border-image-source: linear-gradient(var(--marque), var(--marque)); border-image-slice: 0 fill; border-image-outset: 0 100vmax; }
+  .hero::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 6px; border-image-source: linear-gradient(var(--jaune), var(--jaune)); border-image-slice: 0 fill; border-image-outset: 0 100vmax; }
   .hero p { color: var(--jaune); margin: 0 0 6px; }
   .haut { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; }
   .haut p { margin: 0; }

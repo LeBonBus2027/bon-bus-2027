@@ -7,3 +7,4 @@ playwright-report/
 rapport-import.txt
 corps-pr.md
 .wrangler/
+.claude/settings.local.json
