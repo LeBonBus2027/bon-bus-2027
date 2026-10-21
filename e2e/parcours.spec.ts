@@ -498,3 +498,18 @@ test("le récap ne répète pas le diaporama, mais permet de le revoir", async (
   await expect(page.getByRole("heading", { name: "Ton récap" })).toBeVisible();
   expect(problemes).toEqual([]);
 });
+
+test("la question reste visible en haut de l'écran pendant qu'on lit « De quoi parle-t-on ? »", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "C'est parti" }).click();
+  await classerTout(page);
+  await page.getByRole("button", { name: /place aux questions/ }).click();
+  await page.getByRole("button", { name: /Version rapide/ }).click();
+  await page.locator("details.aide > summary").click();
+  await page.locator("details.aide .origine summary").click();
+  await page.getByRole("button", { name: "Passer", exact: true }).scrollIntoViewIfNeeded();
+  const haut = await page.locator("h1.question").evaluate(e => e.getBoundingClientRect().top);
+  expect(haut).toBeGreaterThanOrEqual(-1);
+  expect(haut).toBeLessThan(5);
+  await auditAccessibilite(page, "question collée en haut");
+});

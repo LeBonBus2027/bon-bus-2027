@@ -113,7 +113,8 @@
   .maison { width: 60px; height: 56px; flex: none; }
   .barre { height: 6px; background: var(--trait); border-radius: 3px; overflow: hidden; margin: 6px 0 4px; }
   .barre div { height: 100%; background: var(--accent); transform-origin: left; transition: transform 0.3s; }
-  .question { font-size: clamp(22px, 5vw, 28px); }
+  /* La question reste visible en haut de l'écran pendant qu'on lit « De quoi parle-t-on ? » et les réponses. */
+  .question { font-size: clamp(22px, 5vw, 28px); position: sticky; top: 0; z-index: 2; margin-inline: -16px; padding: 10px 16px; background: var(--fond); box-shadow: 0 8px 8px -8px rgb(11 31 58 / 0.25); }
   details { margin-bottom: 12px; color: var(--discret); }
   .aide > p { color: var(--encre); font-size: 16px; line-height: 1.5; }
   .origine { margin: 0; }
