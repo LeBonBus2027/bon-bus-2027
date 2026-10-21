@@ -6,7 +6,8 @@
   import AvantApres from "./AvantApres.svelte";
   import Bilan from "./Bilan.svelte";
   import Partage from "./Partage.svelte";
-  import { affairesPubliees, chargerJustice, fiche, ISSUE, nombre, type Justice } from "../lib/justice";
+  import { affairesPubliees, chargerJustice, nombre, type Justice } from "../lib/justice";
+  import DecisionLigne from "../lib/DecisionLigne.svelte";
   import Photo from "../lib/Photo.svelte";
 
   /**
@@ -83,16 +84,7 @@
                 <p class="qui"><Photo id={f.candidat.id} taille={40} /> <strong>{f.candidat.nom}</strong> <span class="compte">{nombre(liste.length, "décision")}</span></p>
                 {#if f === decu && revelation.haut}<p class="chapeau">Tu l'avais mis dans le bac « {BAC[revelation.haut]} », mais son bus te laisse à {arrets(f.trajet.arrets)} de chez toi. En plus, voici ce que dit la justice à son sujet.</p>{/if}
                 <ul class="lignes">
-                  {#each liste.slice(0, 3) as a, i (`${i}-${a.affaire}`)}
-                    {@const l = fiche(a)}
-                    <li>
-                      <span class="tag {l.issue}">{ISSUE[l.issue]}</span>
-                      <span class="corps">
-                        <span class="infraction">{l.infraction}</span>
-                        <span class="meta">{l.quand}{#if l.statut}<span class="statut" class:definitive={l.definitive}>{l.statut}</span>{/if}</span>
-                      </span>
-                    </li>
-                  {/each}
+                  {#each liste.slice(0, 3) as a, i (`${i}-${a.affaire}`)}<DecisionLigne affaire={a} />{/each}
                 </ul>
                 {#if liste.length > 3}<p class="plus">+ {nombre(liste.length - 3, "autre décision")} dans ton récap</p>{/if}
               </li>
@@ -144,24 +136,11 @@
   .qui { display: flex; align-items: center; gap: 10px; margin: 0 0 8px; font-size: 17px; }
   .compte { margin-left: auto; font-size: 13.5px; color: var(--discret); white-space: nowrap; }
   .lignes { display: grid; gap: 8px; }
-  .lignes li { display: grid; grid-template-columns: 8.4em 1fr; gap: 10px; align-items: start; }
-  .tag { display: inline-block; text-align: center; padding: 3px 6px; border-radius: 999px; font-size: 12.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.03em; border: 2px solid var(--contour); line-height: 1.2; }
-  .tag.condamnation { background: var(--encre); color: var(--fond); }
-  .tag.relaxe { background: transparent; color: var(--encre); }
-  .tag.civil { background: transparent; color: var(--encre); border-style: dashed; }
-  .corps { display: grid; gap: 2px; }
-  .infraction { font-weight: 700; line-height: 1.3; }
-  .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: 14.5px; color: var(--discret); }
-  .statut { display: inline-flex; align-items: center; gap: 5px; }
-  /* Rond plein : décision définitive ; rond vide : procédure encore ouverte, présomption d'innocence. */
-  .statut::before { content: ""; width: 8px; height: 8px; border-radius: 50%; border: 2px solid currentColor; }
-  .statut.definitive::before { background: currentColor; }
   .plus { margin: 8px 0 0; font-size: 14px; color: var(--discret); }
   .aucune { padding: 10px 12px; border: 2px dashed var(--trait); border-radius: var(--rayon); margin-bottom: 10px; }
   .aucune p { margin: 0 0 8px; font-weight: 600; }
   .aucune ul { display: flex; flex-wrap: wrap; gap: 6px 14px; }
   .aucune li { display: inline-flex; align-items: center; gap: 6px; }
-  @media (max-width: 420px) { .lignes li { grid-template-columns: 1fr; gap: 4px; } .tag { justify-self: start; } }
   .nav button { padding-inline: 14px; }
   @media (prefers-reduced-motion: reduce) { .contenu, .nav { transition: none; } }
 </style>

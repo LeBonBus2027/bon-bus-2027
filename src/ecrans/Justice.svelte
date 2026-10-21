@@ -1,5 +1,6 @@
 <script lang="ts">
   import { affairesPubliees, chargerJustice, condamnation, dateJustice, nombre, partiDe, precision, resume, type Affaire, type Justice } from "../lib/justice";
+  import DecisionLigne from "../lib/DecisionLigne.svelte";
 
   /**
    * « Ce que dit la justice » pour un candidat : ses décisions de justice vérifiées, telles quelles, avec leur statut,
@@ -43,10 +44,8 @@
     {/each}
   </ul>
 {:else}
-  <ul class="lignes">
-    {#each affaires as a, i (`${i}-${a.affaire}`)}
-      <li class:relaxe={!condamnation(a)}>{resume(a)}{#if precision(a)}{" "}<span class="discret">({precision(a)})</span>{/if}</li>
-    {/each}
+  <ul class="cartes">
+    {#each affaires as a, i (`${i}-${a.affaire}`)}<DecisionLigne affaire={a} avecPrecision />{/each}
   </ul>
 {/if}
 
@@ -55,11 +54,17 @@
     <details class="parti">
       <summary>Dans son parti ({parti.nom}) : {nombre(parti.affaires.length, "décision")} visant {nombre(personnes, "personne")}</summary>
       <p class="discret petit">Élus et responsables dont le parti actuel est le sien, d'après <a href="https://poligraph.fr" target="_blank" rel="noopener noreferrer">Poligraph</a>. Leur nombre dépend aussi de la taille et de l'ancienneté du parti.</p>
-      <ul class="lignes">
-        {#each parti.affaires as a, i (`${i}-${a.personne}-${a.affaire}`)}
-          <li class:relaxe={!condamnation(a)}><strong>{a.personne}</strong> · {resume(a)}{#if detail && a.sources.length} · <a href={a.sources.at(-1)!.url} target="_blank" rel="noopener noreferrer">sources</a>{/if}</li>
-        {/each}
-      </ul>
+      {#if detail}
+        <ul class="lignes">
+          {#each parti.affaires as a, i (`${i}-${a.personne}-${a.affaire}`)}
+            <li class:relaxe={!condamnation(a)}><strong>{a.personne}</strong> · {resume(a)}{#if a.sources.length} · <a href={a.sources.at(-1)!.url} target="_blank" rel="noopener noreferrer">sources</a>{/if}</li>
+          {/each}
+        </ul>
+      {:else}
+        <ul class="cartes">
+          {#each parti.affaires as a, i (`${i}-${a.personne}-${a.affaire}`)}<DecisionLigne affaire={a} avecPersonne avecPrecision />{/each}
+        </ul>
+      {/if}
     </details>
   {:else}
     <p class="discret petit">Aucune décision visant des membres de son parti ({parti.nom}) n'a été trouvée.</p>
@@ -81,6 +86,7 @@
   .lignes li { margin-bottom: 4px; }
   .lignes li::marker { color: var(--encre); }
   .lignes li.relaxe::marker { color: var(--discret); }
+  .cartes { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
   .parti { margin-top: 8px; }
   .parti summary { min-height: 44px; padding: 10px 0; font-weight: 700; font-size: 15.5px; }
 </style>

@@ -137,13 +137,10 @@ for (let s = 1; s <= NB; s++) {
     await expect(page.getByRole("heading", { name: "Ton récap" })).toBeVisible();
 
     // Le récap : la référence.
-    const lignes = await page.locator("tbody tr").evaluateAll(trs => trs.map(tr => {
-      const td = tr.querySelectorAll("td");
-      return {
-        nom: td[1]!.querySelector("a")!.textContent!, bus: td[2]!.querySelector("span")!.textContent!.replace("→", ""),
-        arrets: td[3]!.firstChild!.textContent!, incomplet: tr.textContent!.includes("position incomplète"),
-      };
-    }));
+    const lignes = await page.locator(".tes-bus > li").evaluateAll(lis => lis.map(li => ({
+      nom: li.querySelector(".nom")!.textContent!, bus: li.querySelector(".bus-apres")!.textContent!,
+      arrets: li.querySelector(".distance")!.firstChild!.textContent!, incomplet: li.textContent!.includes("position incomplète"),
+    })));
     const tab = lignes.map(l => ({ ...l, nom: ns(l.nom), bus: ns(l.bus), a: /pile/.test(l.arrets) ? 0 : Number(l.arrets.match(/\d+/)![0]) }));
     const ctx = JSON.stringify({ s, complete, bacs, tab: tab.map(t => [t.nom, t.a, t.bus]) });
 

@@ -49,7 +49,7 @@ test.describe("parcours complet", () => {
     await expect(page.getByRole("heading", { name: "On a gratté la peinture" })).toBeVisible();
     await expect(page.locator(".message")).not.toBeEmpty();
     await expect(page.getByText("Aucun bus ne te dépose pile devant chez toi.")).toBeVisible();
-    await expect(page.locator("tbody tr")).toHaveCount(7);
+    await expect(page.locator(".tes-bus > li")).toHaveCount(7);
     await expect(page.getByRole("link", { name: "Vérifier mon inscription" })).toHaveAttribute("href", /service-public\.fr/);
     // « Ce que dit la justice » : une section par bus de la gare, chargée à la demande.
     await expect(page.getByRole("heading", { name: "Ce que dit la justice" })).toBeVisible();
