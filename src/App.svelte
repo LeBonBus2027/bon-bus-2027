@@ -117,6 +117,14 @@
   }
 </script>
 
+<!-- Un onglet resté ouvert pendant une mise à jour du site demande d'anciens fichiers, qui n'existent plus : on le dit. -->
+{#snippet nouvelleVersion()}
+  <div class="info" role="alert">
+    <p>Une nouvelle version du site est en ligne. Recharge la page pour continuer.</p>
+    <p><button class="principal" onclick={() => location.reload()}>Recharger la page</button></p>
+  </div>
+{/snippet}
+
 <header class="bandeau">
   <div class="interieur">
     <a class="logo" href="#retour" onclick={versAccueil}>
@@ -130,7 +138,7 @@
   {#if page}
     <div id="page">
       <p><a href="#retour">← Revenir au site</a></p>
-      {#await PAGES[page]() then { default: Page }}<Page />{/await}
+      {#await PAGES[page]() then { default: Page }}<Page />{:catch}{@render nouvelleVersion()}{/await}
     </div>
   {/if}
   <!-- Le parcours reste monté (masqué) pendant la lecture d'une page : rien n'est perdu ni rejoué. -->
@@ -147,14 +155,20 @@
   {:else if etape === "questionnaire"}
     {#await ECRANS.questionnaire() then { default: Questionnaire }}
       <Questionnaire bind:reponses bind:ordre={ordreQuestions} bind:format debut={debutQuestions} onFini={finQuestions} />
+    {:catch}
+      {@render nouvelleVersion()}
     {/await}
   {:else if duo?.premier}
     {#await ECRANS.duo() then { default: Duo }}
       <Duo noms={duo.noms} parties={[duo.premier, { bacs, reponses, ordre: ordreQuestions }]} onRecommencer={recommencer} />
+    {:catch}
+      {@render nouvelleVersion()}
     {/await}
   {:else}
     {#await ECRANS.trajet() then { default: Trajet }}
       <Trajet {bacs} {reponses} ordre={ordreQuestions} onRecommencer={recommencer} onAffiner={affiner} />
+    {:catch}
+      {@render nouvelleVersion()}
     {/await}
   {/if}
   </div>

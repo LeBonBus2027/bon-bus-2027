@@ -419,3 +419,12 @@ test("le logo LeBonBus2027 ramène à l'accueil, après confirmation si un parco
   await expect(page.getByRole("heading", { name: "Quel bus te ramène chez toi ?" })).toBeVisible();
   expect(problemes).toEqual([]);
 });
+
+test("onglet resté ouvert pendant une mise à jour : on propose de recharger au lieu d'une page vide", async ({ page }) => {
+  await page.goto("/");
+  // Simule un ancien onglet : le fichier de la page n'existe plus sur le serveur.
+  await page.route(/\/(assets\/Methode[^/]*\.js|src\/pages\/Methode\.svelte)/, r => r.abort());
+  await page.getByRole("link", { name: "Comment ça marche", exact: true }).click();
+  await expect(page.getByRole("alert")).toContainText("Une nouvelle version du site est en ligne");
+  await expect(page.getByRole("button", { name: "Recharger la page" })).toBeVisible();
+});

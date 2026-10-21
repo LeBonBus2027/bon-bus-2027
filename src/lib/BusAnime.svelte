@@ -42,6 +42,10 @@
   .e3 { bottom: 22%; left: 2%; font-size: 11px; animation-delay: calc(var(--retard) + 0.9s); }
   @keyframes scintille { 0%, 100% { opacity: 0; transform: scale(0.4) rotate(0); } 50% { opacity: 1; transform: scale(1.1) rotate(25deg); } }
 
+  /* Bien vu : l'épave hoche du capot, comme pour dire « eh oui ». */
+  .juste svg { animation: hoche 0.5s ease-in-out var(--retard) 2; }
+  @keyframes hoche { 0%, 100% { transform: none; } 50% { transform: rotate(-4deg) translateY(-2px); } }
+
   /* Belle surprise : le bus fait un bond, puis scintille un peu. */
   .envol svg { animation: bond 0.9s cubic-bezier(.3, 1.6, .5, 1) var(--retard) both; }
   .envol .eclat { animation-iteration-count: 3; }
@@ -58,7 +62,8 @@
   @keyframes hoquet { 0%, 100% { transform: none; } 25% { transform: translateX(-2px); } 75% { transform: translateX(2px); } }
 
   .fumee { position: absolute; left: 4%; bottom: 30%; width: 14px; height: 14px; border-radius: 50%; background: #8a94a3; opacity: 0; animation: fume 1.8s ease-out infinite; }
-  .cale .fumee { animation-iteration-count: 2; }
+  .cale .fumee { animation-name: bouffee; animation-iteration-count: 2; }
+  @keyframes bouffee { 0% { opacity: 0.7; transform: scale(0.4); } 100% { opacity: 0; transform: translate(-8px, -12px) scale(1.2); } }
   .f1 { animation-delay: calc(var(--retard) + 0.2s); }
   .f2 { animation-delay: calc(var(--retard) + 0.8s); width: 18px; height: 18px; }
   .f3 { animation-delay: calc(var(--retard) + 1.4s); width: 22px; height: 22px; background: #5d6673; }

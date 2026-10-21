@@ -2,6 +2,7 @@
   import { tick } from "svelte";
   import { BAC, type Niveau } from "../lib/niveaux";
   import { arrets, type Revelation } from "../lib/revelation";
+  import Afficheur from "./Afficheur.svelte";
   import AvantApres from "./AvantApres.svelte";
   import Bilan from "./Bilan.svelte";
   import { affairesPubliees, chargerJustice, fiche, ISSUE, nombre, type Justice } from "../lib/justice";
@@ -65,6 +66,7 @@
 
   <div class="contenu">
     {#if etape === 0}
+      <Afficheur podium={revelation.podium} total={revelation.focus.length} />
       <p class="message">{revelation.message}</p>
       {#if !gratte}<p class="discret petit">Pour l'instant, tes bus ont encore la peinture que tu leur as donnée. Dessous, il y a ce qu'ils valent vraiment pour toi.</p>{/if}
     {:else if etape === 1}

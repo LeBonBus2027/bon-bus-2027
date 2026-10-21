@@ -8,7 +8,9 @@
   import { arrets, effet, EFFET, type Peinture } from "../lib/revelation";
 
   /**
-   * « Gratter la peinture » : pour chaque bus mis en avant, le bus imaginé au départ puis ce qu'il vaut vraiment pour toi.
+   * « Gratter la peinture » : pour chaque bus, le bus imaginé au départ puis ce qu'il vaut vraiment pour toi.
+   * Les grands écarts (bus beau devenu cabossé ou épave) prennent toute la largeur, avec un bandeau de chantier ;
+   * les réussites (« J'adore » → luxe, « Jamais » → épave) ont un cadre doré et « = » au lieu de la flèche.
    * Sans onPourquoi (diaporama), les cartes ne sont pas cliquables ; compact les range sur deux colonnes.
    */
   let { focus, bacs, peinture, onPourquoi, compact = false, titre = true }: {
@@ -34,7 +36,8 @@
       {@const apres = peinture[f.candidat.id] ?? "bof"}
       {@const e = effet(avant, apres)}
       {@const resume = `Tu voyais : ${nomBus(avant)}. Pour toi : ${nomBus(apres)}, ${arrets(f.trajet.arrets)}.${e ? ` ${EFFET[e]}.` : ""}`}
-      <li style:--retard="{i * 0.15}s">
+      {@const juste = e === "brille" || e === "juste"}
+      <li style:--retard="{i * 0.15}s" class:ecart={e === "panne"} class:reussite={juste}>
         {#snippet contenu()}
           <span class="qui"><Photo id={f.candidat.id} taille={compact ? 32 : 40} /><strong>{f.candidat.nom}</strong></span>
           <span class="bus" aria-hidden="true">
@@ -42,7 +45,7 @@
               <svg viewBox="-34 -8 240 112" aria-hidden="true"><Bus niveau={avant} /></svg>
               {#if !compact}<span class="etiquette-signal">Tu voyais</span>{/if}
             </span>
-            <span class="fleche" aria-hidden="true">→</span>
+            <span class="fleche" aria-hidden="true">{juste ? "=" : "→"}</span>
             <span class="etat apres">
               <BusAnime niveau={apres} effet={e} retard={i * 0.15 + 0.3} />
               <span class="etiquette-signal">{compact ? arrets(f.trajet.arrets) : `Pour toi · ${arrets(f.trajet.arrets)}`}</span>
@@ -88,5 +91,21 @@
   .compact .etat svg { max-width: 40px; }
   .compact .apres :global(.anime) { max-width: 92px; }
   .legende { margin: 0 0 6px; color: var(--discret); }
+
+  /* Grand écart : toute la largeur, bus en grand, bandeau de chantier, et la carte encaisse le choc. */
+  .ecart { grid-column: 1 / -1; }
+  .ecart .carte-bus, .compact .ecart .carte-bus { position: relative; overflow: hidden; border: 3px solid var(--contour); padding-top: 20px; }
+  .ecart .carte-bus::before { content: ""; position: absolute; inset: 0 0 auto; height: 10px; background: repeating-linear-gradient(-45deg, var(--jaune) 0 12px, var(--marque) 12px 24px); }
+  .ecart .qui, .compact .ecart .qui { font-size: 18px; }
+  .compact .ecart .bus { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1.5fr); }
+  .compact .ecart .etat svg { max-width: 110px; }
+  .compact .ecart .apres :global(.anime) { max-width: 180px; }
+  .ecart .etiquette-signal { font-size: 13px; }
+  li.ecart { animation: entree 0.5s ease-out both, choc 0.45s ease-in-out calc(var(--retard) + 1.4s); }
+  @keyframes choc { 0%, 100% { transform: none; } 20%, 60% { transform: translateX(-5px) rotate(-0.6deg); } 40%, 80% { transform: translateX(5px) rotate(0.6deg); } }
+
+  /* Réussite : tu l'avais bien vu. */
+  .reussite .carte-bus, .compact .reussite .carte-bus { border: 3px solid var(--jaune); box-shadow: 0 0 14px rgb(255 205 0 / 0.55); }
+  .reussite .fleche { display: grid; place-items: center; width: 1.5em; height: 1.5em; border-radius: 50%; background: var(--jaune); color: var(--marque); line-height: 1; }
   @media (prefers-reduced-motion: reduce) { li { animation: none; } }
 </style>

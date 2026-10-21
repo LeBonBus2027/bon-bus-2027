@@ -41,13 +41,13 @@ describe("reveler", () => {
     expect(r.rappel.map(c => c.candidat.id)).toEqual(["a", "b", "c", "d", "e"]);
   });
 
-  it("met en avant les 3 plus proches, tout ton plus beau bac et ton épave, sans doublon", () => {
-    const r = reveler(classement, { a: "jamais", b: "adore", c: "bof", d: "pas", e: "bof" });
-    expect(r.focus.map(c => c.candidat.id)).toEqual(["a", "b", "c"]);
-    const r2 = reveler(classement, { a: "bof", b: "pas", c: "bof", d: "adore", e: "adore" });
-    expect(r2.focus.map(c => c.candidat.id)).toEqual(["a", "b", "c", "d", "e"]);
-    const r3 = reveler([...classement, cand("f", 15)], { a: "bof", b: "bof", c: "bof", d: "adore", e: "jamais", f: "adore" });
-    expect(r3.focus.map(c => c.candidat.id)).toEqual(["a", "b", "c", "d", "f", "e"]);
+  it("gratte tous les bus : grands écarts d'abord (le plus grand en premier), puis réussites, puis le reste", () => {
+    // Peintures : a luxe, b neuf, c correct, d cabossé, e épave.
+    const r = reveler(classement, { a: "bof", b: "bof", c: "bof", d: "adore", e: "adore" });
+    expect(r.focus.map(c => c.candidat.id)).toEqual(["e", "d", "a", "b", "c"]);
+    const r2 = reveler(classement, { a: "adore", b: "bof", c: "bof", d: "bof", e: "jamais" });
+    expect(r2.focus.map(c => c.candidat.id)).toEqual(["a", "e", "b", "c", "d"]);
+    expect(new Set(r2.focus).size).toBe(classement.length);
   });
 
   it("reste correct si tout le monde est inconnu", () => {
@@ -128,6 +128,7 @@ describe("effet", () => {
     expect(effet("jamais", "bien")).toBe("envol");
     expect(effet("bof", "bien")).toBe("monte");
     expect(effet("bof", "bof")).toBeNull();
+    expect(effet("jamais", "jamais")).toBe("juste");
     expect(effet("inconnu", "adore")).toBe("envol");
     expect(effet("inconnu", "pas")).toBeNull();
   });
