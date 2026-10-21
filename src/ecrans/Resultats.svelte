@@ -6,6 +6,7 @@
   import { arrets, niveauReel, type Revelation } from "../lib/revelation";
   import Photo from "../lib/Photo.svelte";
   import AvantApres from "./AvantApres.svelte";
+  import Justice from "./Justice.svelte";
   import Partage from "./Partage.svelte";
 
   /*
@@ -76,6 +77,17 @@
   <p class="info petit">Le bus de {horsSelection.candidat.nom}, que tu n'avais pas ajouté à ta gare, se serait arrêté encore plus près ({arrets(horsSelection.trajet.arrets)}).</p>
 {/if}
 
+<h2>Ce que dit la justice</h2>
+<p class="discret petit">Pour chacun de tes bus, les décisions de justice rendues à l'encontre du candidat, telles quelles : condamnations et relaxes, avec leur statut. Elles ne changent pas son trajet. Méthode et sources : <a href="#methode">comment ça marche</a>.</p>
+<div class="justice">
+  {#each classement as c (c.candidat.id)}
+    <section aria-labelledby="justice-{c.candidat.id}">
+      <h3 id="justice-{c.candidat.id}" class="qui-justice"><Photo id={c.candidat.id} taille={32} /> {c.candidat.nom}</h3>
+      <Justice id={c.candidat.id} detail={false} />
+    </section>
+  {/each}
+</div>
+
 <h2>Pour aller plus loin</h2>
 {#if onAffiner && restantes > 0}
   {@const minutes = Math.max(1, Math.round((restantes * 6) / 60))}
@@ -116,5 +128,8 @@
   .affiner p:last-child { margin-bottom: 0; }
   .pourquoi { display: block; margin-top: 4px; min-height: 40px; padding: 6px 12px; font-size: 15px; border-color: var(--trait); }
   .recommencer { margin-top: 24px; }
+  .justice { display: grid; gap: 14px; }
+  .justice h3 { margin: 0 0 6px; font-size: 17px; }
+  .qui-justice { display: flex; align-items: center; gap: 8px; }
   .bouton { display: inline-flex; align-items: center; min-height: 48px; padding: 10px 18px; border-radius: 999px; background: var(--marque); color: var(--jaune); border: 2px solid var(--jaune); text-decoration: none; font-weight: 900; text-transform: uppercase; letter-spacing: 0.04em; }
 </style>

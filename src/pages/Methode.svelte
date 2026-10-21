@@ -32,6 +32,16 @@
 <h2>Pourquoi nos résultats peuvent différer de MonVote2027</h2>
 <p>MonVote2027 calcule un pourcentage avec une formule linéaire. Nous utilisons leur tableau de concordance qualitative, qui distingue mieux « plutôt pour » de « plutôt contre ». Le classement peut donc légèrement différer. Pour ne pas afficher deux chiffres contradictoires, nous affichons des arrêts plutôt que leur pourcentage.</p>
 
+<h2>Ce que dit la justice</h2>
+<p>Avant le récap (« Pour rappel »), dans le récap et dans l'explication du trajet de chaque bus, le site montre les décisions de justice rendues à l'encontre du candidat lui-même, puis, repliées, celles qui visent des membres de son parti. Elles sont affichées à part et ne changent jamais le trajet des bus.</p>
+<ul>
+  <li><strong>Seulement des décisions de justice</strong> : condamnations et relaxes. Jamais une plainte, une enquête ou une mise en examen, qui sont des accusations.</li>
+  <li><strong>Avec leur statut</strong> : une décision frappée d'appel ou d'un pourvoi en cassation est indiquée comme telle, et la présomption d'innocence s'applique jusqu'à la décision définitive. La décision suivante est ajoutée dès qu'elle est rendue.</li>
+  <li><strong>Le même traitement pour tous</strong>, sans commentaire ni total : seulement les faits, la juridiction, la date, la peine et les sources de presse.</li>
+  <li><strong>Sources</strong> : pour les candidats à {selection.seuil} % ou plus dans les sondages, chaque décision a été vérifiée à la main dans la presse, à partir des bases <a href="https://poligraph.fr" target="_blank" rel="noopener noreferrer">Poligraph</a> et <a href="https://casier-politique.fr" target="_blank" rel="noopener noreferrer">Casier politique</a>. Pour les autres candidats et les membres des partis, les décisions viennent de Poligraph et ne sont publiées que si Poligraph cite au moins deux sources.</li>
+  <li><strong>Membres du parti</strong> : les personnes dont le parti actuel est celui du candidat, d'après Poligraph. Leur nombre dépend aussi de la taille et de l'ancienneté du parti, et une base peut être incomplète : l'absence de décision ne prouve pas qu'il n'y en a aucune.</li>
+</ul>
+
 <h2>Ce qui ne compte pas</h2>
 <ul>
   <li><strong>Ton classement de départ</strong> ne change que l'apparence des bus. Il n'a aucun effet sur leur trajet.</li>

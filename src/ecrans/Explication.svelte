@@ -4,6 +4,7 @@
   import { BAC, type Niveau } from "../lib/niveaux";
   import { arrets, niveauReel, VU } from "../lib/revelation";
   import Photo from "../lib/Photo.svelte";
+  import Justice from "./Justice.svelte";
 
   let { candidat, trajet, bac, ordre, reponses, positions, onFermer }: {
     candidat: Candidat;
@@ -63,6 +64,10 @@
     <ul>{#each lignes as l (l.id)}{@render ligne(l)}{/each}</ul>
   </details>
   <p class="petit"><a href={candidat.url_source} target="_blank" rel="noopener noreferrer">Ses positions sourcées sur MonVote2027</a></p>
+
+  <h3>Ce que dit la justice</h3>
+  <p class="discret petit">Les décisions de justice rendues à son encontre, telles quelles. Elles ne changent pas le trajet de son bus.</p>
+  <Justice id={candidat.id} />
 </section>
 
 <style>

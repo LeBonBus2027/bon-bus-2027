@@ -1,0 +1,390 @@
+{
+  "meta": {
+    "objet": "Décisions de justice rendues contre les candidats eux-mêmes, quand ils étaient poursuivis (prévenus) : condamnations et relaxes, avec le statut de la décision.",
+    "regles": [
+      "Seulement des décisions de justice : jamais une plainte, une enquête ou une mise en examen, qui sont des accusations.",
+      "Le même traitement pour tous les candidats, sur le même périmètre.",
+      "Des faits sourcés, sans commentaire ni qualification de notre part.",
+      "Une décision frappée d'appel ou de pourvoi est publiée avec son statut ; la décision suivante est ajoutée dès qu'elle est rendue.",
+      "Une entrée « a_verifier » n'est pas publiée tant qu'elle n'est pas confirmée par une source primaire ou deux grands médias."
+    ],
+    "perimetre": "les candidats à 5 % ou plus dans la moyenne des sondages",
+    "pistes": [
+      {
+        "nom": "Casier politique (crapulopedia)",
+        "url": "https://codeberg.org/raphael-jolivet/crapulopedia",
+        "licence": "CC BY-NC-SA 4.0",
+        "usage": "pistes seulement, chaque décision revérifiée"
+      },
+      {
+        "nom": "Poligraph",
+        "url": "https://poligraph.fr/api/export/affaires",
+        "licence": "code AGPL-3.0 ; export public des affaires",
+        "usage": "pistes et sources de presse citées, chaque décision revérifiée"
+      }
+    ],
+    "date_recherche": "2026-10-20"
+  },
+  "candidats": {
+    "le_pen": [
+      {
+        "affaire": "Assistants parlementaires du Front national au Parlement européen",
+        "infraction": "Détournement de fonds publics",
+        "decisions": [
+          {
+            "date": "2025-03-31",
+            "juridiction": "Tribunal correctionnel de Paris",
+            "issue": "condamnation",
+            "peine": "4 ans d'emprisonnement dont 2 ferme (sous bracelet électronique), 100 000 € d'amende, 5 ans d'inéligibilité avec exécution provisoire"
+          },
+          {
+            "date": "2026-07-07",
+            "juridiction": "Cour d'appel de Paris",
+            "issue": "condamnation",
+            "peine": "3 ans d'emprisonnement dont 1 ferme (sous bracelet électronique), 100 000 € d'amende, 45 mois d'inéligibilité dont 30 avec sursis (partie ferme déjà purgée)"
+          }
+        ],
+        "statut": "pourvoi en cassation en cours",
+        "definitive": false,
+        "verification": "verifie",
+        "sources": [
+          {
+            "titre": "Toute l'Europe : condamnée en appel, mais éligible à l'élection présidentielle 2027",
+            "url": "https://www.touteleurope.eu/vie-politique-des-etats-membres/proces-des-assistants-du-rn-marine-le-pen-condamnee-en-appel-mais-eligible-a-l-election-presidentielle-2027/"
+          },
+          {
+            "titre": "Le Club des juristes : cinq ans d'inéligibilité avec exécution provisoire",
+            "url": "https://www.leclubdesjuristes.com/en-bref/le-tribunal-correctionnel-de-paris-condamne-marine-le-pen-a-cinq-ans-dineligibilite-avec-execution-provisoire-10074/"
+          },
+          {
+            "titre": "LCP : cinq ans d'inéligibilité avec exécution immédiate",
+            "url": "https://lcp.fr/actualites/justice-marine-le-pen-condamnee-a-cinq-ans-d-ineligibilite-avec-execution-immediate-pour"
+          }
+        ]
+      },
+      {
+        "affaire": "Propos sur La Cimade (Mayotte)",
+        "infraction": "Diffamation",
+        "decisions": [
+          {
+            "date": "2023-10-13",
+            "juridiction": "Tribunal correctionnel de Paris",
+            "issue": "condamnation",
+            "peine": "non précisée dans les sources consultées"
+          },
+          {
+            "date": "2024-09-11",
+            "juridiction": "Cour d'appel de Paris",
+            "issue": "condamnation",
+            "peine": "500 € d'amende avec sursis"
+          },
+          {
+            "date": "2025-12-16",
+            "juridiction": "Cour de cassation",
+            "issue": "pourvoi rejeté",
+            "peine": ""
+          }
+        ],
+        "statut": "définitive",
+        "definitive": true,
+        "verification": "verifie",
+        "sources": [
+          {
+            "titre": "Le Monde : Marine Le Pen condamnée pour diffamation envers la Cimade (13/10/2023)",
+            "url": "https://www.lemonde.fr/politique/article/2023/10/13/marine-le-pen-condamnee-pour-diffamation-envers-la-cimade_6194210_823448.html"
+          },
+          {
+            "titre": "Euronews : found guilty of defamation (13/10/2023)",
+            "url": "https://www.euronews.com/2023/10/13/marine-le-pen-found-guilty-of-defamation-after-accusing-french-ngo-of-smuggling-migrants-i"
+          },
+          {
+            "titre": "La Cimade : Marine Le Pen définitivement condamnée",
+            "url": "https://www.lacimade.org/diffamation-a-lencontre-de-la-cimade-marine-le-pen-definitivement-condamnee/"
+          },
+          {
+            "titre": "Le Club des juristes : définitivement condamnée pour diffamation envers la Cimade",
+            "url": "https://www.leclubdesjuristes.com/en-bref/marine-le-pen-definitivement-condamnee-pour-diffamation-envers-la-cimade-13397/"
+          },
+          {
+            "titre": "Europe 1 : de nouveau condamnée en appel pour diffamation envers la Cimade",
+            "url": "https://www.europe1.fr/politique/marine-le-pen-de-nouveau-condamnee-en-appel-pour-diffamation-envers-la-cimade-4266896"
+          }
+        ]
+      },
+      {
+        "affaire": "Diffusion d'images d'exactions de l'État islamique (2015)",
+        "infraction": "Diffusion de messages violents",
+        "decisions": [
+          {
+            "date": "2021-05-04",
+            "juridiction": "Tribunal correctionnel de Nanterre",
+            "issue": "relaxe",
+            "peine": ""
+          }
+        ],
+        "statut": "relaxe en première instance",
+        "definitive": null,
+        "verification": "verifie",
+        "a_verifier": "Appel du parquet ou non (aucune trace trouvée).",
+        "sources": [
+          {
+            "titre": "Euronews : acquitted in trial over posting images of IS atrocities",
+            "url": "https://www.euronews.com/my-europe/2021/05/04/marine-le-pen-acquitted-in-trial-over-posting-images-of-is-atrocities"
+          },
+          {
+            "titre": "Ozap : Marine Le Pen et Gilbert Collard relaxés",
+            "url": "https://www.ozap.com/actu/tweets-sur-daesh-marine-le-pen-et-gilbert-collard-relaxes/604248"
+          }
+        ]
+      },
+      {
+        "affaire": "Comparaison des prières de rue à l'Occupation (2010)",
+        "infraction": "Provocation à la discrimination, à la haine ou à la violence",
+        "decisions": [
+          {
+            "date": "2015-12-15",
+            "juridiction": "Tribunal correctionnel de Lyon",
+            "issue": "relaxe",
+            "peine": ""
+          }
+        ],
+        "statut": "relaxe",
+        "definitive": null,
+        "verification": "verifie",
+        "sources": [
+          {
+            "titre": "La Libre Belgique : Marine Le Pen relaxée",
+            "url": "https://www.lalibre.be/international/2015/12/15/prieres-de-rue-comparees-a-loccupation-marine-le-pen-est-relaxee-par-la-justice-francaise-VIFYASRH7JBONN2NRHIZFP5LWE/"
+          },
+          {
+            "titre": "Lyon Mag : prières de rue et Occupation, Marine Le Pen relaxée à Lyon",
+            "url": "https://www.lyonmag.com/article/77335/prieres-de-rue-et-occupation-marine-le-pen-relaxee-a-lyon"
+          },
+          {
+            "titre": "DH : Marine Le Pen relaxée par la justice française",
+            "url": "https://www.dhnet.be/actu/monde/2015/12/15/prieres-de-rue-comparees-a-loccupation-marine-le-pen-relaxee-par-la-justice-francaise-5BCHYEC2VJGDTFRXPFWETH74FU/"
+          }
+        ],
+        "note": "Le parquet avait lui-même requis la relaxe ; appel non connu."
+      },
+      {
+        "affaire": "Propos sur une étudiante voilée (2019)",
+        "infraction": "Injure publique",
+        "decisions": [
+          {
+            "date": "2026-01-20",
+            "juridiction": "Tribunal correctionnel de Paris",
+            "issue": "relaxe",
+            "peine": ""
+          }
+        ],
+        "statut": "relaxe en première instance",
+        "definitive": null,
+        "verification": "verifie",
+        "sources": [
+          {
+            "titre": "CNews : Marine Le Pen relaxée",
+            "url": "https://www.cnews.fr/faits-divers/2026-01-20/injure-publique-marine-le-pen-relaxee-dans-une-affaire-de-diffamation"
+          },
+          {
+            "titre": "actu.fr : Marine Le Pen jugée pour un tweet de 2019",
+            "url": "https://actu.fr/politique/marine-le-pen-de-nouveau-au-tribunal-ce-lundi-pourquoi-la-figure-du-rn-est-jugee-pour-un-tweet-de-2019_63415530.html"
+          }
+        ]
+      },
+      {
+        "affaire": "Propos visant un ancien élu du Front national, publiés sur le site du parti",
+        "infraction": "Complicité de diffamation",
+        "decisions": [
+          {
+            "date": "2010-06-01",
+            "juridiction": "Tribunal correctionnel de Nanterre",
+            "issue": "condamnation",
+            "peine": "1 500 € d'amende avec sursis et 1 000 € de dommages et intérêts"
+          }
+        ],
+        "statut": "appel non connu",
+        "definitive": null,
+        "verification": "a_verifier",
+        "a_verifier": "Une compilation citant Mediapart indique une confirmation en appel en 2011 ; à confirmer par la presse de l'époque.",
+        "sources": [
+          {
+            "titre": "Le Figaro : les Le Pen condamnés pour diffamation (01/06/2010)",
+            "url": "https://www.lefigaro.fr/flash-actu/2010/06/01/97001-20100601FILWWW00514-les-le-pen-condamnes-pour-diffamation.php"
+          }
+        ]
+      }
+    ],
+    "melenchon": [
+      {
+        "affaire": "Perquisition au siège de La France insoumise (octobre 2018)",
+        "infraction": "Actes d'intimidation envers l'autorité judiciaire, rébellion et provocation",
+        "decisions": [
+          {
+            "date": "2019-12-09",
+            "juridiction": "Tribunal correctionnel de Bobigny",
+            "issue": "condamnation",
+            "peine": "3 mois d'emprisonnement avec sursis, 8 000 € d'amende"
+          }
+        ],
+        "statut": "définitive (pas d'appel)",
+        "definitive": true,
+        "verification": "verifie",
+        "sources": [
+          {
+            "titre": "Public Sénat : condamné à trois mois avec sursis pour la perquisition houleuse à LFI",
+            "url": "https://www.publicsenat.fr/actualites/politique/melenchon-condamne-a-trois-mois-avec-sursis-pour-la-perquisition-houleuse-a-lfi"
+          },
+          {
+            "titre": "Al Jazeera : suspended jail term for shoving police during raid",
+            "url": "https://www.aljazeera.com/news/2019/12/10/melenchon-gets-suspended-jail-term-for-shoving-police-during-raid"
+          }
+        ]
+      },
+      {
+        "affaire": "Message Facebook visant un ancien journaliste du Monde (février 2018)",
+        "infraction": "Diffamation",
+        "decisions": [
+          {
+            "date": "",
+            "juridiction": "Tribunal correctionnel de Paris",
+            "issue": "relaxe",
+            "peine": ""
+          },
+          {
+            "date": "2022-06-29",
+            "juridiction": "Cour d'appel de Paris",
+            "issue": "propos jugés diffamatoires",
+            "peine": "1 € de dommages et intérêts et 2 000 € de frais de justice, sans peine pénale"
+          }
+        ],
+        "statut": "décision civile en appel ; pourvoi non connu",
+        "definitive": null,
+        "verification": "verifie",
+        "sources": [
+          {
+            "titre": "France 24 (AFP) : condamné en appel pour diffamation envers un ex-journaliste",
+            "url": "https://www.france24.com/fr/info-en-continu/20220629-jean-luc-m%C3%A9lenchon-condamn%C3%A9-en-appel-pour-diffamation-envers-un-ex-journaliste"
+          },
+          {
+            "titre": "Europe 1 : condamné en appel pour diffamation envers un ex-journaliste",
+            "url": "https://www.europe1.fr/politique/jean-luc-melenchon-condamne-en-appel-pour-diffamation-envers-un-ex-journaliste-4120613"
+          }
+        ]
+      },
+      {
+        "affaire": "Article de blog qualifiant le même journaliste d'« assassin repenti » (novembre 2016)",
+        "infraction": "Diffamation",
+        "decisions": [
+          {
+            "date": "2021-09-24",
+            "juridiction": "Tribunal correctionnel de Paris",
+            "issue": "condamnation",
+            "peine": "500 € d'amende avec sursis"
+          }
+        ],
+        "statut": "définitive",
+        "definitive": null,
+        "verification": "verifie",
+        "a_verifier": "Confirmer par la presse que l'appel a été jugé ou abandonné.",
+        "sources": [
+          {
+            "titre": "Libération : condamné pour diffamation envers un ex-journaliste du Monde (24/09/2021)",
+            "url": "https://www.liberation.fr/societe/police-justice/jean-luc-melenchon-condamne-pour-diffamation-envers-un-ex-journaliste-du-monde-20210924_CWV57DESMVC3ZOF3E5JK2UT374"
+          },
+          {
+            "titre": "CNews : condamné pour diffamation envers un journaliste",
+            "url": "https://www.cnews.fr/france/2021-09-24/assassin-repenti-jean-luc-melenchon-condamne-pour-diffamation-envers-un"
+          },
+          {
+            "titre": "Arab News (AFP) : condamné pour diffamation envers un ancien journaliste du Monde",
+            "url": "https://www.arabnews.fr/node/146266/france"
+          }
+        ],
+        "note": "Définitive selon Poligraph et Casier politique ; issue de l'appel à confirmer par la presse."
+      },
+      {
+        "affaire": "Qualification de Marine Le Pen de « fasciste » (mars 2011), plainte de celle-ci",
+        "infraction": "Injure publique",
+        "decisions": [
+          {
+            "date": "2014-04",
+            "juridiction": "Tribunal correctionnel de Paris",
+            "issue": "relaxe",
+            "peine": ""
+          },
+          {
+            "date": "2015-10",
+            "juridiction": "Cour d'appel de Paris",
+            "issue": "relaxe confirmée",
+            "peine": ""
+          },
+          {
+            "date": "",
+            "juridiction": "Cour de cassation",
+            "issue": "pourvoi rejeté",
+            "peine": ""
+          }
+        ],
+        "statut": "relaxe définitive",
+        "definitive": true,
+        "verification": "verifie",
+        "sources": [
+          {
+            "titre": "Public Sénat : Marine Le Pen définitivement déboutée contre Jean-Luc Mélenchon",
+            "url": "https://www.publicsenat.fr/actualites/politique/fasciste-marine-le-pen-definitivement-deboutee-contre-jean-luc-melenchon-56342"
+          },
+          {
+            "titre": "Politis : Marine Le Pen déboutée de sa plainte contre Mélenchon (2014)",
+            "url": "https://www.politis.fr/articles/2014/04/fasciste-marine-le-pen-deboutee-de-sa-plainte-contre-melenchon-26558"
+          }
+        ],
+        "note": "Date exacte de l'arrêt de cassation non confirmée (un « mardi 28 février », vraisemblablement 2017)."
+      },
+      {
+        "affaire": "Propos visant des journalistes de la cellule investigation de Radio France (2018)",
+        "infraction": "Injure publique et diffamation",
+        "decisions": [
+          {
+            "date": "2022-01-11",
+            "juridiction": "Tribunal correctionnel de Paris",
+            "issue": "condamnation",
+            "peine": "500 € d'amende avec sursis et 3 000 € de dommages et intérêts"
+          }
+        ],
+        "statut": "appel en cours",
+        "definitive": false,
+        "verification": "verifie",
+        "a_verifier": "Issue de l'appel annoncé par son avocat.",
+        "sources": [
+          {
+            "titre": "Le Figaro : condamné pour injure publique et diffamation envers Radio France (11/01/2022)",
+            "url": "https://www.lefigaro.fr/politique/jean-luc-melenchon-condamne-pour-injure-publique-et-diffamation-envers-radio-france-20220111"
+          },
+          {
+            "titre": "Ozap : condamné pour injure publique et diffamation",
+            "url": "https://www.ozap.com/actu/journalistes-traites-d-abrutis-et-de-menteurs-jean-luc-melenchon-condamne-pour-injure-publique-et-diffamation/612438"
+          }
+        ],
+        "note": "Appel annoncé par son avocat ; issue non retrouvée dans la presse (Poligraph : appel en cours)."
+      }
+    ],
+    "philippe": [],
+    "glucksmann": [],
+    "attal": [],
+    "retailleau": [],
+    "lisnard": []
+  },
+  "suivi": {
+    "philippe": "Information judiciaire du Parquet national financier ouverte en mai 2026 (Le Havre) : pas de décision, donc rien à publier. À surveiller.",
+    "retailleau": "Plainte déposée en août 2025 devant la Cour de justice de la République : pas de décision, donc rien à publier.",
+    "_": "Aucune décision trouvée pour Glucksmann, Attal et Lisnard, ni chez Poligraph ni chez Casier politique (recherche du 20/10/2026)."
+  },
+  "exclus": {
+    "le_pen, affaire Jeanne": "Condamnation définitive du parti (personne morale) et de proches, pas de Marine Le Pen elle-même ; Casier politique la lui attribue à tort (18 750 €), Poligraph la classe en implication secondaire.",
+    "melenchon, Marianne asiatique": "Condamnation civile (droit d'auteur, 40 000 € avec La France insoumise, 2023) : hors périmètre, qui ne retient que les poursuites pénales.",
+    "melenchon, assistants parlementaires européens": "Instruction clôturée sans mise en examen : pas de décision le visant.",
+    "philippe, Cité numérique du Havre": "Information judiciaire en cours : pas de décision.",
+    "philippe, glucksmann, attal": "Poligraph les cite comme victimes ou plaignants (ingérences russes) : rien à publier."
+  }
+}

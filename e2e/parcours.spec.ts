@@ -31,6 +31,11 @@ test.describe("parcours complet", () => {
     await page.getByRole("button", { name: "Gratter la peinture" }).click();
     await expect(page.getByRole("heading", { name: "On a gratté la peinture" })).toBeFocused();
     await page.getByRole("button", { name: "Suivant", exact: true }).click();
+    await expect(page.getByRole("heading", { name: "Pour rappel" })).toBeFocused();
+    await expect(page.locator(".diapo .rappel > li")).not.toHaveCount(0);
+    await expect(page.locator(".diapo").getByText("Chargement…")).toHaveCount(0);
+    await auditAccessibilite(page, "pour rappel");
+    await page.getByRole("button", { name: "Suivant", exact: true }).click();
     await expect(page.locator(".diapo .girouette")).not.toBeEmpty();
     await page.getByRole("button", { name: "Voir mon récap" }).click();
     await expect(page.getByRole("heading", { name: "Ton récap" })).toBeFocused();
@@ -40,6 +45,10 @@ test.describe("parcours complet", () => {
     await expect(page.getByText("Aucun bus ne te dépose pile devant chez toi.")).toBeVisible();
     await expect(page.locator("tbody tr")).toHaveCount(7);
     await expect(page.getByRole("link", { name: "Vérifier mon inscription" })).toHaveAttribute("href", /service-public\.fr/);
+    // « Ce que dit la justice » : une section par bus de la gare, chargée à la demande.
+    await expect(page.getByRole("heading", { name: "Ce que dit la justice" })).toBeVisible();
+    await expect(page.locator(".justice section")).toHaveCount(7);
+    await expect(page.locator(".justice").getByText("Chargement…")).toHaveCount(0);
     await auditAccessibilite(page, "résultats");
 
     // L'adresse ne contient jamais de réponse ni de résultat.
@@ -156,6 +165,7 @@ test("chaque bus explique sa position, depuis le tableau ou la carte", async ({ 
   await page.getByRole("button", { name: /^Pourquoi \?/ }).first().click();
   await expect(page.getByRole("heading", { name: /^Pourquoi .+ s'arrête/ })).toBeVisible();
   await expect(page.getByText(/Sur tes 20 réponses/)).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Ce que dit la justice" })).toHaveCount(2);   // récap + explication
   await auditAccessibilite(page, "explication");
   await page.getByRole("button", { name: "Fermer l'explication" }).click();
   await expect(page.getByRole("heading", { name: /^Pourquoi .+ s'arrête/ })).toHaveCount(0);

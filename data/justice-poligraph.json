@@ -1,0 +1,2235 @@
+{
+  "meta": {
+    "source": "Poligraph, export public des affaires",
+    "url": "https://poligraph.fr/api/export/affaires",
+    "date_export": "2026-10-20",
+    "regles": "Décisions de justice visant la personne elle-même, publiées si Poligraph cite au moins deux sources."
+  },
+  "candidats": {
+    "arthaud": [],
+    "asselineau": [],
+    "attal": [],
+    "batho": [],
+    "bertrand": [],
+    "branco": [
+      {
+        "personne": "Juan Branco",
+        "affaire": "Condamnation de Juan Branco pour diffamation envers un responsable de master de Sciences Po",
+        "infraction": "Diffamation",
+        "decisions": [
+          {
+            "date": "",
+            "juridiction": "Tribunal judiciaire",
+            "issue": "condamnation",
+            "peine": ""
+          }
+        ],
+        "statut": "première instance",
+        "definitive": null,
+        "verification": "a_verifier",
+        "sources": [
+          {
+            "titre": "Diffamation : Juan Branco décomploté sur les diplômes de Gabriel Attal",
+            "url": "https://www.lecanardenchaine.fr/police-justice/53900-juan-branco-decomplote-sur-les-diplomes-de-gabriel-attal"
+          },
+          {
+            "titre": "Fiche Poligraph (toutes les sources)",
+            "url": "https://poligraph.fr/affaires/condamnation-juan-branco-diffamation-responsable-master-sciences-po"
+          }
+        ]
+      }
+    ],
+    "cazeneuve": [],
+    "devillepin": [],
+    "dupont_aignan": [],
+    "glucksmann": [],
+    "kazib": [],
+    "le_pen": [
+      {
+        "personne": "Marine Le Pen",
+        "affaire": "Condamnation de Marine Le Pen pour détournement de fonds publics dans l'affaire des assistants parlementaires européens du FN",
+        "infraction": "Détournement de fonds publics",
+        "decisions": [
+          {
+            "date": "2026-07-07",
+            "juridiction": "Cour d'appel de Paris",
+            "issue": "condamnation",
+            "peine": "3 ans d'emprisonnement dont 1 an ferme, 100 000 € d'amende, 45 mois d'inéligibilité"
+          }
+        ],
+        "statut": "pourvoi en cassation en cours",
+        "definitive": false,
+        "verification": "verifie",
+        "sources": [
+          {
+            "titre": "Huit pourvois en cassation déposés à ce stade dans l'affaire des assistants d'eurodéputés FN",
+            "url": "https://www.franceinfo.fr/politique/front-national/huit-pourvois-en-cassation-deposes-a-ce-stade-dans-l-affaire-des-assistants-d-eurodeputes-fn_8109122.html"
+          },
+          {
+            "titre": "Fiche Poligraph (toutes les sources)",
+            "url": "https://poligraph.fr/affaires/marine-le-pen-condamnation-de-marine-le-pen-pour-detournement-de-fonds-publics-dans-l-affaire-des-assistants-parlementaires-europeens-du-fn"
+          }
+        ]
+      },
+      {
+        "personne": "Marine Le Pen",
+        "affaire": "Relaxe de Marine Le Pen pour injure publique envers une étudiante voilée",
+        "infraction": "Injure",
+        "decisions": [
+          {
+            "date": "2026-01-20",
+            "juridiction": "Tribunal correctionnel de Paris (17e chambre correctionnelle)",
+            "issue": "relaxe",
+            "peine": ""
+          }
+        ],
+        "statut": "relaxe",
+        "definitive": null,
+        "verification": "verifie",
+        "sources": [
+          {
+            "titre": "Marine Le Pen de nouveau au tribunal ce lundi : pourquoi la figure du RN est jugée pour un tweet de 2019",
+            "url": "https://actu.fr/politique/marine-le-pen-de-nouveau-au-tribunal-ce-lundi-pourquoi-la-figure-du-rn-est-jugee-pour-un-tweet-de-2019_63415530.html"
+          },
+          {
+            "titre": "Fiche Poligraph (toutes les sources)",
+            "url": "https://poligraph.fr/affaires/marine-le-pen-relaxe-de-marine-le-pen-pour-injure-publique-envers-une-etudiante-voilee"
+          }
+        ]
+      },
+      {
+        "personne": "Marine Le Pen",
+        "affaire": "Condamnation de Marine Le Pen pour diffamation envers la Cimade",
+        "infraction": "Diffamation",
+        "decisions": [
+          {
+            "date": "2025-12-16",
+            "juridiction": "Cour de cassation",
+            "issue": "condamnation",
+            "peine": "500 € d'amende"
+          }
+        ],
+        "statut": "définitive",
+        "definitive": true,
+        "verification": "verifie",
+        "sources": [
+          {
+            "titre": "Marine Le Pen condamnée pour diffamation envers la Cimade",
+            "url": "https://www.lemonde.fr/politique/article/2023/10/13/marine-le-pen-condamnee-pour-diffamation-envers-la-cimade_6194210_823448.html"
+          },
+          {
+            "titre": "Fiche Poligraph (toutes les sources)",
+            "url": "https://poligraph.fr/affaires/marine-le-pen-condamnation-de-marine-le-pen-pour-diffamation-envers-la-cimade-2"
+          }
+        ]
+      },
+      {
+        "personne": "Marine Le Pen",
+        "affaire": "Condamnation de Marine Le Pen pour diffamation envers Christian Baeckeroot",
+        "infraction": "Diffamation",
+        "decisions": [
+          {
+            "date": "2010-06-01",
+            "juridiction": "Tribunal correctionnel de Nanterre",
+            "issue": "condamnation",
+            "peine": "1 500 euros d'amende avec sursis et 1 000 euros de dommages et intérêts pour complicité de diffamation (tribunal correctionnel de Nanterre, 1er juin 2010)."
+          }
+        ],
+        "statut": "première instance",
+        "definitive": null,
+        "verification": "verifie",
+        "sources": [
+          {
+            "titre": "Les Le Pen condamnés pour diffamation",
+            "url": "https://www.lefigaro.fr/flash-actu/2010/06/01/97001-20100601FILWWW00514-les-le-pen-condamnes-pour-diffamation.php"
+          },
+          {
+            "titre": "Fiche Poligraph (toutes les sources)",
+            "url": "https://poligraph.fr/affaires/marine-le-pen-condamnation-de-marine-le-pen-pour-diffamation-envers-christian-baeckeroot"
+          }
+        ]
+      }
+    ],
+    "lisnard": [],
+    "melenchon": [
+      {
+        "personne": "Jean-Luc Mélenchon",
+        "affaire": "Condamnation de Jean-Luc Mélenchon pour injure publique et diffamation envers Radio France",
+        "infraction": "Injure",
+        "decisions": [
+          {
+            "date": "2022-01-11",
+            "juridiction": "Tribunal correctionnel de Paris",
+            "issue": "condamnation",
+            "peine": "500 € d'amende"
+          }
+        ],
+        "statut": "appel en cours",
+        "definitive": false,
+        "verification": "verifie",
+        "sources": [
+          {
+            "titre": "Jean-Luc Mélenchon condamné pour injure publique et diffamation envers Radio France",
+            "url": "https://www.lefigaro.fr/politique/jean-luc-melenchon-condamne-pour-injure-publique-et-diffamation-envers-radio-france-20220111"
+          },
+          {
+            "titre": "Fiche Poligraph (toutes les sources)",
+            "url": "https://poligraph.fr/affaires/jean-luc-melenchon-condamnation-de-jean-luc-melenchon-pour-injure-publique-et-diffamation-envers-radio-france"
+          }
+        ]
+      },
+      {
+        "personne": "Jean-Luc Mélenchon",
+        "affaire": "Condamnation de Jean-Luc Mélenchon pour diffamation envers Paulo Paranagua",
+        "infraction": "Diffamation",
+        "decisions": [
+          {
+            "date": "2021-09-24",
+            "juridiction": "Tribunal correctionnel de Paris",
+            "issue": "condamnation",
+            "peine": "500 € d'amende"
+          }
+        ],
+        "statut": "définitive",
+        "definitive": true,
+        "verification": "verifie",
+        "sources": [
+          {
+            "titre": "Diffamation envers Paulo Paranagua (journaliste du Monde)",
+            "url": "https://www.liberation.fr/societe/police-justice/jean-luc-melenchon-condamne-pour-diffamation-envers-un-ex-journaliste-du-monde-20210924_CWV57DESMVC3ZOF3E5JK2UT374"
+          },
+          {
+            "titre": "Fiche Poligraph (toutes les sources)",
+            "url": "https://poligraph.fr/affaires/jean-luc-melenchon-condamnation-de-jean-luc-melenchon-pour-diffamation-envers-paulo-paranagua"
+          }
+        ]
+      },
+      {
+        "personne": "Jean-Luc Mélenchon",
+        "affaire": "Condamnation de Jean-Luc Mélenchon pour rébellion et intimidation lors de la perquisition d'octobre 2018",
+        "infraction": "Autre infraction",
+        "decisions": [
+          {
+            "date": "2019-12-09",
+            "juridiction": "Tribunal correctionnel de Bobigny",
+            "issue": "condamnation",
+            "peine": "3 mois d'emprisonnement avec sursis, 8 000 € d'amende"
+          }
+        ],
+        "statut": "définitive",
+        "definitive": true,
+        "verification": "verifie",
+        "sources": [
+          {
+            "titre": "Des altercations entre Insoumis et policiers pendant les perquisitions",
+            "url": "https://www.20minutes.fr/politique/2355687-20181017-video-perquisitions-chez-melenchon-lfi-images-altercations-policiers"
+          },
+          {
+            "titre": "Fiche Poligraph (toutes les sources)",
+            "url": "https://poligraph.fr/affaires/jean-luc-melenchon-condamnation-de-jean-luc-melenchon-pour-rebellion-et-intimidation-lors-de-la-perquisition-d-octobre-2018"
+          }
+        ]
+      }
+    ],
+    "philippe": [],
+    "philippot": [],
+    "retailleau": [],
+    "roussel": [],
+    "ruffin": [],
+    "tondelier": [
+      {
+        "personne": "Marine Tondelier",
+        "affaire": "Relaxe pour diffamation envers des viticulteurs de l'Aude",
+        "infraction": "Diffamation",
+        "decisions": [
+          {
+            "date": "2024-11-29",
+            "juridiction": "Tribunal correctionnel de Narbonne",
+            "issue": "relaxe",
+            "peine": ""
+          }
+        ],
+        "statut": "relaxe",
+        "definitive": null,
+        "verification": "verifie",
+        "sources": [
+          {
+            "titre": "Marine Tondelier, poursuivie pour diffamation par deux viticulteurs audois, est relaxée",
+            "url": "https://www.lindependant.fr/2024/11/29/marine-tondelier-poursuivie-pour-diffamation-par-deux-viticulteurs-audois-est-relaxee-12354829.php"
+          },
+          {
+            "titre": "Fiche Poligraph (toutes les sources)",
+            "url": "https://poligraph.fr/affaires/marine-tondelier-relaxe-diffamation-viticulteurs-narbonne"
+          }
+        ]
+      }
+    ],
+    "zemmour": [
+      {
+        "personne": "Éric Zemmour",
+        "affaire": "Condamnation pour injure envers les mineurs isoles etrangers",
+        "infraction": "Injure",
+        "decisions": [
+          {
+            "date": "2025-12-02",
+            "juridiction": "Cour de cassation (rejet pourvoi)",
+            "issue": "condamnation",
+            "peine": "100 jours-amende de 100€ (10 000€)"
+          }
+        ],
+        "statut": "définitive",
+        "definitive": true,
+        "verification": "verifie",
+        "sources": [
+          {
+            "titre": "Éric Zemmour définitivement condamné",
+            "url": "https://www.franceinfo.fr/politique/eric-zemmour/eric-zemmour-definitivement-condamne-pour-des-propos-racistes-en-2019_7497130.html"
+          },
+          {
+            "titre": "Fiche Poligraph (toutes les sources)",
+            "url": "https://poligraph.fr/affaires/eric-zemmour-injure"
+          }
+        ]
+      },
+      {
+        "personne": "Éric Zemmour",
+        "affaire": "Affaire de la diatribe anti-immigration de 2019",
+        "infraction": "Incitation à la haine",
+        "decisions": [
+          {
+            "date": "2025-09-16",
+            "juridiction": "Cour de cassation",
+            "issue": "condamnation",
+            "peine": "15 000 € d'amende pour provocation à la haine raciale et injures racistes"
+          }
+        ],
+        "statut": "définitive",
+        "definitive": true,
+        "verification": "verifie",
+        "sources": [
+          {
+            "titre": "Affaire de la diatribe anti-immigration de 2019",
+            "url": "https://www.lemonde.fr/culture/article/2019/09/29/lci-reconnait-a-demi-mot-une-erreur-apres-la-diffusion-en-direct-d-un-discours-d-eric-zemmour_6013521_3246.html"
+          },
+          {
+            "titre": "Fiche Poligraph (toutes les sources)",
+            "url": "https://poligraph.fr/affaires/eric-zemmour-diatribe-anti-immigration-de-2019"
+          }
+        ]
+      },
+      {
+        "personne": "Éric Zemmour",
+        "affaire": "Affaire des propos sur Pétain « sauveur des Juifs français »",
+        "infraction": "Autre infraction",
+        "decisions": [
+          {
+            "date": "2025-04-02",
+            "juridiction": "Cour d'appel de Paris",
+            "issue": "condamnation",
+            "peine": "10 000 € d'amende pour contestation de crime contre l'humanité"
+          }
+        ],
+        "statut": "première instance",
+        "definitive": null,
+        "verification": "verifie",
+        "sources": [
+          {
+            "titre": "Affaire des propos sur Pétain « sauveur des Juifs français »",
+            "url": "https://www.lefigaro.fr/flash-actu/petain-sauveur-de-juifs-francais-10-000-euros-d-amende-requis-contre-eric-zemmour-20201209"
+          },
+          {
+            "titre": "Fiche Poligraph (toutes les sources)",
+            "url": "https://poligraph.fr/affaires/eric-zemmour-propos-sur-petain-sauveur-des-juifs-francais"
+          }
+        ]
+      },
+      {
+        "personne": "Éric Zemmour",
+        "affaire": "Condamnation pour injure raciale dans l'affaire de Crépol",
+        "infraction": "Incitation à la haine",
+        "decisions": [
+          {
+            "date": "2025-03-26",
+            "juridiction": "Tribunal correctionnel de Paris",
+            "issue": "condamnation",
+            "peine": "9 000 euros d'amende, pouvant donner lieu à incarcération en cas de non-paiement"
+          }
+        ],
+        "statut": "première instance",
+        "definitive": null,
+        "verification": "verifie",
+        "sources": [
+          {
+            "titre": "Éric Zemmour condamné pour injure raciale après des propos sur le drame de Crépol",
+            "url": "https://www.bfmtv.com/police-justice/eric-zemmour-condamne-pour-injure-raciale-apres-des-propos-sur-le-drame-de-crepol_AD-202503260432.html"
+          },
+          {
+            "titre": "Fiche Poligraph (toutes les sources)",
+            "url": "https://poligraph.fr/affaires/eric-zemmour-condamnation-pour-injure-raciale-dans-l-affaire-de-crepol"
+          }
+        ]
+      },
+      {
+        "personne": "Éric Zemmour",
+        "affaire": "Provocation à la haine religieuse envers les musulmans (C à vous, 2016)",
+        "infraction": "Incitation à la haine",
+        "decisions": [
+          {
+            "date": "2019-09-17",
+            "juridiction": "Cour de cassation",
+            "issue": "condamnation",
+            "peine": "3 000 € d'amende"
+          }
+        ],
+        "statut": "définitive",
+        "definitive": true,
+        "verification": "verifie",
+        "sources": [
+          {
+            "titre": "Eric Zemmour condamné en appel pour des propos islamophobes",
+            "url": "https://www.franceinfo.fr/politique/eric-zemmour/eric-zemmour-condamne-en-appel-pour-des-propos-islamophobes_2735267.html"
+          },
+          {
+            "titre": "Fiche Poligraph (toutes les sources)",
+            "url": "https://poligraph.fr/affaires/eric-zemmour-provocation-a-la-haine-religieuse-envers-les-musulmans-c-a-vous-2016"
+          }
+        ]
+      },
+      {
+        "personne": "Éric Zemmour",
+        "affaire": "Accusation de diffamation par Cécile Duflot pour des propos sur l'affaire Baupin",
+        "infraction": "Diffamation",
+        "decisions": [
+          {
+            "date": "2018-02-06",
+            "juridiction": "Tribunal correctionnel de Paris",
+            "issue": "relaxe",
+            "peine": ""
+          }
+        ],
+        "statut": "relaxe",
+        "definitive": null,
+        "verification": "a_verifier",
+        "sources": [
+          {
+            "titre": "Fiche Poligraph (toutes les sources)",
+            "url": "https://poligraph.fr/affaires/eric-zemmour-accusation-de-diffamation-par-cecile-duflot-pour-des-propos-sur-l-affaire-baupin"
+          }
+        ]
+      },
+      {
+        "personne": "Éric Zemmour",
+        "affaire": "Condamnation pour provocation à la discrimination raciale (France Ô et Canal+, 2011)",
+        "infraction": "Incitation à la haine",
+        "decisions": [
+          {
+            "date": "2011-02-18",
+            "juridiction": "Tribunal correctionnel de Paris",
+            "issue": "condamnation",
+            "peine": "Deux amendes de 1 000 € avec sursis (2 000 € au total), dommages-intérêts et frais de justice aux associations parties civiles"
+          }
+        ],
+        "statut": "définitive",
+        "definitive": true,
+        "verification": "verifie",
+        "sources": [
+          {
+            "titre": "Fiche Poligraph (toutes les sources)",
+            "url": "https://poligraph.fr/affaires/eric-zemmour-condamnation-pour-provocation-a-la-discrimination-raciale-france-o-et-canal-2011"
+          }
+        ]
+      }
+    ]
+  },
+  "partis": {
+    "UPR": {
+      "nom": "Union Populaire Républicaine",
+      "candidats": [
+        "asselineau"
+      ],
+      "affaires": []
+    },
+    "RE": {
+      "nom": "Renaissance",
+      "candidats": [
+        "attal"
+      ],
+      "affaires": [
+        {
+          "personne": "Éric Woerth",
+          "affaire": "Relaxe d'Éric Woerth dans l'affaire Sarkozy-Kadhafi",
+          "infraction": "Financement illégal de campagne",
+          "decisions": [
+            {
+              "date": "2025-09-25",
+              "juridiction": "Tribunal correctionnel de Paris",
+              "issue": "relaxe",
+              "peine": ""
+            }
+          ],
+          "statut": "relaxe",
+          "definitive": null,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Fin du procès en appel de Nicolas Sarkozy dans l'affaire libyenne, verdict attendu le 30 novembre",
+              "url": "https://fr.euronews.com/2026/05/27/fin-du-proces-en-appel-de-nicolas-sarkozy-dans-laffaire-libyenne-verdict-attendu-le-30-nov"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/eric-woerth-relaxe-d-eric-woerth-dans-l-affaire-sarkozy-kadhafi"
+            }
+          ]
+        },
+        {
+          "personne": "Aurore Bergé",
+          "affaire": "Plainte pour diffamation par le rappeur Médine",
+          "infraction": "Diffamation",
+          "decisions": [
+            {
+              "date": "2025-03-13",
+              "juridiction": "Tribunal correctionnel de Paris",
+              "issue": "relaxe",
+              "peine": ""
+            }
+          ],
+          "statut": "relaxe",
+          "definitive": null,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Relaxe pour Aurore Bergé, poursuivie en diffamation par le rappeur Médine",
+              "url": "https://www.huffingtonpost.fr/justice/article/aurore-berge-poursuivie-en-diffamation-par-le-rappeur-medine-la-ministre-relaxee_247411.html"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/aurore-berge-plainte-pour-diffamation-par-le-rappeur-medine"
+            }
+          ]
+        },
+        {
+          "personne": "Karl Olive",
+          "affaire": "Condamnation de Karl Olive pour prise illégale d'intérêts à Poissy",
+          "infraction": "Prise illégale d'intérêts",
+          "decisions": [
+            {
+              "date": "2024-11-18",
+              "juridiction": "Tribunal judiciaire de Versailles",
+              "issue": "condamnation",
+              "peine": "8 mois d'emprisonnement avec sursis"
+            }
+          ],
+          "statut": "appel en cours",
+          "definitive": false,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Le député macroniste Karl Olive condamné pour prise illégale d'intérêts - L'Humanité",
+              "url": "https://www.humanite.fr/politique/macronie/le-depute-karl-olive-condamne-pour-prise-illegale-dinterets"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/karl-olive-condamnation-de-karl-olive-pour-prise-illegale-d-interets-a-poissy"
+            }
+          ]
+        },
+        {
+          "personne": "Gérald Darmanin",
+          "affaire": "Accusations de viol et de harcèlement (affaire Sophie Patterson-Spatz)",
+          "infraction": "Agression sexuelle",
+          "decisions": [
+            {
+              "date": "2024-02-14",
+              "juridiction": "Tribunal judiciaire de Paris",
+              "issue": "non-lieu",
+              "peine": ""
+            }
+          ],
+          "statut": "non-lieu",
+          "definitive": null,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "\"Viol par surprise\" et consentement, les clés de l'enquête visant Darmanin",
+              "url": "https://www.lexpress.fr/actualite/societe/justice/viol-par-surprise-et-consentement-les-cles-de-l-enquete-visant-darmanin_1980192.html"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/gerald-darmanin-accusations-de-viol-et-de-harcelement-affaire-sophie-patterson-spatz"
+            }
+          ]
+        },
+        {
+          "personne": "Jérôme Peyrat",
+          "affaire": "Condamnation de Jérôme Peyrat pour violences sur son ex-compagne",
+          "infraction": "Violence",
+          "decisions": [
+            {
+              "date": "2020-09-18",
+              "juridiction": "Tribunal correctionnel d'Angoulême",
+              "issue": "condamnation",
+              "peine": "3 000 euros d'amende avec sursis"
+            }
+          ],
+          "statut": "première instance",
+          "definitive": null,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Législatives : Jérôme Peyrat (LREM), condamné pour violences conjugales, retire sa candidature",
+              "url": "https://www.europe1.fr/politique/legislatives-jerome-peyrat-lrem-condamne-pour-violences-conjugales-retire-sa-candidature-4112216"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/jerome-peyrat-violences-ex-compagne"
+            }
+          ]
+        },
+        {
+          "personne": "Éric Woerth",
+          "affaire": "Affaire Woerth-Bettencourt : relaxe d'Éric Woerth",
+          "infraction": "Trafic d'influence",
+          "decisions": [
+            {
+              "date": "2015-05-28",
+              "juridiction": "Tribunal correctionnel de Bordeaux",
+              "issue": "relaxe",
+              "peine": ""
+            }
+          ],
+          "statut": "relaxe",
+          "definitive": null,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Affaire Woerth-Bettencourt",
+              "url": "https://www.lexpress.fr/actualite/societe/justice/affaire-bettencourt-eric-woerth-a-nouveau-mis-en-examen_1080872.html"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/eric-woerth-woerth-bettencourt-relaxe-d-eric-woerth"
+            }
+          ]
+        },
+        {
+          "personne": "Éric Woerth",
+          "affaire": "Affaire Tapie - Avantage fiscal",
+          "infraction": "Favoritisme",
+          "decisions": [
+            {
+              "date": "",
+              "juridiction": "Cour de justice de la République",
+              "issue": "non-lieu",
+              "peine": ""
+            }
+          ],
+          "statut": "non-lieu",
+          "definitive": null,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Comment Woerth a fait un cadeau de 58 millions à Tapie",
+              "url": "https://www.mediapart.fr/journal/france/011215/affaire-tapie-enquete-sur-un-hold-fiscal-0"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/eric-woerth-tapie-avantage-fiscal"
+            }
+          ]
+        },
+        {
+          "personne": "Éric Woerth",
+          "affaire": "Affaire de l'hippodrome de Compiègne - Non-lieu pour Éric Woerth",
+          "infraction": "Prise illégale d'intérêts",
+          "decisions": [
+            {
+              "date": "",
+              "juridiction": "Cour de justice de la République",
+              "issue": "non-lieu",
+              "peine": ""
+            }
+          ],
+          "statut": "non-lieu",
+          "definitive": null,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Hippodrome de Compiègne : non-lieu pour Eric Woerth",
+              "url": "https://www.lemonde.fr/politique/article/2014/12/11/hippodrome-de-compiegne-non-lieu-pour-eric-woerth_4538979_823448.html"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/eric-woerth-hippodrome-de-compiegne-non-lieu-pour-eric-woerth"
+            }
+          ]
+        }
+      ]
+    },
+    "LFH": {
+      "nom": "La France Humaniste",
+      "candidats": [
+        "devillepin"
+      ],
+      "affaires": []
+    },
+    "PP": {
+      "nom": "Place Publique",
+      "candidats": [
+        "glucksmann"
+      ],
+      "affaires": []
+    },
+    "RN": {
+      "nom": "Rassemblement National",
+      "candidats": [
+        "le_pen"
+      ],
+      "affaires": [
+        {
+          "personne": "Louis Aliot",
+          "affaire": "Condamnation de Louis Aliot dans l'affaire des assistants parlementaires du FN",
+          "infraction": "Détournement de fonds publics",
+          "decisions": [
+            {
+              "date": "2026-07-07",
+              "juridiction": "Cour d'appel de Paris",
+              "issue": "condamnation",
+              "peine": "Un an de prison avec sursis, 5 000 € d'amende, deux ans d'inéligibilité avec sursis"
+            }
+          ],
+          "statut": "pourvoi en cassation en cours",
+          "definitive": false,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Procès du RN : Louis Aliot, bien que condamné à 3 ans d'inéligibilité, conserve sa mairie de Perpignan",
+              "url": "https://www.publicsenat.fr/actualites/politique/proces-du-rn-louis-aliot-bien-que-condamne-a-3-ans-dineligibilite-conserve-sa-mairie-de-perpignan"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/louis-aliot-assistants-parlementaires-fn-2025"
+            }
+          ]
+        },
+        {
+          "personne": "Julien Odoul",
+          "affaire": "Condamnation de Julien Odoul pour recel de détournement de fonds publics dans l'affaire des assistants parlementaires du FN",
+          "infraction": "Recel",
+          "decisions": [
+            {
+              "date": "2026-07-07",
+              "juridiction": "Cour d'appel de Paris",
+              "issue": "condamnation",
+              "peine": "8 mois d'emprisonnement avec sursis, 1 an d'inéligibilité"
+            }
+          ],
+          "statut": "pourvoi en cassation en cours",
+          "definitive": false,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Emplois fictifs du RN: Julien Odoul accusé de recel de détournement de fonds publics",
+              "url": "https://www.challenges.fr/politique/rassemblement-national/emplois-fictifs-rn-julien-odoul-accuse-de-recel-de-detournement-de-fonds-publics_681499"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/julien-odoul-condamnation-de-julien-odoul-pour-recel-de-detournement-de-fonds-publics-dans-l-affaire-des-assistants-parlementaires-du-fn"
+            }
+          ]
+        },
+        {
+          "personne": "Timothée Houssin",
+          "affaire": "Condamnation de Timothée Houssin pour recel de détournement de fonds publics",
+          "infraction": "Détournement de fonds publics",
+          "decisions": [
+            {
+              "date": "2026-07-07",
+              "juridiction": "Cour d'appel de Paris",
+              "issue": "condamnation",
+              "peine": "6 mois d'emprisonnement avec sursis, 1 an d'inéligibilité"
+            }
+          ],
+          "statut": "pourvoi en cassation en cours",
+          "definitive": false,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Barentin :  un élu FN mis en examen",
+              "url": "https://www.lecourriercauchois.fr/actualite-166639-barentin-un-elu-fn-mis-en-examen"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/timothee-houssin-condamnation-de-timothee-houssin-pour-recel-de-detournement-de-fonds-publics"
+            }
+          ]
+        },
+        {
+          "personne": "Catherine Griset",
+          "affaire": "Condamnation de Catherine Griset pour emploi fictif d'assistante parlementaire européenne",
+          "infraction": "Emploi fictif",
+          "decisions": [
+            {
+              "date": "2026-07-07",
+              "juridiction": "Cour d'appel de Paris",
+              "issue": "condamnation",
+              "peine": "1 an d'emprisonnement avec sursis, 2 ans d'inéligibilité"
+            }
+          ],
+          "statut": "pourvoi en cassation en cours",
+          "definitive": false,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Affaire des assistants parlementaires du Front national au Parlement européen",
+              "url": "https://www.liberation.fr/les-pouvoirs/2019/05/30/qui-sont-les-23-deputes-rassemblement-national-elus-au-parlement-europeen_1730421/"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/catherine-griset-condamnation-de-catherine-griset-pour-emploi-fictif-d-assistante-parlementaire-europeenne"
+            }
+          ]
+        },
+        {
+          "personne": "David Rachline",
+          "affaire": "Relaxe de David Rachline pour prise illégale d'intérêts",
+          "infraction": "Prise illégale d'intérêts",
+          "decisions": [
+            {
+              "date": "2026-01-27",
+              "juridiction": "Tribunal correctionnel de Draguignan",
+              "issue": "relaxe",
+              "peine": ""
+            }
+          ],
+          "statut": "relaxe",
+          "definitive": null,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Le parquet fait appel de la relaxe du RN David Rachline dans une affaire de prise illégale d’intérêts",
+              "url": "https://www.lefigaro.fr/nice/le-parquet-fait-appel-de-la-relaxe-du-rn-david-rachline-dans-une-affaire-de-prise-illegale-d-interets-20260203"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/relaxe-de-david-rachline-pour-prise-illegale-d-interets"
+            }
+          ]
+        },
+        {
+          "personne": "Marie-France Lorho",
+          "affaire": "Condamnation de Marie-France Lorho pour emploi fictif de Yann Bompard",
+          "infraction": "Détournement de fonds publics",
+          "decisions": [
+            {
+              "date": "2026-01-26",
+              "juridiction": "Tribunal correctionnel de Marseille",
+              "issue": "condamnation",
+              "peine": "18 mois d'emprisonnement avec sursis, 10 000 € d'amende, 5 ans d'inéligibilité"
+            }
+          ],
+          "statut": "appel en cours",
+          "definitive": false,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Affaire de l'emploi fictif de Yann Bompard",
+              "url": "https://www.liberation.fr/societe/police-justice/le-maire-dorange-soutien-de-zemmour-perquisitionne-pour-des-soupcons-demploi-fictif-20230906_7PQJGJYZBVEJZFUTUASVJBOZSQ/"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/marie-france-lorho-condamnation-de-marie-france-lorho-pour-emploi-fictif-de-yann-bompard"
+            }
+          ]
+        },
+        {
+          "personne": "Laurent Jacobelli",
+          "affaire": "Condamnation de Laurent Jacobelli pour diffamation et outrage envers Belkhir Belhaddad",
+          "infraction": "Diffamation",
+          "decisions": [
+            {
+              "date": "2025-09-02",
+              "juridiction": "Tribunal correctionnel de Thionville",
+              "issue": "condamnation",
+              "peine": "300 € d'amende"
+            }
+          ],
+          "statut": "appel en cours",
+          "definitive": false,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Affaire des propos injurieux envers Belkhir Belhaddad",
+              "url": "https://www.liberation.fr/politique/il-va-bien-le-hamas-joue-pas-ta-racaille-quand-le-depute-rn-jacobelli-invective-son-homologue-renaissance-belhaddad-20231013_O3UTVOW6SRFNNBRJGXTHSSXVYU/"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/laurent-jacobelli-condamnation-de-laurent-jacobelli-pour-diffamation-et-outrage-envers-belkhir-belhaddad"
+            }
+          ]
+        },
+        {
+          "personne": "Marie-Christine Arnautu",
+          "affaire": "Détournement de fonds publics",
+          "infraction": "Détournement de fonds publics",
+          "decisions": [
+            {
+              "date": "2025-03-31",
+              "juridiction": "Tribunal correctionnel de Paris",
+              "issue": "condamnation",
+              "peine": "18 mois de prison avec sursis, 800 € d'amende, 3 ans d'inéligibilité avec sursis"
+            }
+          ],
+          "statut": "définitive",
+          "definitive": true,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "On a liste les 25 condamnations a l'issue du proces des assistants parlementaires du FN",
+              "url": "https://www.franceinfo.fr/politique/front-national/affaire-des-assistants-fn-au-parlement-europeen/marine-le-pen-louis-aliot-julien-odoul-on-a-liste-les-25-condamnations-a-l-issue-du-proces-des-assistants-parlementaires-du-fn_7162527.html"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/marie-christine-arnautu-detournement-de-fonds-publics"
+            }
+          ]
+        },
+        {
+          "personne": "Dominique Bilde",
+          "affaire": "Condamnation de Dominique Bilde dans l'affaire des assistants parlementaires du RN",
+          "infraction": "Détournement de fonds publics",
+          "decisions": [
+            {
+              "date": "2025-03-31",
+              "juridiction": "Tribunal correctionnel de Paris",
+              "issue": "condamnation",
+              "peine": "18 mois de prison avec sursis, 3 ans d'inéligibilité avec sursis"
+            }
+          ],
+          "statut": "définitive",
+          "definitive": true,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Assistants fictifs du RN : la liste des peines prononcées à l’encontre des membres du parti d’extrême droite",
+              "url": "https://www.liberation.fr/politique/elections/assistants-fictifs-du-rn-la-liste-des-peines-prononcees-a-lencontre-des-membres-du-parti-dextreme-droite-20250331_YM3O3L64KVDMNM6EXMG6A67XJM/"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/dominique-bilde-detournement-de-fonds-publics"
+            }
+          ]
+        },
+        {
+          "personne": "Mylène Troszczynski",
+          "affaire": "Détournement de fonds publics",
+          "infraction": "Détournement de fonds publics",
+          "decisions": [
+            {
+              "date": "2025-03-31",
+              "juridiction": "Tribunal correctionnel de Paris",
+              "issue": "condamnation",
+              "peine": "18 mois de prison avec sursis, 800 € d'amende, 3 ans d'inéligibilité avec sursis"
+            }
+          ],
+          "statut": "définitive",
+          "definitive": true,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Mylene Troszczynski, candidate RN aux senatoriales de l'Oise, accusee de detournement de fonds publics",
+              "url": "https://france3-regions.franceinfo.fr/hauts-de-france/oise/mylene-troszczynski-candidate-rn-aux-elections-senatoriales-2023-de-l-oise-accusee-de-detournement-de-fonds-publics-2845241.html"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/mylene-troszczynski-detournement-de-fonds-publics"
+            }
+          ]
+        },
+        {
+          "personne": "Fabien Engelmann",
+          "affaire": "Condamnation de Fabien Engelmann pour favoritisme dans un marché public",
+          "infraction": "Favoritisme",
+          "decisions": [
+            {
+              "date": "2021-05-11",
+              "juridiction": "Tribunal correctionnel de Thionville",
+              "issue": "condamnation",
+              "peine": "15 000 € d'amende, dont 10 000 € avec sursis"
+            }
+          ],
+          "statut": "première instance",
+          "definitive": null,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Le maire FN de Hayange mis en examen dans une affaire de marchés publics",
+              "url": "https://www.lemonde.fr/politique/article/2017/02/18/le-maire-fn-de-hayange-mis-en-examen-dans-une-affaire-de-marches-publics_5081900_823448.html"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/condamnation-de-fabien-engelmann-pour-favoritisme-dans-un-marche-public"
+            }
+          ]
+        },
+        {
+          "personne": "Bruno Bilde",
+          "affaire": "Condamnation de Bruno Bilde pour diffamation envers Florence Binaisse",
+          "infraction": "Diffamation",
+          "decisions": [
+            {
+              "date": "2018-07-02",
+              "juridiction": "Cour d'appel de Douai (confirmant le Tribunal correctionnel de Béthune)",
+              "issue": "condamnation",
+              "peine": "100 € d'amende"
+            }
+          ],
+          "statut": "définitive",
+          "definitive": true,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Cour de cassation, chambre criminelle, 15 octobre 2019, pourvoi n° 18-85.073",
+              "url": "https://www.courdecassation.fr/decision/5fca6546b3254a4e12bd130a"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/bruno-bilde-condamnation-de-bruno-bilde-pour-diffamation-envers-florence-binaisse"
+            }
+          ]
+        },
+        {
+          "personne": "Julien Sanchez",
+          "affaire": "Affaire des mesures discriminatoires contre les magasins ouverts la nuit",
+          "infraction": "Autre infraction",
+          "decisions": [
+            {
+              "date": "2016-12-15",
+              "juridiction": "Tribunal correctionnel de Nîmes",
+              "issue": "relaxe",
+              "peine": ""
+            }
+          ],
+          "statut": "relaxe",
+          "definitive": null,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Accusé de discrimination, le maire FN de Beaucaire jugé à Nîmes",
+              "url": "https://www.lefigaro.fr/politique/le-scan/2016/09/22/25001-20160922ARTFIG00145-attaque-par-des-commercants-musulmans-le-maire-fn-de-beaucaire-juge-a-nimes.php"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/julien-sanchez-mesures-discriminatoires-contre-les-magasins-ouverts-la-nuit"
+            }
+          ]
+        },
+        {
+          "personne": "Yoann Gillet",
+          "affaire": "Condamnation de Yoann Gillet pour injures publiques envers Jean-Paul Fournier",
+          "infraction": "Injure",
+          "decisions": [
+            {
+              "date": "2015-10-20",
+              "juridiction": "Tribunal correctionnel de Nîmes",
+              "issue": "condamnation",
+              "peine": "1 500 € d'amende"
+            }
+          ],
+          "statut": "définitive",
+          "definitive": true,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Gard : Le secrétaire départemental FN condamné pour injures publiques",
+              "url": "https://saint-nazaire.maville.com/actu/actudet_-gard-le-secretaire-departemental-fn-condamne-pour-injures-publiques_54135-2852055_actu.Htm"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/yoann-gillet-condamnation-de-yoann-gillet-pour-injures-publiques-envers-jean-paul-fournier"
+            }
+          ]
+        },
+        {
+          "personne": "Julien Sanchez",
+          "affaire": "Condamnation de Julien Sanchez pour provocation à la haine (commentaires sur sa page Facebook)",
+          "infraction": "Incitation à la haine",
+          "decisions": [
+            {
+              "date": "2015-03-17",
+              "juridiction": "Cour de cassation",
+              "issue": "condamnation",
+              "peine": "3 000 € d'amende (cour d'appel de Nîmes, 18 octobre 2013), après 4 000 € en première instance"
+            }
+          ],
+          "statut": "définitive",
+          "definitive": true,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "La CEDH déboute à nouveau le maire RN de Beaucaire Julien Sanchez",
+              "url": "https://www.francebleu.fr/infos/politique/la-cour-europeenne-des-droits-de-l-homme-deboute-a-nouveau-le-maire-de-beaucaire-julien-sanchez-1361529"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/julien-sanchez-incitation-a-la-haine-raciale"
+            }
+          ]
+        },
+        {
+          "personne": "Frédéric Boccaletti",
+          "affaire": "Condamnation de Frédéric Boccaletti pour violence en réunion avec arme",
+          "infraction": "Violence",
+          "decisions": [
+            {
+              "date": "",
+              "juridiction": "Tribunal correctionnel de Toulon",
+              "issue": "condamnation",
+              "peine": "1 an d'emprisonnement dont 6 mois ferme"
+            }
+          ],
+          "statut": "définitive",
+          "definitive": true,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/frederic-boccaletti-condamnation-de-frederic-boccaletti-pour-violence-en-reunion-avec-arme"
+            }
+          ]
+        }
+      ]
+    },
+    "LFI": {
+      "nom": "La France insoumise",
+      "candidats": [
+        "melenchon"
+      ],
+      "affaires": [
+        {
+          "personne": "Sophia Chikirou",
+          "affaire": "Sophia Chikirou - escroquerie dans l'affaire Le Média",
+          "infraction": "Abus de confiance",
+          "decisions": [
+            {
+              "date": "2026-06-08",
+              "juridiction": "Tribunal correctionnel de Paris (13e chambre correctionnelle du tribunal judiciaire de Paris)",
+              "issue": "condamnation",
+              "peine": "8 000€ d'amende dont 4 000€ avec sursis pour vol de chèques, relaxée pour la tentative d'escroquerie"
+            }
+          ],
+          "statut": "appel en cours",
+          "definitive": false,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/sophia-chikirou-sophia-chikirou-escroquerie-dans-l-affaire-le-media"
+            }
+          ]
+        },
+        {
+          "personne": "Rima Hassan",
+          "affaire": "Relaxe pour injure publique envers Anne-Pernelle Richardot",
+          "infraction": "Diffamation",
+          "decisions": [
+            {
+              "date": "2026-03-04",
+              "juridiction": "juridiction non précisée",
+              "issue": "relaxe",
+              "peine": ""
+            }
+          ],
+          "statut": "relaxe",
+          "definitive": null,
+          "verification": "a_verifier",
+          "sources": [
+            {
+              "titre": "Accusee d'injure publique, l'eurodepute LFI Rima Hassan relaxee par le tribunal",
+              "url": "https://france3-regions.franceinfo.fr/grand-est/bas-rhin/strasbourg-0/accusee-d-injure-publique-par-une-elue-socialiste-l-eurodeputee-lfi-rima-hassan-relaxee-par-le-tribunal-3309102.html"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/rima-hassan-relaxe-injure-publique-anne-pernelle-richardot"
+            }
+          ]
+        },
+        {
+          "personne": "Andrée Taurinya",
+          "affaire": "Condamnation d'Andrée Taurinya pour diffamation envers Gerbert Rambaud",
+          "infraction": "Diffamation",
+          "decisions": [
+            {
+              "date": "2025-05-05",
+              "juridiction": "Tribunal correctionnel de Saint-Étienne",
+              "issue": "condamnation",
+              "peine": "2 000 € d'amende"
+            }
+          ],
+          "statut": "appel en cours",
+          "definitive": false,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Condamnation pour diffamation contre Gerbert Rambaud",
+              "url": "https://www.ouest-france.fr/politique/la-france-insoumise/une-deputee-de-la-france-insoumise-condamnee-pour-diffamation-par-le-tribunal-de-saint-etienne-cc6aab14-29bb-11f0-b7b8-37276f4d776e"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/andree-taurinya-condamnation-d-andree-taurinya-pour-diffamation-envers-gerbert-rambaud"
+            }
+          ]
+        },
+        {
+          "personne": "Sébastien Delogu",
+          "affaire": "Condamnation de Sébastien Delogu pour violences aggravées lors du blocus du lycée Saint-Exupéry",
+          "infraction": "Violence",
+          "decisions": [
+            {
+              "date": "2025-02-14",
+              "juridiction": "Tribunal correctionnel de Marseille",
+              "issue": "condamnation",
+              "peine": "5 000 € d'amende"
+            }
+          ],
+          "statut": "appel en cours",
+          "definitive": false,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Le procès pour violences du député LFI sortant Sébastien Delogu reporté au mois de janvier",
+              "url": "https://www.leparisien.fr/faits-divers/le-proces-pour-violences-du-depute-lfi-sortant-sebastien-delogu-reporte-au-mois-de-janvier-25-06-2024-BCTSJZY24RGMTDETOF2MDPYWSI.php"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/sebastien-delogu-condamnation-de-sebastien-delogu-pour-violences-aggravees-lors-du-blocus-du-lycee-saint-exupery"
+            }
+          ]
+        },
+        {
+          "personne": "Adrien Quatennens",
+          "affaire": "Condamnation d'Adrien Quatennens pour violences conjugales",
+          "infraction": "Violence",
+          "decisions": [
+            {
+              "date": "2022-12-13",
+              "juridiction": "Tribunal judiciaire de Lille",
+              "issue": "condamnation",
+              "peine": "4 mois d'emprisonnement avec sursis, 2 000 € d'amende"
+            }
+          ],
+          "statut": "définitive",
+          "definitive": true,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Affaire des violences conjugales",
+              "url": "https://www.liberation.fr/politique/le-cas-adrien-quatennens-un-cas-de-conscience-20220914_J7SPHKQRZBA6VN75WVEABAKXZ4/"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/adrien-quatennens-condamnation-d-adrien-quatennens-pour-violences-conjugales-2"
+            }
+          ]
+        },
+        {
+          "personne": "Aurélien Taché",
+          "affaire": "Condamnation d'Aurélien Taché pour outrage et violence en état d'ivresse",
+          "infraction": "Violence",
+          "decisions": [
+            {
+              "date": "2022-09-07",
+              "juridiction": "Tribunal de Niort",
+              "issue": "condamnation",
+              "peine": "5 000 € d'amende"
+            }
+          ],
+          "statut": "définitive",
+          "definitive": true,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Après une bagarre dans un bar à Niort, le député Aurélien Taché insulte des policiers",
+              "url": "https://www.lanouvellerepublique.fr/deux-sevres/un-syndicat-accuse-un-depute-d-avoir-insulte-des-policiers-a-niort-en-deux-sevres"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/aurelien-tache-condamnation-d-aurelien-tache-pour-outrage-et-violence-en-etat-d-ivresse"
+            }
+          ]
+        },
+        {
+          "personne": "Bastien Lachaud",
+          "affaire": "Condamnation de Bastien Lachaud pour trouble à l'ordre public lors de la perquisition au siège de LFI",
+          "infraction": "Autre infraction",
+          "decisions": [
+            {
+              "date": "2019-12-09",
+              "juridiction": "Tribunal correctionnel de Bobigny",
+              "issue": "condamnation",
+              "peine": "6 000 € d'amende"
+            }
+          ],
+          "statut": "définitive",
+          "definitive": true,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Perquisition au siège de LFI : Jean-Luc Mélenchon condamné à trois mois de prison avec sursis",
+              "url": "https://www.ici.fr/infos/faits-divers-justice/perquisition-au-siege-de-lfi-jean-luc-melenchon-condamne-a-trois-mois-de-prison-avec-sursis-1575882805"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/bastien-lachaud-condamnation-de-bastien-lachaud-pour-trouble-a-l-ordre-public-lors-de-la-perquisition-au-siege-de-lfi"
+            }
+          ]
+        },
+        {
+          "personne": "Manuel Bompard",
+          "affaire": "Condamnation de Manuel Bompard pour rébellion lors de la perquisition au siège de LFI",
+          "infraction": "Autre infraction",
+          "decisions": [
+            {
+              "date": "2019-12-09",
+              "juridiction": "Tribunal correctionnel de Bobigny",
+              "issue": "condamnation",
+              "peine": "7 000 € d'amende"
+            }
+          ],
+          "statut": "définitive",
+          "definitive": true,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Condamnation pour rébellion lors de la perquisition au siège de LFI",
+              "url": "https://www.capital.fr/economie-politique/la-correctionnelle-pour-jean-luc-melenchon-alexis-corbiere-et-manuel-bompard-1343274"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/manuel-bompard-condamnation-de-manuel-bompard-pour-rebellion-lors-de-la-perquisition-au-siege-de-lfi"
+            }
+          ]
+        },
+        {
+          "personne": "Raphaël Arnault",
+          "affaire": "Condamnation de Raphaël Arnault pour violences volontaires en réunion",
+          "infraction": "Violence",
+          "decisions": [
+            {
+              "date": "",
+              "juridiction": "Tribunal correctionnel de Lyon",
+              "issue": "condamnation",
+              "peine": "4 mois de prison avec sursis"
+            }
+          ],
+          "statut": "définitive",
+          "definitive": true,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Le député LFI Raphaël Arnault définitivement condamné pour violences volontaires en réunion à Lyon",
+              "url": "https://www.lyonmag.com/article/148734/le-depute-lfi-raphael-arnault-definitivement-condamne-pour-violences-volontaires-en-reunion-a-lyon"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/raphael-arnault-violences-volontaires-en-reunion-raphael-arnault"
+            }
+          ]
+        },
+        {
+          "personne": "Jean-Hugues Ratenon",
+          "affaire": "Affaire de diffamation et injures (tract 2009)",
+          "infraction": "Diffamation",
+          "decisions": [
+            {
+              "date": "",
+              "juridiction": "Tribunal correctionnel",
+              "issue": "relaxe",
+              "peine": ""
+            }
+          ],
+          "statut": "relaxe",
+          "definitive": null,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Affaire de diffamation et injures (tract 2009)",
+              "url": "https://www.clicanoo.re/Politique/Article/2010/03/06/Daniel-Gonthier-porte-plainte-contre-Jean-Hugues-Ratenon_141371"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/jean-hugues-ratenon-diffamation-et-injures-tract-2009"
+            }
+          ]
+        }
+      ]
+    },
+    "HOR": {
+      "nom": "Horizons",
+      "candidats": [
+        "philippe"
+      ],
+      "affaires": [
+        {
+          "personne": "Agnès Firmin Le Bodo",
+          "affaire": "Condamnation d'Agnès Firmin Le Bodo pour des cadeaux non déclarés des laboratoires Urgo",
+          "infraction": "Autre infraction",
+          "decisions": [
+            {
+              "date": "2024-10-14",
+              "juridiction": "Tribunal correctionnel du Havre (CRPC)",
+              "issue": "condamnation",
+              "peine": "8 000 euros d'amende, dont 4 000 euros avec sursis, et confiscation des cadeaux saisis pendant l'enquête"
+            }
+          ],
+          "statut": "première instance",
+          "definitive": null,
+          "verification": "a_verifier",
+          "sources": [
+            {
+              "titre": "L’ancienne ministre de la santé Agnès Firmin Le Bodo condamnée pour des cadeaux non déclarés des laboratoires Urgo",
+              "url": "https://www.lemonde.fr/societe/article/2024/10/17/l-ancienne-ministre-de-la-sante-agnes-firmin-le-bodo-condamnee-pour-des-cadeaux-non-declares-des-laboratoires-urgo_6354614_3224.html"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/condamnation-d-agnes-firmin-le-bodo-pour-des-cadeaux-non-declares-des-laboratoires-urgo"
+            }
+          ]
+        },
+        {
+          "personne": "Laurent Marcangeli",
+          "affaire": "Condamnation par la Cour des comptes pour non-exécution de décisions de justice",
+          "infraction": "Autre infraction",
+          "decisions": [
+            {
+              "date": "2023-05-31",
+              "juridiction": "Cour des comptes",
+              "issue": "condamnation",
+              "peine": "Amende de 10 000 euros (responsabilité financière des gestionnaires publics, Cour des comptes, chambre du contentieux). Sanction financière, non pénale."
+            }
+          ],
+          "statut": "première instance",
+          "definitive": null,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "L'ancien maire d'Ajaccio Laurent Marcangeli condamné par la Cour des comptes",
+              "url": "https://www.corsenetinfos.corsica/L-ancien-maire-d-Ajaccio-Laurent-Marcangeli-condamne-par-la-Cour-des-comptes_a71529.html"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/laurent-marcangeli-condamnation-par-la-cour-des-comptes-pour-non-execution-de-decisions-de-justice"
+            }
+          ]
+        },
+        {
+          "personne": "Catherine Vautrin",
+          "affaire": "Affaire des pénalités de Nicolas Sarkozy",
+          "infraction": "Abus de confiance",
+          "decisions": [
+            {
+              "date": "",
+              "juridiction": "Tribunal judiciaire de Paris",
+              "issue": "non-lieu",
+              "peine": ""
+            }
+          ],
+          "statut": "non-lieu",
+          "definitive": null,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/catherine-vautrin-penalites-de-nicolas-sarkozy"
+            }
+          ]
+        }
+      ]
+    },
+    "LR": {
+      "nom": "Les Républicains",
+      "candidats": [
+        "retailleau"
+      ],
+      "affaires": [
+        {
+          "personne": "Gaël Perdriau",
+          "affaire": "Chantage à la sextape contre Gilles Artigues",
+          "infraction": "Autre infraction",
+          "decisions": [
+            {
+              "date": "2026-09-10",
+              "juridiction": "Cour d'appel de Lyon",
+              "issue": "condamnation",
+              "peine": "5 ans de prison dont 4 ans ferme, 50 000 € d'amende et 10 ans d'inéligibilité (cour d'appel de Lyon, 10 septembre 2026), avec mandat de dépôt"
+            }
+          ],
+          "statut": "première instance",
+          "definitive": null,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Chantage à la sextape : la cour d'appel rend sa décision ce jeudi contre l'ex-maire de Saint-Etienne Gaël Perdriau",
+              "url": "https://www.cnews.fr/faits-divers/2026-09-10/chantage-la-sextape-la-cour-dappel-rend-sa-decision-ce-jeudi-contre-lex"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/perdriau-chantage-sextape"
+            }
+          ]
+        },
+        {
+          "personne": "Yves Foulon",
+          "affaire": "Insultes et menaces contre l'opposant Vital Baude lors des municipales",
+          "infraction": "Menace",
+          "decisions": [
+            {
+              "date": "2026-08-20",
+              "juridiction": "Tribunal correctionnel de Bordeaux",
+              "issue": "condamnation",
+              "peine": "Amende de 10 000 euros dont 5 000 euros avec sursis pour menaces et violences, amende de 30 euros pour injures ; 2 500 euros de dommages et intérêts à Vital Baude. Jugement de première instance."
+            }
+          ],
+          "statut": "première instance",
+          "definitive": null,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Le maire d'Arcachon reconnu coupable après les menaces sur son opposant pendant les municipales",
+              "url": "https://www.ici.fr/nouvelle-aquitaine/gironde-33/arcachon/le-maire-d-arcachon-reconnu-coupable-apres-les-menaces-sur-son-opposition-pendant-les-municipales-7723622"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/insultes-et-menaces-contre-l-opposant-vital-baude"
+            }
+          ]
+        },
+        {
+          "personne": "Patrick Balkany",
+          "affaire": "Condamnation de Patrick Balkany pour détournement de fonds publics (affaires Codeeil et police municipale)",
+          "infraction": "Détournement de fonds publics",
+          "decisions": [
+            {
+              "date": "2026-05-28",
+              "juridiction": "Tribunal correctionnel de Nanterre",
+              "issue": "condamnation",
+              "peine": "15 mois de prison ferme et 350 000 € d'amende dans l'affaire Codeeil ; 3 ans de prison ferme et 500 000 € d'amende dans l'affaire de la police municipale (sans mandat de dépôt). 10 ans d'inéligibilité et interdiction d'exercer une fonction publique pendant 5 ans. Appel interjeté."
+            }
+          ],
+          "statut": "première instance",
+          "definitive": null,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "L'ancien maire de Levallois-Perret Patrick Balkany condamné à de la prison ferme dans deux affaires de détournement de fonds publics",
+              "url": "https://www.franceinfo.fr/societe/justice/l-ancien-maire-de-levallois-perret-patrick-balkany-condamne-a-de-la-prison-ferme-dans-deux-affaires-de-detournement-de-fonds-publics_8033813.html"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/patrick-balkany-condamnation-detournement-fonds-publics-2026"
+            }
+          ]
+        },
+        {
+          "personne": "Laurent Brosse",
+          "affaire": "Condamnation de Laurent Brosse pour violences et tentative d'agression sexuelle",
+          "infraction": "Agression sexuelle",
+          "decisions": [
+            {
+              "date": "2025-12-01",
+              "juridiction": "Cour d'appel de Versailles",
+              "issue": "condamnation",
+              "peine": "10 mois de prison avec sursis et 2 ans de sursis probatoire (cour d'appel de Versailles, 1er décembre 2025). Agression sexuelle requalifiée en tentative; relaxe pour la séquestration. Inéligibilité écartée."
+            }
+          ],
+          "statut": "première instance",
+          "definitive": null,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Condamné pour violences sur son ex-compagne, le maire de Conflans en passe de se représenter",
+              "url": "https://www.mediapart.fr/journal/france/141225/condamne-pour-violences-sur-son-ex-compagne-le-maire-de-conflans-en-passe-de-se-representer"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/laurent-brosse-violences-et-tentative-d-agression-sexuelle"
+            }
+          ]
+        },
+        {
+          "personne": "Nicolas Sarkozy",
+          "affaire": "Affaire Bygmalion",
+          "infraction": "Financement illégal de campagne",
+          "decisions": [
+            {
+              "date": "2025-11-26",
+              "juridiction": "Cour d'appel de Paris",
+              "issue": "condamnation",
+              "peine": "1 an d'emprisonnement dont 6 mois avec sursis. Condamnation définitive après le rejet du pourvoi le 26 novembre 2025. Le 5 mai 2026, un juge de l'application des peines du tribunal judiciaire de Paris a accordé un aménagement en libération conditionnelle à compter du 7 mai 2026, sans bracelet électronique."
+            }
+          ],
+          "statut": "définitive",
+          "definitive": true,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Affaire Bygmalion : Nicolas Sarkozy \"prend acte\" de sa condamnation définitive à un an de prison",
+              "url": "https://www.france24.com/fr/info-en-continu/20251126-bygmalion-la-cour-de-cassation-va-dire-si-la-condamnation-de-sarkozy-est-d%C3%A9finitive"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/nicolas-sarkozy-bygmalion"
+            }
+          ]
+        },
+        {
+          "personne": "Nicolas Sarkozy",
+          "affaire": "Affaire Sarkozy-Kadhafi",
+          "infraction": "Financement illégal de campagne",
+          "decisions": [
+            {
+              "date": "2025-09-25",
+              "juridiction": "Cour d'appel de Paris",
+              "issue": "condamnation",
+              "peine": "1ère instance : 5 ans de prison ferme avec exécution provisoire. Appel en cours, décision attendue le 30 novembre 2026."
+            }
+          ],
+          "statut": "appel en cours",
+          "definitive": false,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "«Claude, voyez cela»: Claude Guéant brise la défense de Nicolas Sarkozy au procès des financements libyens",
+              "url": "https://www.mediapart.fr/journal/france/140426/claude-voyez-cela-claude-gueant-brise-la-defense-de-nicolas-sarkozy-au-proces-des-financements-libyens"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/nicolas-sarkozy-sarkozy-kadhafi-2"
+            }
+          ]
+        },
+        {
+          "personne": "Brice Hortefeux",
+          "affaire": "Association de malfaiteurs",
+          "infraction": "Autre infraction",
+          "decisions": [
+            {
+              "date": "2025-09-25",
+              "juridiction": "Tribunal correctionnel de Paris",
+              "issue": "condamnation",
+              "peine": "2 ans de prison ferme, 50 000 € d'amende, 5 ans d'inéligibilité"
+            }
+          ],
+          "statut": "appel en cours",
+          "definitive": false,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Proces du financement libyen : Brice Hortefeux coupable d'association de malfaiteurs",
+              "url": "https://www.francebleu.fr/infos/politique/proces-sarkozy-brice-hortefeux-reconnu-coupable-d-association-de-malfaiteurs-3619538"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/brice-hortefeux-association-de-malfaiteurs"
+            }
+          ]
+        },
+        {
+          "personne": "Eric Straumann",
+          "affaire": "Relaxe en appel d'Éric Straumann dans l'affaire des indemnités rétroactives de Colmar",
+          "infraction": "Détournement de fonds publics",
+          "decisions": [
+            {
+              "date": "2025-09-23",
+              "juridiction": "Cour d'appel de Colmar",
+              "issue": "relaxe",
+              "peine": ""
+            }
+          ],
+          "statut": "relaxe",
+          "definitive": null,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Haut-Rhin : le maire de Colmar condamné pour tentative de détournement de fonds publics",
+              "url": "https://www.lefigaro.fr/flash-actu/haut-rhin-le-maire-de-colmar-condamne-pour-tentative-de-detournement-de-fonds-publics-20240325"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/eric-straumann-indemnites-retroactives-colmar-relaxe"
+            }
+          ]
+        },
+        {
+          "personne": "François Fillon",
+          "affaire": "Condamnation définitive de François Fillon dans l'affaire des emplois fictifs",
+          "infraction": "Emploi fictif",
+          "decisions": [
+            {
+              "date": "2025-06-17",
+              "juridiction": "Cour d'appel de Paris",
+              "issue": "condamnation",
+              "peine": "4 ans de prison avec sursis, 375 000€ d'amende, 5 ans d'inéligibilité"
+            }
+          ],
+          "statut": "définitive",
+          "definitive": true,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Affaire des emplois fictifs : François Fillon finalement condamné à du sursis",
+              "url": "https://www.dhnet.be/dernieres-depeches/2025/06/17/penelopegate-francois-fillon-fixe-sur-sa-peine-GQCSXWTRHNGFJPWMTS3OGTL7EY/"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/francois-fillon-condamnation-definitive-de-francois-fillon-dans-l-affaire-des-emplois-fictifs"
+            }
+          ]
+        },
+        {
+          "personne": "Bruno Beschizza",
+          "affaire": "Relaxe de Bruno Beschizza poursuivi pour dénonciation calomnieuse",
+          "infraction": "Autre infraction",
+          "decisions": [
+            {
+              "date": "2025-02-12",
+              "juridiction": "Tribunal correctionnel de Paris",
+              "issue": "relaxe",
+              "peine": ""
+            }
+          ],
+          "statut": "relaxe",
+          "definitive": null,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Dans l’ombre du procès Sarkozy, Bruno Beschizza jugé pour dénonciation calomnieuse",
+              "url": "https://www.liberation.fr/societe/police-justice/dans-lombre-du-proces-sarkozy-bruno-beschizza-juge-pour-denonciation-calomnieuse-20250106_NTSRXMMA7NHUNJMCTPGJJBKEKQ/"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/bruno-beschizza-denonciation-calomnieuse-relaxe"
+            }
+          ]
+        },
+        {
+          "personne": "Nicolas Sarkozy",
+          "affaire": "Affaire Bismuth / Affaire des écoutes",
+          "infraction": "Corruption",
+          "decisions": [
+            {
+              "date": "2024-12-18",
+              "juridiction": "Cour de cassation, chambre criminelle",
+              "issue": "condamnation",
+              "peine": "3 ans de prison dont 1 an ferme sous bracelet électronique et 3 ans d'inéligibilité. Définitif (Cour de cassation, 18 décembre 2024)."
+            }
+          ],
+          "statut": "définitive",
+          "definitive": true,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Affaire des écoutes de Sarkozy : les méthodes du parquet national financier en question",
+              "url": "https://www.leparisien.fr/faits-divers/affaire-des-ecoutes-de-sarkozy-les-methodes-du-parquet-national-financier-en-question-26-06-2020-8342271.php"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/nicolas-sarkozy-bismuth-affaire-des-ecoutes"
+            }
+          ]
+        },
+        {
+          "personne": "Marc Joulaud",
+          "affaire": "Détournement de fonds publics",
+          "infraction": "Détournement de fonds publics",
+          "decisions": [
+            {
+              "date": "2024-04-24",
+              "juridiction": "Cour de cassation (rejet pourvoi)",
+              "issue": "condamnation",
+              "peine": "3 ans de prison avec sursis, 5 ans d'inéligibilité"
+            }
+          ],
+          "statut": "définitive",
+          "definitive": true,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Emplois fictifs : François Fillon définitivement jugé coupable",
+              "url": "https://www.france24.com/fr/info-en-continu/20240424-emplois-fictifs-l-ancien-premier-ministre-fran%C3%A7ois-fillon-d%C3%A9finitivement-jug%C3%A9-coupable"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/marc-joulaud-detournement-de-fonds-publics"
+            }
+          ]
+        },
+        {
+          "personne": "Gilles Platret",
+          "affaire": "Relaxe de Gilles Platret pour homicide involontaire après une triple noyade",
+          "infraction": "Autre infraction",
+          "decisions": [
+            {
+              "date": "2023-05-12",
+              "juridiction": "Tribunal correctionnel de Chalon-sur-Saône",
+              "issue": "relaxe",
+              "peine": ""
+            }
+          ],
+          "statut": "relaxe",
+          "definitive": null,
+          "verification": "a_verifier",
+          "sources": [
+            {
+              "titre": "Chalon-sur-Saône : le maire, Gilles Platret, relaxé après une triple noyade",
+              "url": "https://www.lefigaro.fr/flash-actu/chalon-sur-saone-le-maire-gilles-platret-relaxe-apres-une-triple-noyade-20230512"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/relaxe-de-gilles-platret-pour-homicide-involontaire-apres-une-triple-noyade"
+            }
+          ]
+        },
+        {
+          "personne": "Georges Tron",
+          "affaire": "Viol",
+          "infraction": "Agression sexuelle",
+          "decisions": [
+            {
+              "date": "2021-12-08",
+              "juridiction": "Cour d'assises d'appel de Paris",
+              "issue": "condamnation",
+              "peine": "5 ans de prison dont 3 ans ferme, 6 ans d'inéligibilité"
+            }
+          ],
+          "statut": "définitive",
+          "definitive": true,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Georges Tron définitivement condamné pour viol",
+              "url": "https://www.franceinfo.fr/societe/justice/proces-de-georges-tron/son-pourvoi-rejete-georges-tron-definitivement-condamne-pour-viol-et-agressions-sexuelles_4874007.html"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/georges-tron-viol"
+            }
+          ]
+        },
+        {
+          "personne": "Claude Guéant",
+          "affaire": "Détournement de fonds",
+          "infraction": "Détournement de fonds publics",
+          "decisions": [
+            {
+              "date": "2019-01-16",
+              "juridiction": "Cour de cassation (rejet pourvoi)",
+              "issue": "condamnation",
+              "peine": "2 ans de prison dont 1 ferme, 75 000€ d'amende, 5 ans interdiction fonction publique"
+            }
+          ],
+          "statut": "définitive",
+          "definitive": true,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Claude Guéant définitivement condamné à un an de prison ferme dans l'affaire des primes en liquide",
+              "url": "https://www.franceinfo.fr/politique/claude-gueant/affaire-gueant/claude-gueant-definitivement-condamne-a-un-an-de-prison-ferme-dans-l-affaire-des-primes-en-liquide-du-ministere-de-l-interieur_3147663.html"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/claude-gueant-detournement-de-fonds"
+            }
+          ]
+        },
+        {
+          "personne": "Jean-Jacques Panunzi",
+          "affaire": "Affaire des marchés publics - condamnation pour favoritisme",
+          "infraction": "Favoritisme",
+          "decisions": [
+            {
+              "date": "2017-01-24",
+              "juridiction": "juridiction non précisée",
+              "issue": "condamnation",
+              "peine": "1 an d'emprisonnement avec sursis, 5 000 € d'amende"
+            }
+          ],
+          "statut": "première instance",
+          "definitive": null,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Marchés publics: Panunzi et Colonna condamnés à un de prison avec sursis",
+              "url": "https://www.corsematin.com/article/derniere-minute/marches-publics-panunzi-et-colonna-condamnes-a-un-de-prison-avec-sursis"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/jean-jacques-panunzi-marches-publics-condamnation-pour-favoritisme"
+            }
+          ]
+        },
+        {
+          "personne": "Bruno Sido",
+          "affaire": "Affaire du compte en Suisse non déclaré",
+          "infraction": "Blanchiment",
+          "decisions": [
+            {
+              "date": "2016-04-01",
+              "juridiction": "Tribunal de grande instance de Paris",
+              "issue": "condamnation",
+              "peine": "Six mois d'emprisonnement avec sursis et 60 000 euros d'amende (CRPC)"
+            }
+          ],
+          "statut": "définitive",
+          "definitive": true,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Quand Sido moquait Cahuzac au Sénat",
+              "url": "https://www.huffingtonpost.fr/2014/11/13/bruno-sido-compte-suisse-jerome-cahuzac_n_6152022.html"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/bruno-sido-compte-en-suisse-non-declare"
+            }
+          ]
+        },
+        {
+          "personne": "Philippe Pemezec",
+          "affaire": "Affaire de l'attribution d'un logement social à la fille de Philippe Pemezec",
+          "infraction": "Prise illégale d'intérêts",
+          "decisions": [
+            {
+              "date": "2016-03-30",
+              "juridiction": "Cour d'appel de Versailles",
+              "issue": "relaxe",
+              "peine": ""
+            }
+          ],
+          "statut": "relaxe",
+          "definitive": null,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Pemezec père et fille sont condamnés pour logement en famille organisée | Mediapart",
+              "url": "https://www.mediapart.fr/journal/france/220415/pemezec-pere-et-fille-sont-condamnes-pour-logement-en-famille-organisee"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/philippe-pemezec-attribution-logement-social-relaxe"
+            }
+          ]
+        },
+        {
+          "personne": "Laurent Wauquiez",
+          "affaire": "Condamnation de Laurent Wauquiez pour diffamation envers Philippe Kaltenbach",
+          "infraction": "Diffamation",
+          "decisions": [
+            {
+              "date": "2015-05-30",
+              "juridiction": "Cour d'appel de Versailles",
+              "issue": "condamnation",
+              "peine": "500 € d'amende"
+            }
+          ],
+          "statut": "définitive",
+          "definitive": true,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Laurent Wauquiez condamné pour avoir traité de crapule l'ex-maire de Clamart",
+              "url": "https://www.leparisien.fr/hauts-de-seine-92/clamart-92140/laurent-wauquiez-condamne-pour-avoir-traite-de-crapule-l-ex-maire-de-clamart-29-05-2015-4814497.php"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/laurent-wauquiez-condamnation-de-laurent-wauquiez-pour-diffamation-envers-philippe-kaltenbach-2"
+            }
+          ]
+        },
+        {
+          "personne": "Nicolas Sarkozy",
+          "affaire": "Affaire Woerth-Bettencourt",
+          "infraction": "Financement illégal de campagne",
+          "decisions": [
+            {
+              "date": "2013-10-07",
+              "juridiction": "juridiction non précisée",
+              "issue": "non-lieu",
+              "peine": ""
+            }
+          ],
+          "statut": "non-lieu",
+          "definitive": null,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Affaire Bettencourt : non-lieu pour Sarkozy",
+              "url": "https://www.lemonde.fr/societe/article/2013/10/07/affaire-bettencourt-non-lieu-pour-nicolas-sarkozy_3491099_3224.html"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/nicolas-sarkozy-woerth-bettencourt"
+            }
+          ]
+        },
+        {
+          "personne": "Manuel Aeschlimann",
+          "affaire": "Condamnation de Manuel Aeschlimann pour favoritisme dans des marchés publics",
+          "infraction": "Favoritisme",
+          "decisions": [
+            {
+              "date": "2011-01-21",
+              "juridiction": "Cour d'appel de Versailles",
+              "issue": "condamnation",
+              "peine": "18 mois de prison avec sursis, 20 000 € d'amende et un an d'inéligibilité (cour d'appel de Versailles, 21 janvier 2011, confirmant le jugement du 13 mars 2009 et ramenant l'inéligibilité de quatre ans à un an)."
+            }
+          ],
+          "statut": "définitive",
+          "definitive": true,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Un an d'inégibilité pour Manuel Aeschlimann",
+              "url": "https://www.europe1.fr/politique/Un-an-d-inegibilite-pour-Manuel-Aeschlimann-458412"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/manuel-aeschlimann-favoritisme-marche-public-asnieres"
+            }
+          ]
+        },
+        {
+          "personne": "Alain Juppé",
+          "affaire": "Prise illégale d'intérêts",
+          "infraction": "Prise illégale d'intérêts",
+          "decisions": [
+            {
+              "date": "2004-12-01",
+              "juridiction": "Cour d appel de Versailles",
+              "issue": "condamnation",
+              "peine": "14 mois de prison avec sursis, 1 an inéligibilité"
+            }
+          ],
+          "statut": "définitive",
+          "definitive": true,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Alain Juppé condamné en appel",
+              "url": "https://www.ina.fr/ina-eclaire-actu/video/2716231001002/emplois-fictifs-de-la-ville-de-paris-alain-juppe-condamne-en-appel-mais-peine-allegee"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/alain-juppe-prise-illegale-d-interets"
+            }
+          ]
+        },
+        {
+          "personne": "Alain Carignon",
+          "affaire": "Affaire Carignon : corruption et abus de biens sociaux (eau de Grenoble)",
+          "infraction": "Corruption",
+          "decisions": [
+            {
+              "date": "1996-07-09",
+              "juridiction": "Cour d'appel de Lyon",
+              "issue": "condamnation",
+              "peine": "Peine globale prononcée par la cour d'appel de Lyon le 9 juillet 1996 : 5 ans d'emprisonnement dont 1 an avec sursis, 400 000 francs d'amende et 5 ans d'interdiction du droit de vote et d'éligibilité. Condamnation pénale définitive après le rejet du pourvoi le 27 octobre 1997."
+            }
+          ],
+          "statut": "définitive",
+          "definitive": true,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Le rejet du pourvoi en cassation d'Alain Carignon élargit la notion de délit d'abus de biens sociaux",
+              "url": "https://www.lemonde.fr/archives/article/1997/10/29/le-rejet-du-pourvoi-en-cassation-d-alain-carignon-elargit-la-notion-de-delit-d-abus-de-biens-sociaux_3809933_1819218.html"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/alain-carignon-faux"
+            }
+          ]
+        },
+        {
+          "personne": "Nicolas Daragon",
+          "affaire": "Condamnation de Nicolas Daragon pour prise illégale d'intérêts",
+          "infraction": "Prise illégale d'intérêts",
+          "decisions": [
+            {
+              "date": "",
+              "juridiction": "juridiction non précisée",
+              "issue": "condamnation",
+              "peine": "3 000 € d'amende"
+            }
+          ],
+          "statut": "première instance",
+          "definitive": null,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Valence - Mise en examen de Nicolas Daragon",
+              "url": "https://france3-regions.franceinfo.fr/auvergne-rhone-alpes/info/valence---mise-en-examen-de-nicolas-daragon-55045.html"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/condamnation-de-nicolas-daragon-pour-prise-illegale-d-interets"
+            }
+          ]
+        },
+        {
+          "personne": "Patrick Balkany",
+          "affaire": "Prise illégale d'intérêts",
+          "infraction": "Prise illégale d'intérêts",
+          "decisions": [
+            {
+              "date": "",
+              "juridiction": "juridiction non précisée",
+              "issue": "condamnation",
+              "peine": "15 mois de prison avec sursis, 30 000 euros d'amende, 2 ans d'inéligibilité"
+            }
+          ],
+          "statut": "définitive",
+          "definitive": true,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Procès Balkany : le maire de Levallois, adulé par certains, rattrapé par la justice",
+              "url": "https://www.francebleu.fr/infos/faits-divers-justice/proces-balkany-six-semaines-de-proces-devant-le-tribunal-correctionnel-de-paris-1557498984"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/patrick-balkany-prise-illegale-d-interets"
+            }
+          ]
+        }
+      ]
+    },
+    "PCF": {
+      "nom": "Parti communiste français",
+      "candidats": [
+        "roussel"
+      ],
+      "affaires": [
+        {
+          "personne": "Nicolas Sansu",
+          "affaire": "Condamnation de Nicolas Sansu pour conduite en état d'ivresse et outrage à agents",
+          "infraction": "Autre infraction",
+          "decisions": [
+            {
+              "date": "2023-05-02",
+              "juridiction": "Tribunal judiciaire de Bourges",
+              "issue": "condamnation",
+              "peine": "2 mois d'emprisonnement avec sursis, 300 € d'amende"
+            }
+          ],
+          "statut": "première instance",
+          "definitive": null,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Conduite en état d'ivresse et outrage à agents (février 2023)",
+              "url": "https://www.ouest-france.fr/societe/justice/le-depute-nicolas-sansu-condamne-pour-conduite-en-etat-divresse-et-outrages-a-des-policiers-7b1ead96-e999-11ed-8d3a-d8dde08625eb"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/nicolas-sansu-condamnation-de-nicolas-sansu-pour-conduite-en-etat-d-ivresse-et-outrage-a-agents"
+            }
+          ]
+        }
+      ]
+    },
+    "EELV": {
+      "nom": "Les Écologistes – Europe Écologie Les Verts",
+      "candidats": [
+        "tondelier"
+      ],
+      "affaires": [
+        {
+          "personne": "Yannick Jadot",
+          "affaire": "Relaxe de Yannick Jadot, poursuivi en diffamation par TotalEnergies",
+          "infraction": "Diffamation",
+          "decisions": [
+            {
+              "date": "2025-06-06",
+              "juridiction": "Tribunal correctionnel de Paris, 17e chambre",
+              "issue": "relaxe",
+              "peine": ""
+            }
+          ],
+          "statut": "relaxe",
+          "definitive": null,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Action en diffamation de TotalEnergies contre Yannick Jadot",
+              "url": "https://www.lemonde.fr/election-presidentielle-2022/article/2022/03/23/totalenergies-annonce-une-action-en-diffamation-contre-yannick-jadot-pour-l-avoir-accuse-d-etre-complice-des-crimes-de-guerre-en-ukraine_6118840_6059010.html"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/yannick-jadot-action-en-diffamation-de-totalenergies-contre-yannick-jadot"
+            }
+          ]
+        },
+        {
+          "personne": "Patrick Chaimovitch",
+          "affaire": "Condamnation pour injure publique envers la police et la gendarmerie",
+          "infraction": "Injure",
+          "decisions": [
+            {
+              "date": "2021-07-06",
+              "juridiction": "Tribunal correctionnel de Nanterre",
+              "issue": "condamnation",
+              "peine": "3 000 € d'amende, 1 000 € de dommages-intérêts, 800 € de frais de justice"
+            }
+          ],
+          "statut": "première instance",
+          "definitive": null,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Colombes : le maire condamné pour injure publique envers la police et la gendarmerie",
+              "url": "https://www.ici.fr/infos/faits-divers-justice/colombes-le-maire-condamne-pour-injure-publique-envers-la-police-et-la-gendarmerie-1625581637"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/2021-07-06-injure-publique-police-gendarmerie"
+            }
+          ]
+        }
+      ]
+    },
+    "REC": {
+      "nom": "Reconquête",
+      "candidats": [
+        "zemmour"
+      ],
+      "affaires": [
+        {
+          "personne": "Gérard Dezempte",
+          "affaire": "Relaxe de Gérard Dezempte, poursuivi pour discrimination dans l'exercice du droit de préemption",
+          "infraction": "Autre infraction",
+          "decisions": [
+            {
+              "date": "2009-02-04",
+              "juridiction": "Cour d'appel de Lyon (sur renvoi après cassation)",
+              "issue": "relaxe",
+              "peine": ""
+            }
+          ],
+          "statut": "relaxe",
+          "definitive": null,
+          "verification": "verifie",
+          "sources": [
+            {
+              "titre": "Relaxe d'un maire UMP accusé de discrimination raciale",
+              "url": "https://www.20minutes.fr/lyon/297155-20090205-relaxe-maire-ump-accuse-discrimination-raciale"
+            },
+            {
+              "titre": "Fiche Poligraph (toutes les sources)",
+              "url": "https://poligraph.fr/affaires/gerard-dezempte-discrimination-preemption-charvieu-chavagneux"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
