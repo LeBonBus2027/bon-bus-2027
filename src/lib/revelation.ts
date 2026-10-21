@@ -29,6 +29,10 @@ export interface Revelation {
   beau?: Classe<Candidat>;
   epave?: Classe<Candidat>;
   focus: Classe<Candidat>[];
+  /** « Pour rappel » (justice) : tous les bus de ton plus beau bac, plus les 3 plus proches, dans l'ordre du classement. */
+  rappel: Classe<Candidat>[];
+  /** Ton plus beau bac occupé (« J'adore » s'il n'est pas vide, etc.). */
+  haut?: Niveau;
   message: string;
   /** Petite morale imagée : ce que tu voyais du bus, puis où il va vraiment. */
   metaphore: string;
@@ -100,6 +104,7 @@ export function reveler(classement: readonly Classe<Candidat>[], bacs: Readonly<
   const beau = haut ? classement.filter(c => bacs[c.candidat.id] === haut).at(-1) : undefined;
   const epave = bas ? classement.find(c => bacs[c.candidat.id] === bas) : undefined;
   const focus = [...new Set([...classement.slice(0, 3), beau, epave].filter((c): c is Classe<Candidat> => !!c))];
+  const rappel = classement.filter((c, i) => i < 3 || (!!haut && bacs[c.candidat.id] === haut));
 
   const n = meilleur.candidat.nom, nm = meilleur.trajet.arrets;
   const intuition = !!haut && bacs[meilleur.candidat.id] === haut;
@@ -114,7 +119,7 @@ export function reveler(classement: readonly Classe<Candidat>[], bacs: Readonly<
     message = `Ton plus beau bus, ${beau.candidat.nom}, te laisse à ${arrets(nb)} de chez toi.${loin} Celui qui te rapproche le plus, c'est ${n} (${arrets(nm)}), ${rangement(bacs[meilleur.candidat.id])}.`;
   }
   const mot = metaphore(bacs[meilleur.candidat.id] ?? "inconnu", haut, beau, intuition, tirage);
-  return { meilleur, beau, epave, focus, message, metaphore: mot, intuition };
+  return { meilleur, beau, epave, focus, rappel, haut, message, metaphore: mot, intuition };
 }
 
 /**

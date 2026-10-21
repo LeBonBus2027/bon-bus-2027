@@ -1,6 +1,6 @@
 <script lang="ts">
   import { tick } from "svelte";
-  import type { Niveau } from "../lib/niveaux";
+  import { BAC, type Niveau } from "../lib/niveaux";
   import type { Revelation } from "../lib/revelation";
   import AvantApres from "./AvantApres.svelte";
   import { affairesPubliees, chargerJustice, resume, type Justice } from "../lib/justice";
@@ -62,9 +62,9 @@
     {:else if etape === 1}
       <AvantApres focus={revelation.focus} {bacs} compact titre={false} />
     {:else if etape === 2}
-      <p class="petit">Ce que dit la justice sur ces candidats. Ça ne change pas leur trajet.</p>
+      <p class="petit">Ce que dit la justice sur {revelation.haut ? `tes bus « ${BAC[revelation.haut]} » et ` : ""}les 3 bus qui te rapprochent le plus. Ça ne change pas leur trajet.</p>
       <ul class="rappel">
-        {#each revelation.focus as f (f.candidat.id)}
+        {#each revelation.rappel as f (f.candidat.id)}
           {@const liste = justice ? affairesPubliees(justice, f.candidat.id) : undefined}
           <li>
             <strong>{f.candidat.nom}</strong>
