@@ -42,10 +42,6 @@
   .e3 { bottom: 22%; left: 2%; font-size: 11px; animation-delay: calc(var(--retard) + 0.9s); }
   @keyframes scintille { 0%, 100% { opacity: 0; transform: scale(0.4) rotate(0); } 50% { opacity: 1; transform: scale(1.1) rotate(25deg); } }
 
-  /* Bien vu : l'épave hoche du capot, comme pour dire « eh oui ». */
-  .juste svg { animation: hoche 0.5s ease-in-out var(--retard) 2; }
-  @keyframes hoche { 0%, 100% { transform: none; } 50% { transform: rotate(-4deg) translateY(-2px); } }
-
   /* Belle surprise : le bus fait un bond, puis scintille un peu. */
   .envol svg { animation: bond 0.9s cubic-bezier(.3, 1.6, .5, 1) var(--retard) both; }
   .envol .eclat { animation-iteration-count: 3; }

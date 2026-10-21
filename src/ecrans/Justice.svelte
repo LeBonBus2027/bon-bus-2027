@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { affairesPubliees, chargerJustice, condamnation, dateJustice, nombre, partiDe, resume, type Affaire, type Justice } from "../lib/justice";
+  import { affairesPubliees, chargerJustice, condamnation, dateJustice, nombre, partiDe, precision, resume, type Affaire, type Justice } from "../lib/justice";
 
   /**
    * « Ce que dit la justice » pour un candidat : ses décisions de justice vérifiées, telles quelles, avec leur statut,
@@ -13,7 +13,6 @@
   const affaires = $derived<Affaire[] | null | undefined>(justice ? affairesPubliees(justice, id) : undefined);
   const parti = $derived(justice ? partiDe(justice, id) : undefined);
   const personnes = $derived(parti ? new Set(parti.affaires.map(a => a.personne)).size : 0);
-  const presomption = (a: Affaire) => condamnation(a) && a.definitive !== true;
 </script>
 
 {#snippet sources(a: Affaire)}
@@ -38,7 +37,7 @@
             <li><span class="quand">{dateJustice(d.date)}</span> · {d.juridiction} : <strong>{d.issue}</strong>{d.peine ? ` — ${d.peine}` : ""}</li>
           {/each}
         </ol>
-        <p class="statut petit"><span class="etiquette-signal">Statut</span> {a.statut}{#if presomption(a)}. Décision non définitive : la présomption d'innocence s'applique jusqu'à la décision définitive{/if}.</p>
+        <p class="statut petit"><span class="etiquette-signal">Statut</span> {a.statut}{#if precision(a) === "présomption d'innocence"}. Décision non définitive : la présomption d'innocence s'applique jusqu'à la décision définitive{:else if precision(a)}. Décision non définitive{/if}.</p>
         {@render sources(a)}
       </li>
     {/each}
@@ -46,7 +45,7 @@
 {:else}
   <ul class="lignes">
     {#each affaires as a, i (`${i}-${a.affaire}`)}
-      <li class:relaxe={!condamnation(a)}>{resume(a)}{#if presomption(a)}{" "}<span class="discret">(présomption d'innocence)</span>{/if}</li>
+      <li class:relaxe={!condamnation(a)}>{resume(a)}{#if precision(a)}{" "}<span class="discret">({precision(a)})</span>{/if}</li>
     {/each}
   </ul>
 {/if}

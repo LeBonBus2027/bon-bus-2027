@@ -86,8 +86,8 @@ describe(`simulations (${N} parcours)`, () => {
         if (avant === "adore" && apres === "jamais") { expect(e, ctx).toBe("panne"); panne++; }
         if (e === "panne") expect(rang(apres) - rang(avant), ctx).toBeGreaterThanOrEqual(3);
         if (e === "brille") expect([avant, apres], ctx).toEqual(["adore", "adore"]);
-        if (avant === "jamais" && apres === "jamais") expect(e, ctx).toBe("juste");
-        if (avant !== "inconnu" && avant === apres && avant !== "adore" && avant !== "jamais") expect(e, ctx).toBeNull();
+        if (avant === "jamais" && apres === "jamais") expect(e, ctx).toBeNull();
+        if (avant !== "inconnu" && avant === apres && avant !== "adore") expect(e, ctx).toBeNull();
       }
     }
     expect(brille).toBeGreaterThan(100);
@@ -104,7 +104,7 @@ describe(`simulations (${N} parcours)`, () => {
       if (r.epave) expect(r.epave, ctx).toBe(epave);
       // « Gratter la peinture » : tous les bus, grands écarts d'abord, puis réussites, puis le reste, chaque groupe dans l'ordre du classement.
       expect(new Set(r.focus), ctx).toEqual(new Set(p.classement));
-      const groupe = (c: Classe<Candidat>) => { const e = effet(p.bacs[c.candidat.id]!, r.peinture[c.candidat.id]!); return e === "panne" ? 0 : e === "brille" || e === "juste" ? 1 : 2; };
+      const groupe = (c: Classe<Candidat>) => { const e = effet(p.bacs[c.candidat.id]!, r.peinture[c.candidat.id]!); return e === "panne" ? 0 : e === "brille" ? 1 : 2; };
       for (let k = 1; k < r.focus.length; k++) expect(groupe(r.focus[k]!), ctx).toBeGreaterThanOrEqual(groupe(r.focus[k - 1]!));
       const haut = ORDRE_BEAUTE.find(n => p.classement.some(c => p.bacs[c.candidat.id] === n));
       expect(r.haut, ctx).toBe(haut);

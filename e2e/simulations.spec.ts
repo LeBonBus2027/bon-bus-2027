@@ -19,7 +19,7 @@ const BACS = ["J'adore", "Plutôt bien", "Bof", "Plutôt pas", "Jamais", "Je ne 
 const CLE: Record<string, string> = { "J'adore": "adore", "Plutôt bien": "bien", "Bof": "bof", "Plutôt pas": "pas", "Jamais": "jamais", "Je ne le connais pas": "inconnu" };
 const BUS: Record<string, string> = { adore: "Autocar de luxe", bien: "Bus neuf", bof: "Bus correct", pas: "Bus cabossé", jamais: "Épave", inconnu: "Bus gris" };
 const BEAUTE = ["adore", "bien", "bof", "pas", "jamais"];
-const EFFET: Record<string, string> = { brille: "Il brille", juste: "Bien vu", panne: "En panne", cale: "Il cale", envol: "Belle surprise", monte: "Il monte en gamme" };
+const EFFET: Record<string, string> = { brille: "Il brille", panne: "En panne", cale: "Il cale", envol: "Belle surprise", monte: "Il monte en gamme" };
 const VALEUR: Record<string, number> = { "Tout à fait d'accord": 2, "Plutôt d'accord": 1, "Neutre": 0, "Plutôt pas d'accord": -1, "Pas du tout d'accord": -2 };
 const REPONSES = Object.keys(VALEUR);
 const ns = (s: string) => s.replace(/[  ]/g, " ").replace(/\s+/g, " ").trim();
@@ -55,7 +55,6 @@ function peinturesAttendues(arrets: number[]): string[] {
 function effetAttendu(avant: string, apres: string): string | null {
   const a = BEAUTE.indexOf(apres);
   if (avant === "adore" && apres === "adore") return "brille";
-  if (avant === "jamais" && apres === "jamais") return "juste";
   if (avant === "inconnu") return a === 0 ? "envol" : null;
   const e = a - BEAUTE.indexOf(avant);
   return e >= 3 ? "panne" : e >= 1 ? "cale" : e <= -2 ? "envol" : e === -1 ? "monte" : null;
@@ -171,7 +170,7 @@ for (let s = 1; s <= NB; s++) {
 
     // 2. « On a gratté la peinture » : tous tes bus ; grands écarts d'abord (cartes larges), puis réussites (« = »), puis le reste.
     expect([...noms2].sort(), ctx).toEqual(Object.keys(bacs).sort());
-    const famille = (nom: string) => { const e = effetAttendu(bacs[nom]!, peinture[nom]!); return e === "panne" ? 0 : e === "brille" || e === "juste" ? 1 : 2; };
+    const famille = (nom: string) => { const e = effetAttendu(bacs[nom]!, peinture[nom]!); return e === "panne" ? 0 : e === "brille" ? 1 : 2; };
     for (let k = 1; k < noms2.length; k++) expect(famille(noms2[k]!), ctx).toBeGreaterThanOrEqual(famille(noms2[k - 1]!));
     expect(classes2, ctx).toEqual(noms2.map(famille));
     noms2.forEach((nom, k) => {

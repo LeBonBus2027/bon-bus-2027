@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import brut from "../../data/justice.json";
 import { candidats } from "./candidats";
 import pgBrut from "../../data/justice-poligraph.json";
-import { affairesPubliees, dateJustice, fiche, resume, type Affaire } from "./justice";
+import { affairesPubliees, dateJustice, fiche, precision, resume, type Affaire } from "./justice";
 
 const j = brut as unknown as { meta: unknown; candidats: Record<string, Affaire[]> };
 const pg = pgBrut as unknown as { candidats: Record<string, Affaire[]>; partis: Record<string, { candidats: string[]; affaires: Affaire[] }> };
@@ -75,5 +75,29 @@ describe("fiche", () => {
     expect(fiche({ ...base, decisions: [{ date: "2021-09-24", juridiction: "", issue: "condamnation", peine: "" }], statut: "définitive" }).definitive).toBe(true);
     const f = fiche({ ...base, decisions: [{ date: "2024-01-01", juridiction: "", issue: "condamnation", peine: "" }, { date: "2025-03-01", juridiction: "", issue: "pourvoi rejeté", peine: "" }], statut: "définitive", definitive: true });
     expect(f).toMatchObject({ issue: "condamnation", quand: "1er mars 2025", statut: "Définitive", definitive: true });
+  });
+});
+
+describe("precision", () => {
+  const base: Affaire = { affaire: "x", infraction: "Diffamation", decisions: [], statut: "", definitive: null, verification: "verifie", sources: [] };
+  const d = (issue: string) => [{ date: "2022-01-01", juridiction: "", issue, peine: "" }];
+  it("présomption d'innocence pour une condamnation pénale non définitive, rien si elle est définitive", () => {
+    expect(precision({ ...base, decisions: d("condamnation"), statut: "appel en cours", definitive: false })).toBe("présomption d'innocence");
+    expect(precision({ ...base, decisions: d("condamnation"), statut: "définitive" })).toBe("");
+    expect(precision({ ...base, decisions: d("condamnation"), statut: "définitive (pas d'appel)", definitive: true })).toBe("");
+  });
+  it("« décision non définitive » pour une décision civile, rien pour une relaxe", () => {
+    expect(precision({ ...base, decisions: d("propos jugés diffamatoires"), statut: "décision civile en appel ; pourvoi non connu" })).toBe("décision non définitive");
+    expect(precision({ ...base, decisions: d("relaxe"), statut: "relaxe en première instance" })).toBe("");
+  });
+});
+
+describe("données de justice", () => {
+  it("un statut « définitive » est toujours marqué définitif", () => {
+    for (const source of [brut, pgBrut] as unknown as { candidats: Record<string, Affaire[]> }[]) {
+      for (const [id, liste] of Object.entries(source.candidats)) {
+        for (const a of liste) if (/^(relaxe )?définitive/i.test(a.statut)) expect(a.definitive, `${id} · ${a.affaire}`).toBe(true);
+      }
+    }
   });
 });

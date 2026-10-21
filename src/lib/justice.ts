@@ -88,8 +88,20 @@ export function fiche(a: Affaire): { issue: Issue; infraction: string; quand: st
   // « relaxe en première instance » → « en première instance » ; « relaxe » seul n'apporte rien de plus que l'étiquette.
   const tete = [issue, ISSUE[issue].toLowerCase()].find(t => a.statut.toLowerCase().startsWith(t));
   const reste = tete ? a.statut.slice(tete.length).trim() : a.statut;
-  const definitive = a.definitive === true || /^(relaxe )?définitive/i.test(a.statut);
-  return { issue, infraction: a.infraction, quand: date ? dateJustice(date) : "", statut: reste ? reste[0]!.toUpperCase() + reste.slice(1) : "", definitive };
+  return { issue, infraction: a.infraction, quand: date ? dateJustice(date) : "", statut: reste ? reste[0]!.toUpperCase() + reste.slice(1) : "", definitive: estDefinitive(a) };
+}
+
+/** Décision définitive : marquée comme telle, ou dont le statut le dit (« définitive », « relaxe définitive »…). */
+export const estDefinitive = (a: Affaire) => a.definitive === true || /^(relaxe )?définitive/i.test(a.statut);
+
+/**
+ * Précision à côté d'une décision non définitive, même règle pour tous : « présomption d'innocence » pour une
+ * condamnation pénale (notion pénale), « décision non définitive » pour une décision civile ; rien pour une relaxe
+ * ou une décision définitive.
+ */
+export function precision(a: Affaire): string {
+  if (estDefinitive(a) || !condamnation(a)) return "";
+  return fiche(a).issue === "civil" ? "décision non définitive" : "présomption d'innocence";
 }
 
 /** « 1 décision », « 3 décisions ». */

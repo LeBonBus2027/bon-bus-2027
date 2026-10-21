@@ -102,7 +102,7 @@ function rangement(niveau: Niveau | undefined) {
 /**
  * « Gratter la peinture » montre tous les bus de ta gare, dans l'ordre de l'histoire : d'abord les grands écarts
  * (un bus que tu voyais beau devenu cabossé ou épave, le plus grand écart en premier), puis tes réussites
- * (« J'adore » vraiment le plus beau, « Jamais » vraiment l'épave), puis les autres, dans l'ordre du classement.
+ * (« J'adore » vraiment autocar de luxe), puis les autres, dans l'ordre du classement.
  * Ton plus beau bus est le plus éloigné de ton plus beau bac ; ton épave, le plus proche de ton bac le moins beau.
  */
 export function reveler(classement: readonly Classe<Candidat>[], bacs: Readonly<Record<string, Niveau>>, tirage: () => number = tirageCrypto): Revelation {
@@ -114,7 +114,7 @@ export function reveler(classement: readonly Classe<Candidat>[], bacs: Readonly<
   const peinture = peintures(classement);
   const priorite = (c: Classe<Candidat>) => {
     const avant = bacs[c.candidat.id] ?? "inconnu", apres = peinture[c.candidat.id]!, e = effet(avant, apres);
-    return e === "panne" ? -ORDRE_BEAUTE.indexOf(apres) + ORDRE_BEAUTE.indexOf(avant) - 10 : e === "brille" || e === "juste" ? 0 : 1;
+    return e === "panne" ? -ORDRE_BEAUTE.indexOf(apres) + ORDRE_BEAUTE.indexOf(avant) - 10 : e === "brille" ? 0 : 1;
   };
   const focus = classement.map((c, i) => ({ c, i, p: priorite(c) })).sort((a, b) => a.p - b.p || a.i - b.i).map(x => x.c);
   const rappel = classement.filter((c, i) => i < 3 || (!!haut && bacs[c.candidat.id] === haut));
@@ -156,19 +156,18 @@ export function peintures(classement: readonly Classe<Candidat>[]): Record<strin
 
 /**
  * Animation de la peinture grattée, selon l'écart entre le bac de départ et la peinture :
- * brille (« J'adore » et vraiment le plus beau), juste (« Jamais » et vraiment l'épave),
+ * brille (« J'adore » et vraiment le plus beau),
  * panne (chute de 3 niveaux ou plus), cale (chute de 1 ou 2),
  * envol (montée de 2 niveaux ou plus, ou bus inconnu devenu autocar de luxe), monte (montée de 1).
  */
-export type Effet = "brille" | "juste" | "panne" | "cale" | "envol" | "monte";
+export type Effet = "brille" | "panne" | "cale" | "envol" | "monte";
 export function effet(avant: Niveau, apres: Peinture): Effet | null {
   const a = ORDRE_BEAUTE.indexOf(apres);
   if (avant === "adore" && apres === "adore") return "brille";
-  if (avant === "jamais" && apres === "jamais") return "juste";
   if (avant === "inconnu") return a === 0 ? "envol" : null;
   const ecart = a - ORDRE_BEAUTE.indexOf(avant);
   return ecart >= 3 ? "panne" : ecart >= 1 ? "cale" : ecart <= -2 ? "envol" : ecart === -1 ? "monte" : null;
 }
 
 /** Ce que dit l'animation, pour les lecteurs d'écran et quand les animations sont coupées. */
-export const EFFET: Record<Effet, string> = { brille: "Il brille", juste: "Bien vu", panne: "En panne", cale: "Il cale", envol: "Belle surprise", monte: "Il monte en gamme" };
+export const EFFET: Record<Effet, string> = { brille: "Il brille", panne: "En panne", cale: "Il cale", envol: "Belle surprise", monte: "Il monte en gamme" };

@@ -10,7 +10,7 @@
   /**
    * « Gratter la peinture » : pour chaque bus, le bus imaginé au départ puis ce qu'il vaut vraiment pour toi.
    * Les grands écarts (bus beau devenu cabossé ou épave) prennent toute la largeur, avec un bandeau de chantier ;
-   * les réussites (« J'adore » → luxe, « Jamais » → épave) ont un cadre doré et « = » au lieu de la flèche.
+   * la réussite (« J'adore » et vraiment l'autocar de luxe) a un cadre doré et « = » au lieu de la flèche.
    * Sans onPourquoi (diaporama), les cartes ne sont pas cliquables ; compact les range sur deux colonnes.
    */
   let { focus, bacs, peinture, onPourquoi, compact = false, titre = true }: {
@@ -36,7 +36,7 @@
       {@const apres = peinture[f.candidat.id] ?? "bof"}
       {@const e = effet(avant, apres)}
       {@const resume = `Tu voyais : ${nomBus(avant)}. Pour toi : ${nomBus(apres)}, ${arrets(f.trajet.arrets)}.${e ? ` ${EFFET[e]}.` : ""}`}
-      {@const juste = e === "brille" || e === "juste"}
+      {@const juste = e === "brille"}
       <li style:--retard="{i * 0.15}s" class:ecart={e === "panne"} class:reussite={juste}>
         {#snippet contenu()}
           <span class="qui"><Photo id={f.candidat.id} taille={compact ? 32 : 40} /><strong>{f.candidat.nom}</strong></span>

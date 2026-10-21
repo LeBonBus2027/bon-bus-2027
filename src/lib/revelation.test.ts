@@ -45,8 +45,9 @@ describe("reveler", () => {
     // Peintures : a luxe, b neuf, c correct, d cabossé, e épave.
     const r = reveler(classement, { a: "bof", b: "bof", c: "bof", d: "adore", e: "adore" });
     expect(r.focus.map(c => c.candidat.id)).toEqual(["e", "d", "a", "b", "c"]);
+    // « Jamais » resté épave : pas de mise en avant, il garde sa place dans le classement.
     const r2 = reveler(classement, { a: "adore", b: "bof", c: "bof", d: "bof", e: "jamais" });
-    expect(r2.focus.map(c => c.candidat.id)).toEqual(["a", "e", "b", "c", "d"]);
+    expect(r2.focus.map(c => c.candidat.id)).toEqual(["a", "b", "c", "d", "e"]);
     expect(new Set(r2.focus).size).toBe(classement.length);
   });
 
@@ -128,7 +129,7 @@ describe("effet", () => {
     expect(effet("jamais", "bien")).toBe("envol");
     expect(effet("bof", "bien")).toBe("monte");
     expect(effet("bof", "bof")).toBeNull();
-    expect(effet("jamais", "jamais")).toBe("juste");
+    expect(effet("jamais", "jamais")).toBeNull();
     expect(effet("inconnu", "adore")).toBe("envol");
     expect(effet("inconnu", "pas")).toBeNull();
   });
