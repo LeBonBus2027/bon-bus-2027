@@ -13,7 +13,7 @@
   import { avenue, BLOC, CANAL, COLS, dansGrille, GARE, HAUTEUR, LARGEUR, MAISON, PARC, positionBus, px, ROWS, RUES, TERMINUS } from "./ville";
 
   type Vue = [number, number, number, number];
-  let { bus, vue = $bindable(), ratio, pietons = [], etiquettes = [], interactive = false, selectionne = null, onChoisir }: {
+  let { bus, vue = $bindable(), ratio, pietons = [], etiquettes = [], interactive = false, selectionne = null, onChoisir, tailleBus = 0.28 }: {
     bus: BusSurCarte[];
     vue: Vue;
     /** Largeur ÷ hauteur du cadre affiché (portrait sur mobile). */
@@ -24,6 +24,8 @@
     interactive?: boolean;
     selectionne?: string | null;
     onChoisir?: (id: string) => void;
+    /** Taille des bus sur le plan (la bande-annonce de l'accueil les grossit). */
+    tailleBus?: number;
   } = $props();
 
   // --- Navigation. Souris : glisser pour déplacer, molette pour zoomer. Tactile : un doigt fait défiler la PAGE
@@ -93,7 +95,6 @@
     return () => svg?.removeEventListener("wheel", roulette);
   });
 
-  const ECHELLE = 0.28;
   // Palette « plan de transport » : rues blanches, grands axes en jaune signal, repères bleu nuit.
   const C = { sol: "#dfe5ec", pate: "#f7f9fb", parc: "#d7ebd2", arbre: "#b4d9a8", eau: "#b9d6ec",
               rue: "#ffffff", bordure: "#c9d2de", avenue: "#ffcd00", bordureAvenue: "#e0b400", nom: "#4a5b72",
@@ -165,7 +166,7 @@
 
   {#each places as b (b.id)}
     <g class="bus" class:attenue={b.attenue && b.id !== selectionne} data-id={b.id}
-       transform="translate({b.p.x.toFixed(1)} {b.p.y.toFixed(1)}) rotate({b.p.angle.toFixed(1)}) scale({ECHELLE} {ECHELLE * (b.p.retourne ? -1 : 1)}) translate(-100 -55)">
+       transform="translate({b.p.x.toFixed(1)} {b.p.y.toFixed(1)}) rotate({b.p.angle.toFixed(1)}) scale({tailleBus} {tailleBus * (b.p.retourne ? -1 : 1)}) translate(-100 -55)">
       {#if interactive}<rect x="-30" y="-30" width="260" height="160" fill="transparent" />{/if}
       {#key b.niveau}<g class="mue"><Bus niveau={b.niveau} /></g>{/key}
     </g>

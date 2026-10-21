@@ -513,3 +513,50 @@ test("la question reste visible en haut de l'écran pendant qu'on lit « De quoi
   expect(haut).toBeLessThan(5);
   await auditAccessibilite(page, "question collée en haut");
 });
+
+test.describe("bande-annonce de l'accueil", () => {
+  test("se joue, se met en pause et se passe", async ({ page }) => {
+    const problemes = surveiller(page);
+    await page.goto("/");
+    const bande = page.getByRole("region", { name: /Comment ça marche/ });
+    const ecran = bande.locator(".ecran");
+    await expect(ecran).toBeVisible();
+    // Les étapes sont lisibles en texte par les lecteurs d'écran ; le décor animé leur est caché.
+    await expect(bande.getByRole("listitem")).toHaveCount(6);
+    await expect(ecran.locator(".scene")).toHaveAttribute("aria-hidden", "true");
+    await expect(page.getByRole("button", { name: "C'est parti" })).toBeVisible();
+
+    // Elle avance toute seule…
+    await expect.poll(async () => Number(await ecran.getAttribute("data-temps"))).toBeGreaterThan(10);
+    await auditAccessibilite(page, "bande-annonce");
+
+    // … et s'arrête avec le bouton pause.
+    await bande.getByRole("button", { name: "Pause" }).click();
+    await expect(bande.getByRole("button", { name: "Reprendre" })).toBeVisible();
+    const fige = await ecran.getAttribute("data-temps");
+    await page.waitForTimeout(1200);
+    await expect(ecran).toHaveAttribute("data-temps", fige!);
+    await bande.getByRole("button", { name: "Reprendre" }).click();
+    await expect.poll(async () => ecran.getAttribute("data-temps")).not.toBe(fige);
+
+    // « Passer » va droit au bouton pour commencer, la bande-annonce reste sur sa morale.
+    await bande.getByRole("button", { name: "Passer" }).click();
+    await expect(page.getByRole("button", { name: "C'est parti" })).toBeFocused();
+    await expect(ecran).toHaveAttribute("data-scene", "5");
+    await expect(bande.getByRole("button", { name: "Rejouer" })).toBeVisible();
+    await bande.getByRole("button", { name: "Rejouer" }).click();
+    await expect(ecran).toHaveAttribute("data-scene", "0");
+    expect(problemes).toEqual([]);
+  });
+
+  test("en mouvement réduit, les étapes s'affichent en vignettes fixes", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    const bande = page.getByRole("region", { name: /Comment ça marche/ });
+    await expect(bande.locator(".vignettes > li")).toHaveCount(5);
+    await expect(bande.locator(".ecran")).toHaveCount(0);
+    await expect(bande.getByRole("button", { name: "Pause" })).toHaveCount(0);
+    await expect(bande.getByText("Prends celui qui te rapproche le plus.")).toBeVisible();
+    await auditAccessibilite(page, "vignettes");
+  });
+});

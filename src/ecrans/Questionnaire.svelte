@@ -3,6 +3,7 @@
   import { tirerQuestions } from "../lib/tirage";
   import { MIN_REPONSES, type Reponse } from "../lib/calcul";
   import { grandTheme, questions } from "../lib/donnees";
+  import Maison from "../lib/Maison.svelte";
   // « De quoi parle-t-on ? » en mots simples, relu par rapport au texte de MonVote2027 (même sens, aucun ajout).
   // Fichier séparé : l'import des données MonVote ne l'écrase pas.
   import aidesSimples from "../../data/aides-simples.json";
@@ -63,14 +64,7 @@
 {:else if courante}
   <div class="entete">
     <p class="etiquette-signal discret" aria-live="polite">Question {index + 1} sur {ordre.length} · {grandTheme(courante)}</p>
-    <svg class="maison" viewBox="0 0 60 56" aria-hidden="true" fill="currentColor">
-      <rect x="6" y="50" width="48" height="4" rx="1" fill="currentColor" />
-      {#if progression > 0.1}<rect x="10" y="26" width="40" height="24" fill="#dfe5ec" />{/if}
-      {#if progression > 0.3}<rect x="25" y="36" width="10" height="14" rx="1" fill="currentColor" />{/if}
-      {#if progression > 0.5}<rect x="14" y="31" width="8" height="7" fill="#a8d3e6" /><rect x="38" y="31" width="8" height="7" fill="#a8d3e6" />{/if}
-      {#if progression > 0.7}<path d="M4 28 L30 6 L56 28z" fill="#ffcd00" stroke="currentColor" stroke-width="2" />{/if}
-      {#if progression > 0.85}<rect x="40" y="8" width="6" height="12" fill="currentColor" />{/if}
-    </svg>
+    <svg class="maison" viewBox="0 0 60 56" aria-hidden="true" fill="currentColor"><Maison {progression} /></svg>
   </div>
   <div class="barre" aria-hidden="true"><div style:transform="scaleX({progression})"></div></div>
 

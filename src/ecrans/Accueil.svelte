@@ -1,5 +1,4 @@
 <script lang="ts">
-  import Bus from "../lib/Bus.svelte";
   import { choisirTheme, themeActuel } from "../lib/theme";
 
   /** noms = null : parcours solo ; deux prénoms : mode duo (chacun son tour sur le même téléphone). */
@@ -21,6 +20,10 @@
     choisirTheme(theme);
   }
   const propre = (n: string, defaut: string) => n.trim().slice(0, 24) || defaut;
+
+  // La bande-annonce (carte, bus animés) arrive à part : le bouton « C'est parti » ne l'attend pas.
+  const bandeAnnonce = import("./BandeAnnonce.svelte");
+  let partir: HTMLButtonElement | undefined = $state();
 </script>
 
 <div class="hero">
@@ -34,23 +37,17 @@
   <h1 tabindex="-1">Quel bus te ramène chez toi ?</h1>
 </div>
 
-<div class="trio" aria-hidden="true">
-  <svg viewBox="-34 -8 240 112"><Bus niveau="adore" /></svg>
-  <svg viewBox="-34 -8 240 112"><Bus niveau="bof" /></svg>
-  <svg viewBox="-34 -8 240 112"><Bus niveau="jamais" /></svg>
-</div>
+{#await bandeAnnonce}
+  <div class="attente" aria-hidden="true"></div>
+{:then { default: BandeAnnonce }}
+  <BandeAnnonce onPasser={() => partir?.focus()} />
+{/await}
 
 <p>En 2027, plusieurs bus vont se présenter devant toi. Aucun ne te déposera pile devant chez toi. Mais lequel te rapproche le plus de tes idées ?</p>
 <p>Et si ce n'était pas celui qui a la plus belle carrosserie ?</p>
 
-<ol class="etapes">
-  <li><strong>Tu ranges les candidats</strong> selon ton ressenti. Chacun devient un bus, du car de luxe à l'épave.</li>
-  <li><strong>Tu réponds aux questions</strong>, 20 ou 100, au choix.</li>
-  <li><strong>Les bus partent.</strong> On regarde lequel s'arrête le plus près de chez toi.</li>
-</ol>
-
 <p class="rangee">
-  <button class="principal" onclick={() => onCommencer(null)}>C'est parti</button>
+  <button class="principal" bind:this={partir} onclick={() => onCommencer(null)}>C'est parti</button>
   <button onclick={() => (duo = !duo)} aria-expanded={duo}>À deux</button>
   <span class="discret petit">5 minutes environ</span>
 </p>
@@ -76,11 +73,8 @@
   .theme { min-height: 44px; padding: 6px 14px; font-size: 15px; border-radius: 999px; background: #fff; color: var(--marque); border-color: #fff; font-weight: 800; }
   .theme.sombre { background: var(--jaune); border-color: var(--jaune); }
   .hero h1 { margin: 0; }
-  .trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 8px 0 16px; background: var(--panneau); border-radius: var(--rayon); padding: 6px; }
-  .trio svg { width: 100%; height: auto; }
-  .etapes { padding-left: 22px; }
-  .etapes li { margin-bottom: 6px; }
-  .etapes li::marker { font-weight: 900; }
+  /* Place réservée à la bande-annonce le temps qu'elle arrive : la page ne saute pas. */
+  .attente { max-width: 560px; margin: 4px auto 18px; aspect-ratio: 3 / 2.6; border-radius: var(--rayon); background: var(--carte); }
   .duo { display: grid; gap: 10px; margin-bottom: 16px; }
   .duo p { margin: 0; }
   .duo label { display: grid; gap: 4px; font-weight: 700; }
