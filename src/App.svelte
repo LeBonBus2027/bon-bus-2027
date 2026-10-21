@@ -2,7 +2,7 @@
   import { onMount, tick } from "svelte";
   import { melanger } from "./lib/aleatoire";
   import type { Reponse } from "./lib/calcul";
-  import { candidats, meta, retenusParDefaut } from "./lib/candidats";
+  import { candidats, meta, retenusParDefaut, selection } from "./lib/candidats";
   import type { Niveau } from "./lib/niveaux";
   import Accueil from "./ecrans/Accueil.svelte";
   import Bus from "./lib/Bus.svelte";
@@ -174,13 +174,23 @@
   </div>
 </main>
 
-<footer>
-  <p>Questions et positions des candidats : <a href="https://monvote2027.fr" target="_blank" rel="noopener noreferrer">MonVote2027</a>, données du {new Date(meta.date_import).toLocaleDateString("fr-FR")}. Idée originale : une vidéo de @4deux_93.</p>
-  <p>Aucune donnée collectée. Outil indicatif, indépendant de tout parti et de tout candidat.</p>
-  <nav aria-label="Informations">
-    <a href="#methode">Comment ça marche</a> · <a href="#confidentialite">Confidentialité</a> ·
-    <a href="#mentions-legales">Mentions légales</a> · <a href="#a-propos">À propos</a>
-  </nav>
+<footer class="pied">
+  <div class="interieur">
+    <p class="signature"><span class="marque">LeBonBus<span>2027</span></span> <span class="devise">Outil citoyen, indicatif et indépendant de tout parti et de tout candidat. Aucune donnée collectée.</span></p>
+
+    <h2 class="etiquette-signal titre-sources">Sources</h2>
+    <ul class="sources">
+      <li><span class="quoi">Questions et positions</span><a href="https://monvote2027.fr" target="_blank" rel="noopener noreferrer">MonVote2027</a><span class="detail">Données du {new Date(meta.date_import).toLocaleDateString("fr-FR")}</span></li>
+      <li><span class="quoi">Décisions de justice</span><span class="liens"><a href="https://poligraph.fr" target="_blank" rel="noopener noreferrer">Poligraph</a> · <a href="https://casier-politique.fr" target="_blank" rel="noopener noreferrer">Casier politique</a></span><span class="detail">et la presse citée sous chaque décision</span></li>
+      <li><span class="quoi">Candidats proposés d'office</span><a href={selection.url} target="_blank" rel="noopener noreferrer">Moyenne des sondages</a><span class="detail">au {new Date(selection.date).toLocaleDateString("fr-FR")}</span></li>
+      <li><span class="quoi">Portraits</span><a href="#a-propos">Wikimedia Commons</a><span class="detail">auteurs crédités dans « À propos »</span></li>
+      <li><span class="quoi">Idée originale</span><a href="https://www.tiktok.com/@4deux_93/video/7688815863260024097" target="_blank" rel="noopener noreferrer">Vidéo de @4deux_93</a><span class="detail">la métaphore des bus</span></li>
+    </ul>
+
+    <nav aria-label="Informations">
+      <a href="#methode">Comment ça marche</a><a href="#confidentialite">Confidentialité</a><a href="#mentions-legales">Mentions légales</a><a href="#a-propos">À propos</a>
+    </nav>
+  </div>
 </footer>
 
 <style>
@@ -193,10 +203,23 @@
   .marque span { color: var(--jaune); }
   .logo:hover .marque { text-decoration: underline; text-decoration-color: var(--jaune); text-underline-offset: 4px; }
   .logo:focus-visible { outline: 3px solid var(--jaune); outline-offset: 3px; }
-  footer { max-width: 760px; margin: 0 auto; padding: 16px 16px 32px; color: var(--discret); font-size: 15px; border-top: 4px solid var(--jaune); }
-  footer p { margin-bottom: 4px; }
-  footer nav { margin-top: 8px; line-height: 2.4; }
-  footer a { color: var(--discret); }
+  /* Pied de page : bandeau bleu nuit comme l'en-tête, sources en petits blocs, liens en pastilles. Ne change pas en mode sombre. */
+  .pied { background: var(--marque); color: #dbe3ee; border-top: 4px solid var(--jaune); margin-top: 24px; }
+  .pied .interieur { max-width: 760px; margin: 0 auto; padding: 22px 16px 30px; }
+  .signature { display: grid; gap: 6px; margin: 0 0 18px; }
+  .signature .marque { font-size: 22px; color: #fff; }
+  .devise { font-size: 15px; line-height: 1.45; }
+  .titre-sources { margin: 0 0 8px; color: var(--jaune); font-size: 13px; }
+  .sources { list-style: none; padding: 0; margin: 0 0 18px; display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 8px; }
+  .sources li { display: grid; gap: 2px; align-content: start; padding: 10px 12px; border-radius: var(--rayon); background: #13294a; }
+  .quoi { font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #b4c0d0; }
+  .sources a { color: var(--jaune); font-weight: 800; font-size: 16px; text-underline-offset: 3px; }
+  .sources .liens { color: #b4c0d0; }
+  .detail { font-size: 13.5px; color: #b4c0d0; }
+  .pied nav { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 16px; border-top: 1px solid #2a3f60; }
+  .pied nav a { display: inline-flex; align-items: center; min-height: 44px; padding: 6px 14px; border-radius: 999px; border: 2px solid #dbe3ee; color: #fff; font-weight: 700; font-size: 15px; text-decoration: none; }
+  .pied nav a:hover { background: var(--jaune); border-color: var(--jaune); color: var(--marque); }
+  .pied a:focus-visible { outline: 3px solid var(--jaune); outline-offset: 2px; }
   :global(main h1:focus) { outline: none; }
   .tour { display: inline-block; background: var(--jaune); color: var(--marque); padding: 4px 10px; border-radius: 6px; margin: 0 0 6px; }
 </style>

@@ -43,9 +43,6 @@
   <BandeAnnonce onPasser={() => partir?.focus()} />
 {/await}
 
-<p>En 2027, plusieurs bus vont se présenter devant toi. Aucun ne te déposera pile devant chez toi. Mais lequel te rapproche le plus de tes idées ?</p>
-<p>Et si ce n'était pas celui qui a la plus belle carrosserie ?</p>
-
 <p class="rangee">
   <button class="principal" bind:this={partir} onclick={() => onCommencer(null)}>C'est parti</button>
   <button onclick={() => (duo = !duo)} aria-expanded={duo}>À deux</button>

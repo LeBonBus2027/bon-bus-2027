@@ -8,6 +8,8 @@
 
 <h2>D'où viennent les données</h2>
 <p>Les {questions.length} questions et les positions des {candidats.length} candidats viennent de <a href="https://monvote2027.fr/donnees" target="_blank" rel="noopener noreferrer">MonVote2027</a>, un outil citoyen indépendant qui source chaque position (programmes, déclarations, votes). Nous n'en modifions aucune. Une erreur sur une position ? Signale-la directement à MonVote2027 : la correction arrivera ici à l'import suivant.</p>
+<p>Les explications « De quoi parle-t-on ? » sont réécrites en mots simples d'après celles de MonVote2027, sans changer leur sens : le texte d'origine reste affiché juste en dessous.</p>
+<p>Les portraits des candidats viennent de Wikimedia Commons, sous licence libre, choisis selon les mêmes critères pour tous. Leurs auteurs sont crédités sur la page <a href="#a-propos">À propos</a>.</p>
 <p class="petit discret">Version des données : import du {new Date(meta.date_import).toLocaleDateString("fr-FR")}, empreinte <code>{meta.empreinte.slice(0, 16)}…</code></p>
 
 <h2>Quels candidats au départ</h2>
