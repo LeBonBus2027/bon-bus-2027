@@ -3,7 +3,7 @@
   import type { Classe } from "../lib/calcul";
   import type { Candidat } from "../lib/donnees";
   import { BAC, NIVEAUX, type Niveau } from "../lib/niveaux";
-  import { arrets, niveauReel, type Revelation } from "../lib/revelation";
+  import { arrets, type Revelation } from "../lib/revelation";
   import Photo from "../lib/Photo.svelte";
   import AvantApres from "./AvantApres.svelte";
   import Justice from "./Justice.svelte";
@@ -35,7 +35,7 @@
 <h2 id="titre-recap" class="etiquette-signal recap" tabindex="-1">Ton récap</h2>
 <p class="message">{revelation.message}</p>
 
-<AvantApres focus={revelation.focus} {bacs} {onPourquoi} compact />
+<AvantApres focus={revelation.focus} {bacs} peinture={revelation.peinture} {onPourquoi} compact />
 
 <blockquote class="girouette">{revelation.metaphore}</blockquote>
 <p class="morale"><span>Aucun bus ne te dépose pile devant chez toi. Prends celui qui te rapproche le plus.</span></p>
@@ -62,7 +62,7 @@
             <a href={c.candidat.url_source} target="_blank" rel="noopener noreferrer">{c.candidat.nom}</a>
             <span class="discret petit">{c.candidat.parti}</span>
           </td>
-          <td>{BAC[bacs[c.candidat.id] ?? "inconnu"]} <span class="discret petit">→ {NIVEAUX.find(n => n.cle === niveauReel(c.trajet.arrets))?.bus}</span></td>
+          <td>{BAC[bacs[c.candidat.id] ?? "inconnu"]} <span class="discret petit">→ {NIVEAUX.find(n => n.cle === revelation.peinture[c.candidat.id])?.bus}</span></td>
           <td>
             {arrets(c.trajet.arrets)}{#if c.trajet.incomplet}<span class="discret petit"> (position incomplète)</span>{/if}
             <button class="pourquoi" onclick={() => onPourquoi(c.candidat.id)}>Pourquoi ?<span class="visually-hidden"> {c.candidat.nom}</span></button>

@@ -1,7 +1,7 @@
 <script lang="ts">
   import Bus from "../lib/Bus.svelte";
   import { BAC, NIVEAUX, type Niveau } from "../lib/niveaux";
-  import { niveauReel, type Revelation } from "../lib/revelation";
+  import { effet, type Revelation } from "../lib/revelation";
   import { dessinerTicket, type LigneTicket } from "../lib/ticket";
 
   let { revelation, bacs }: { revelation: Revelation; bacs: Record<string, Niveau> } = $props();
@@ -69,7 +69,8 @@
     const { meilleur, beau, intuition } = revelation;
     const ligne = (titre: string, c: typeof meilleur): LigneTicket => ({
       titre, nom: avecNoms ? c.candidat.nom : undefined,
-      avant: bacs[c.candidat.id] ?? "inconnu", apres: niveauReel(c.trajet.arrets), arrets: c.trajet.arrets,
+      avant: bacs[c.candidat.id] ?? "inconnu", apres: revelation.peinture[c.candidat.id] ?? "bof", arrets: c.trajet.arrets,
+      effet: effet(bacs[c.candidat.id] ?? "inconnu", revelation.peinture[c.candidat.id] ?? "bof"),
     });
     if (!beau || intuition) return [ligne(intuition ? "MON BUS PRÉFÉRÉ ME RAMÈNE BIEN" : "CELUI QUI ME RAMÈNE", meilleur)];
     return [ligne("MON PLUS BEAU BUS", beau), ligne("CELUI QUI ME RAMÈNE", meilleur)];

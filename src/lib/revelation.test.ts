@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { Classe } from "./calcul";
 import { questions, type Candidat } from "./donnees";
 import type { Niveau } from "./niveaux";
-import { niveauReel, reveler, rejeu } from "./revelation";
+import { effet, peintures, reveler, rejeu } from "./revelation";
 
 /** Les textes utilisent des espaces insécables (typographie française) : on compare sans en tenir compte. */
 const norm = (s: string) => s.replace(/ /g, " ");
@@ -104,9 +104,29 @@ describe("metaphore", () => {
   });
 });
 
-describe("niveauReel", () => {
-  it("dégrade le bus avec la distance, avec les mêmes seuils pour tous", () => {
-    expect([0, 2, 3, 5, 6, 8, 9, 11, 12, 20].map(niveauReel)).toEqual(
-      ["adore", "adore", "bien", "bien", "bof", "bof", "pas", "pas", "jamais", "jamais"]);
+describe("peintures", () => {
+  it("donne l'autocar de luxe au plus proche, l'épave au plus loin, et répartit les autres", () => {
+    const sept = [1, 3, 4, 6, 8, 9, 14].map((d, i) => cand(`c${i}`, d));
+    expect(Object.values(peintures(sept))).toEqual(["adore", "bien", "bien", "bof", "pas", "pas", "jamais"]);
+  });
+  it("même peinture pour des bus au même nombre d'arrêts ; un seul bus est l'autocar de luxe", () => {
+    expect(peintures([cand("a", 2), cand("b", 2), cand("c", 5)])).toEqual({ a: "adore", b: "adore", c: "jamais" });
+    // Ex-aequo en queue : tous épaves ; ex-aequo au milieu : rang du milieu de leur groupe.
+    expect(Object.values(peintures([2, 6, 11, 11, 11, 11, 11].map((d, i) => cand(`c${i}`, d))))).toEqual(["adore", "bien", "jamais", "jamais", "jamais", "jamais", "jamais"]);
+    expect(Object.values(peintures([1, 4, 4, 4, 8, 9, 14].map((d, i) => cand(`c${i}`, d))))).toEqual(["adore", "bien", "bien", "bien", "pas", "pas", "jamais"]);
+    expect(peintures([cand("a", 12)])).toEqual({ a: "adore" });
+  });
+});
+
+describe("effet", () => {
+  it("fait briller le favori arrivé premier et tomber en panne le favori arrivé dernier", () => {
+    expect(effet("adore", "adore")).toBe("brille");
+    expect(effet("adore", "jamais")).toBe("panne");
+    expect(effet("bien", "pas")).toBe("cale");
+    expect(effet("jamais", "bien")).toBe("envol");
+    expect(effet("bof", "bien")).toBe("monte");
+    expect(effet("bof", "bof")).toBeNull();
+    expect(effet("inconnu", "adore")).toBe("envol");
+    expect(effet("inconnu", "pas")).toBeNull();
   });
 });

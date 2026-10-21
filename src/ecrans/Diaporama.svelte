@@ -3,6 +3,7 @@
   import { BAC, type Niveau } from "../lib/niveaux";
   import { arrets, type Revelation } from "../lib/revelation";
   import AvantApres from "./AvantApres.svelte";
+  import Bilan from "./Bilan.svelte";
   import { affairesPubliees, chargerJustice, fiche, ISSUE, nombre, type Justice } from "../lib/justice";
   import Photo from "../lib/Photo.svelte";
 
@@ -67,7 +68,7 @@
       <p class="message">{revelation.message}</p>
       {#if !gratte}<p class="discret petit">Pour l'instant, tes bus ont encore la peinture que tu leur as donnée. Dessous, il y a ce qu'ils valent vraiment pour toi.</p>{/if}
     {:else if etape === 1}
-      <AvantApres focus={revelation.focus} {bacs} compact titre={false} />
+      <AvantApres focus={revelation.focus} {bacs} peinture={revelation.peinture} compact titre={false} />
     {:else if etape === 2}
       <p class="petit">Ce que dit la justice sur {revelation.haut ? `tes bus « ${BAC[revelation.haut]} » et ` : ""}les 3 bus qui te rapprochent le plus. Ça ne change pas leur trajet.</p>
       {#if !rappel}<p class="discret petit">Chargement…</p>
@@ -106,6 +107,7 @@
     {:else}
       <blockquote class="girouette">{revelation.metaphore}</blockquote>
       <p class="morale"><span>Aucun bus ne te dépose pile devant chez toi. Prends celui qui te rapproche le plus.</span></p>
+      <Bilan {revelation} {bacs} />
     {/if}
   </div>
 

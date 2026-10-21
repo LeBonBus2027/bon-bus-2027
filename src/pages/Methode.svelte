@@ -26,6 +26,9 @@
 <p>À la fin, la distance vaut {R0} × (1 − somme des pas ÷ 2n), où n est le nombre de questions répondues. Un bus d'accord avec toi sur tout, à la même intensité, arrive devant ta porte ; un bus opposé sur tout finit au terminus, {2 * R0} arrêts plus loin. Les questions passées ne comptent pas. Il faut au moins {MIN_REPONSES} réponses.</p>
 <p>Si un candidat n'a pas de position sur plus de {Math.round((1 - COUVERTURE_MIN) * 100)} % des questions auxquelles tu as répondu, son résultat porte la mention « position incomplète ».</p>
 
+<h2>La peinture grattée</h2>
+<p>À l'arrivée, chaque bus perd la peinture que tu lui avais donnée et prend celle de son rang parmi tes bus : le plus proche de chez toi devient l'autocar de luxe, le plus éloigné l'épave, et les autres se répartissent entre les deux. Deux bus au même nombre d'arrêts ont la même peinture : tous de luxe s'ils sont en tête, tous épaves s'ils sont en queue, sinon celle du milieu de leur groupe. Un bus que tu adorais et qui arrive premier brille ; un bus qui perd trois niveaux ou plus tombe en panne. Ces effets ne disent rien des candidats : ils comparent seulement ton ressenti de départ à tes réponses.</p>
+
 <h2>Ce qui compte pour toi</h2>
 <p>À l'arrivée, tu peux choisir jusqu'à 3 grands thèmes qui comptent double, pour tous les candidats de la même façon. Les questions de ces thèmes donnent à chaque bus une poussée en plus : s'il est globalement d'accord avec toi sur ces thèmes, il avance ; s'il ne l'est pas, il recule. Jamais l'inverse, même si tu es un peu moins d'accord avec lui sur ces thèmes qu'ailleurs. Et un bus n'en dépasse un autre que s'il fait mieux que lui sur les thèmes choisis. Sans thème choisi, on retrouve exactement la règle de base. MonVote2027 propose un réglage du même esprit sur sa page de résultats.</p>
 

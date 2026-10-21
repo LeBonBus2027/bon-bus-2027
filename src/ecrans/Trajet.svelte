@@ -11,7 +11,7 @@
   import { distanceA } from "../lib/retroviseur";
   import { questionsPourAffiner } from "../lib/affiner";
   import { melanger } from "../lib/aleatoire";
-  import { niveauReel, rejeu, reveler } from "../lib/revelation";
+  import { rejeu, reveler } from "../lib/revelation";
   import { aPied, GARE, HAUTEUR, LARGEUR, lignes, MAISON, positionBus, px } from "../lib/ville";
   import Diaporama from "./Diaporama.svelte";
   import Explication from "./Explication.svelte";
@@ -82,7 +82,7 @@
   const arreter = () => passer;
 
   const bus = $derived(mesBus.map(c => ({
-    id: c.id, niveau: gratte ? niveauReel(trajets.get(c.id)!.arrets) : bacs[c.id] ?? "inconnu", ligne: ligneDe(c.id), d: distances[c.id]!,
+    id: c.id, niveau: gratte ? revelation.peinture[c.id] ?? "bof" : bacs[c.id] ?? "inconnu", ligne: ligneDe(c.id), d: distances[c.id]!,
     voie: voie(c.id), attenue: arrive && !enAvant.has(c.id),
   })));
 
@@ -224,7 +224,7 @@
 
 
 {#if choisi}
-  <Explication candidat={choisi.candidat} trajet={choisi.trajet} bac={bacs[choisi.candidat.id] ?? "inconnu"}
+  <Explication candidat={choisi.candidat} trajet={choisi.trajet} bac={bacs[choisi.candidat.id] ?? "inconnu"} apres={revelation.peinture[choisi.candidat.id] ?? "bof"}
     ordre={r.ordre} {reponses} positions={positions[choisi.candidat.id] ?? {}} onFermer={() => (selectionne = null)} />
 {/if}
 

@@ -33,6 +33,8 @@ export interface Revelation {
   rappel: Classe<Candidat>[];
   /** Ton plus beau bac occupé (« J'adore » s'il n'est pas vide, etc.). */
   haut?: Niveau;
+  /** Peinture grattée de chaque bus de la gare, d'après son rang (voir peintures). */
+  peinture: Record<string, Peinture>;
   message: string;
   /** Petite morale imagée : ce que tu voyais du bus, puis où il va vraiment. */
   metaphore: string;
@@ -119,17 +121,40 @@ export function reveler(classement: readonly Classe<Candidat>[], bacs: Readonly<
     message = `Ton plus beau bus, ${beau.candidat.nom}, te laisse à ${arrets(nb)} de chez toi.${loin} Celui qui te rapproche le plus, c'est ${n} (${arrets(nm)}), ${rangement(bacs[meilleur.candidat.id])}.`;
   }
   const mot = metaphore(bacs[meilleur.candidat.id] ?? "inconnu", haut, beau, intuition, tirage);
-  return { meilleur, beau, epave, focus, rappel, haut, message, metaphore: mot, intuition };
+  return { meilleur, beau, epave, focus, rappel, haut, peinture: peintures(classement), message, metaphore: mot, intuition };
+}
+
+export type Peinture = Exclude<Niveau, "inconnu">;
+
+/**
+ * Peinture grattée : ce que vaut vraiment chaque bus POUR TOI, d'après son rang parmi tes bus (pas sa distance).
+ * Le plus proche devient l'autocar de luxe, le plus éloigné l'épave ; les rangs intermédiaires se répartissent
+ * régulièrement sur les 5 niveaux. Des bus au même nombre d'arrêts ont la même peinture : tous de luxe s'ils sont en tête, tous épaves s'ils sont en queue, sinon celle du milieu de leur groupe. Même règle pour tous.
+ */
+export function peintures(classement: readonly Classe<Candidat>[]): Record<string, Peinture> {
+  const n = classement.length;
+  return Object.fromEntries(classement.map((c): [string, Peinture] => {
+    // Ex-aequo (même nombre d'arrêts) : en tête, tous autocars de luxe ; en queue, tous épaves ; entre les deux, le rang du milieu du groupe.
+    const egal = (x: Classe<Candidat>) => x.trajet.arrets === c.trajet.arrets;
+    const premier = classement.findIndex(egal), dernier = classement.findLastIndex(egal);
+    const rang = premier === 0 ? 0 : dernier === n - 1 ? n - 1 : (premier + dernier) / 2;
+    return [c.candidat.id, n < 2 ? "adore" : ORDRE_BEAUTE[Math.round((rang * (ORDRE_BEAUTE.length - 1)) / (n - 1))] as Peinture];
+  }));
 }
 
 /**
- * Ce que vaut vraiment un bus POUR TOI, d'après sa distance finale (seuils fixes, identiques pour tous) :
- * c'est la « peinture grattée » montrée à l'arrivée, à comparer avec le bac choisi au départ.
+ * Animation de la peinture grattée, selon l'écart entre le bac de départ et la peinture :
+ * brille (« J'adore » et vraiment le plus beau), panne (chute de 3 niveaux ou plus), cale (chute de 1 ou 2),
+ * envol (montée de 2 niveaux ou plus, ou bus inconnu devenu autocar de luxe), monte (montée de 1).
  */
-export function niveauReel(arrets: number): Exclude<Niveau, "inconnu"> {
-  if (arrets <= 2) return "adore";
-  if (arrets <= 5) return "bien";
-  if (arrets <= 8) return "bof";
-  if (arrets <= 11) return "pas";
-  return "jamais";
+export type Effet = "brille" | "panne" | "cale" | "envol" | "monte";
+export function effet(avant: Niveau, apres: Peinture): Effet | null {
+  const a = ORDRE_BEAUTE.indexOf(apres);
+  if (avant === "adore" && apres === "adore") return "brille";
+  if (avant === "inconnu") return a === 0 ? "envol" : null;
+  const ecart = a - ORDRE_BEAUTE.indexOf(avant);
+  return ecart >= 3 ? "panne" : ecart >= 1 ? "cale" : ecart <= -2 ? "envol" : ecart === -1 ? "monte" : null;
 }
+
+/** Ce que dit l'animation, pour les lecteurs d'écran et quand les animations sont coupées. */
+export const EFFET: Record<Effet, string> = { brille: "Il brille", panne: "En panne", cale: "Il cale", envol: "Belle surprise", monte: "Il monte en gamme" };
