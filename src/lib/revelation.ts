@@ -28,6 +28,8 @@ export interface Revelation {
   meilleur: Classe<Candidat>;
   beau?: Classe<Candidat>;
   epave?: Classe<Candidat>;
+  /** Ton coup de cœur qui t'éloigne : le plus beau bus, s'il s'arrête plus loin que celui qui te rapproche le plus. */
+  decu?: Classe<Candidat>;
   focus: Classe<Candidat>[];
   /** « Pour rappel » (justice) : tous les bus de ton plus beau bac, plus les 3 plus proches, dans l'ordre du classement. */
   rappel: Classe<Candidat>[];
@@ -121,7 +123,8 @@ export function reveler(classement: readonly Classe<Candidat>[], bacs: Readonly<
     message = `Ton plus beau bus, ${beau.candidat.nom}, te laisse à ${arrets(nb)} de chez toi.${loin} Celui qui te rapproche le plus, c'est ${n} (${arrets(nm)}), ${rangement(bacs[meilleur.candidat.id])}.`;
   }
   const mot = metaphore(bacs[meilleur.candidat.id] ?? "inconnu", haut, beau, intuition, tirage);
-  return { meilleur, beau, epave, focus, rappel, haut, peinture: peintures(classement), message, metaphore: mot, intuition };
+  const decu = beau && beau.trajet.arrets > meilleur.trajet.arrets ? beau : undefined;
+  return { meilleur, beau, epave, decu, focus, rappel, haut, peinture: peintures(classement), message, metaphore: mot, intuition };
 }
 
 export type Peinture = Exclude<Niveau, "inconnu">;

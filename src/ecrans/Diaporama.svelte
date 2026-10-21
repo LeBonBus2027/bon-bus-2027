@@ -49,9 +49,9 @@
   let justice = $state<Justice | null>(null);
   $effect(() => { chargerJustice().then(j => { justice = j; }); });
   // D'abord les candidats visés par des décisions, puis, ensemble, ceux qui n'en ont aucune.
-  // En tête : ton plus beau bus quand ce n'est pas lui qui te rapproche le plus ; ensuite l'ordre du classement.
+  // En tête : ton coup de cœur qui t'éloigne (revelation.decu) ; ensuite l'ordre du classement.
   const rappel = $derived(justice ? revelation.rappel.map(f => ({ f, liste: affairesPubliees(justice!, f.candidat.id) ?? [] })) : null);
-  const decu = $derived(revelation.beau && revelation.beau.trajet.arrets > revelation.meilleur.trajet.arrets ? revelation.beau : undefined);
+  const decu = $derived(revelation.decu);
   const avec = $derived((rappel?.filter(r => r.liste.length) ?? []).sort((a, b) => Number(b.f === decu) - Number(a.f === decu)));
   const sans = $derived(rappel?.filter(r => !r.liste.length) ?? []);
 </script>

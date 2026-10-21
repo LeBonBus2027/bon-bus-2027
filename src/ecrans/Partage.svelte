@@ -66,14 +66,14 @@
 
   /** Contenu du ticket : bus imaginé → bus réel, sans nom par défaut. */
   function lignesTicket(): LigneTicket[] {
-    const { meilleur, beau, intuition } = revelation;
+    const { meilleur, decu, intuition } = revelation;
     const ligne = (titre: string, c: typeof meilleur): LigneTicket => ({
       titre, nom: avecNoms ? c.candidat.nom : undefined,
       avant: bacs[c.candidat.id] ?? "inconnu", apres: revelation.peinture[c.candidat.id] ?? "bof", arrets: c.trajet.arrets,
       effet: effet(bacs[c.candidat.id] ?? "inconnu", revelation.peinture[c.candidat.id] ?? "bof"),
     });
-    if (!beau || intuition) return [ligne(intuition ? "MON BUS PRÉFÉRÉ ME RAMÈNE BIEN" : "CELUI QUI ME RAMÈNE", meilleur)];
-    return [ligne("MON PLUS BEAU BUS", beau), ligne("CELUI QUI ME RAMÈNE", meilleur)];
+    const lui = ligne(intuition ? "MON BUS PRÉFÉRÉ ME RAMÈNE BIEN" : "CELUI QUI ME RAMÈNE", meilleur);
+    return decu ? [ligne("MON COUP DE CŒUR", decu), lui] : [lui];
   }
 
   async function creerImage(): Promise<File> {
@@ -145,7 +145,7 @@
 
 <div class="boite partage">
   <h2>Partage ton trajet</h2>
-  {#if apercu}<img class="apercu" src={apercu} alt="Aperçu de ton ticket de bus à partager : ton plus beau bus et celui qui te ramène, tels que tu les imaginais et tels qu'ils sont vraiment pour toi." />{/if}
+  {#if apercu}<img class="apercu" src={apercu} alt="Aperçu de ton ticket de bus à partager : ton coup de cœur et celui qui te ramène, tels que tu les imaginais et tels qu'ils sont vraiment pour toi." />{/if}
   <p><button class="principal" onclick={partager} disabled={enCours}>{enCours ? "Préparation…" : "Partager"}</button></p>
   <label><input type="checkbox" bind:checked={avecNoms} /> Afficher les noms des candidats</label>
   <p class="discret petit">Sans les noms, ton partage ne dévoile pas tes préférences : il donne juste envie d'essayer. Le lien mène à l'accueil, jamais à ton résultat.</p>

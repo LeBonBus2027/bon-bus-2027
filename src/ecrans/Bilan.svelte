@@ -8,8 +8,8 @@
   import { arrets, effet, type Revelation } from "../lib/revelation";
 
   /**
-   * Sous la morale, les deux bus les plus parlants : ton plus beau bus quand il ne te rapproche pas le plus,
-   * et le bus qui te rapproche le plus. Si ton intuition était la bonne, une seule carte.
+   * Sous la morale, les deux bus les plus parlants : ton coup de cœur qui t'éloigne (s'il y en a un),
+   * puis le bus qui te rapproche le plus (« Ton intuition » s'il était aussi dans ton plus beau bac).
    */
   let { revelation, bacs }: { revelation: Revelation; bacs: Record<string, Niveau> } = $props();
 
@@ -19,14 +19,12 @@
     return n === "inconnu" ? "Tu ne le connaissais pas." : `Tu l'avais mis dans le bac « ${BAC[n]} ».`;
   };
   const cartes = $derived.by((): Carte[] => {
-    const { meilleur, beau, intuition } = revelation;
-    if (intuition || !beau || beau.trajet.arrets <= meilleur.trajet.arrets) {
-      return [{ c: meilleur, titre: intuition ? "Ton intuition" : "Ton bus", phrase: `${rangement(meilleur)} C'est lui qui te rapproche le plus.` }];
-    }
-    return [
-      { c: beau, titre: "Ton coup de cœur", phrase: `${rangement(beau)} ${beau.trajet.arrets > R0 ? "Il est parti dans l'autre sens, vers le terminus." : "Il ne va pas vraiment vers chez toi."}` },
-      { c: meilleur, titre: "La surprise", phrase: `${rangement(meilleur)} C'est pourtant lui qui te rapproche le plus.` },
-    ];
+    const { meilleur, decu, intuition } = revelation;
+    const lui: Carte = intuition
+      ? { c: meilleur, titre: "Ton intuition", phrase: `${rangement(meilleur)} C'est lui qui te rapproche le plus.` }
+      : { c: meilleur, titre: decu ? "La surprise" : "Ton bus", phrase: `${rangement(meilleur)} C'est ${decu ? "pourtant " : ""}lui qui te rapproche le plus.` };
+    if (!decu) return [lui];
+    return [{ c: decu, titre: "Ton coup de cœur", phrase: `${rangement(decu)} ${decu.trajet.arrets > R0 ? "Il est parti dans l'autre sens, vers le terminus." : "Il ne va pas vraiment vers chez toi."}` }, lui];
   });
 </script>
 
