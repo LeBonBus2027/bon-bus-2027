@@ -32,6 +32,7 @@
 <h2>Signaler un problème</h2>
 <ul>
   <li>Une position de candidat te semble fausse : signale-la à <a href="https://monvote2027.fr/contact" target="_blank" rel="noopener noreferrer">MonVote2027</a>, qui la vérifiera.</li>
+  <li>Une décision de justice te semble fausse ou n'est plus à jour : signale-la à <a href="https://poligraph.fr/signaler" target="_blank" rel="noopener noreferrer">Poligraph</a>. Pour <a href="https://casier-politique.fr" target="_blank" rel="noopener noreferrer">Casier politique</a>, qui se base sur Wikipédia : vérifie d'abord sur Wikipédia ; si son site en diffère, signale-le sur <a href="https://codeberg.org/raphael-jolivet/crapulopedia/issues" target="_blank" rel="noopener noreferrer">son dépôt Codeberg</a>.</li>
 </ul>
 
 <style>

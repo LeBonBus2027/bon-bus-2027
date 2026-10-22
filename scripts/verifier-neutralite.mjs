@@ -32,7 +32,7 @@ const interdits = [
   { motif: /\.innerHTML\s*=|insertAdjacentHTML|outerHTML\s*=/, raison: "injection de HTML brut" },
   // Citer la moyenne des sondages publiés (sélection des candidats) est permis ; présenter l'outil comme un sondage, non.
   { motif: /\b(notre|ce|cet|un|mon|ton) sondage|intentions? de vote|r[ée]sultats? du sondage/i, raison: "l'outil ne doit pas se présenter comme un sondage" },
-  { motif: /(src|href)=["']https?:\/\/(?!monvote2027\.fr|www\.service-public\.fr|www\.tiktok\.com|poligraph\.fr|casier-politique\.fr)/, raison: "ressource ou lien externe non prévu" },
+  { motif: /(src|href)=["']https?:\/\/(?!monvote2027\.fr|www\.service-public\.fr|www\.tiktok\.com|poligraph\.fr|casier-politique\.fr|codeberg\.org\/raphael-jolivet\/crapulopedia)/, raison: "ressource ou lien externe non prévu" },
   { motif: /@import\s+url\(|fonts\.googleapis/, raison: "police ou feuille de style externe" },
 ];
 

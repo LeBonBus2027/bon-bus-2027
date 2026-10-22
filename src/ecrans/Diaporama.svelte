@@ -8,6 +8,7 @@
   import Partage from "./Partage.svelte";
   import { affairesPubliees, chargerJustice, nombre, type Justice } from "../lib/justice";
   import DecisionLigne from "../lib/DecisionLigne.svelte";
+  import SignalerJustice from "../lib/SignalerJustice.svelte";
   import Photo from "../lib/Photo.svelte";
 
   /**
@@ -98,7 +99,7 @@
           </div>
         {/if}
       {/if}
-      <p class="discret petit"><span aria-hidden="true">●</span> décision définitive · <span aria-hidden="true">○</span> pas encore définitive : la présomption d'innocence s'applique. Le détail, les sources et les décisions visant leur parti sont dans ton récap.</p>
+      <p class="discret petit"><span aria-hidden="true">●</span> décision définitive · <span aria-hidden="true">○</span> pas encore définitive : la présomption d'innocence s'applique. Le détail, les sources et les décisions visant leur parti sont dans ton récap. <SignalerJustice /></p>
     {:else if etape === 3}
       <blockquote class="girouette">{revelation.metaphore}</blockquote>
       <p class="morale"><span>Aucun bus ne te dépose pile devant chez toi. Prends celui qui te rapproche le plus.</span></p>

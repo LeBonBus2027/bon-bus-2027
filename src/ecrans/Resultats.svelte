@@ -8,6 +8,7 @@
   import Photo from "../lib/Photo.svelte";
   import Afficheur from "./Afficheur.svelte";
   import Justice from "./Justice.svelte";
+  import SignalerJustice from "../lib/SignalerJustice.svelte";
   import { affairesPubliees, chargerJustice, nombre, type Justice as DonneesJustice } from "../lib/justice";
   import Partage from "./Partage.svelte";
 
@@ -88,7 +89,7 @@
 {/if}
 
 <h2>Ce que dit la justice</h2>
-<p class="discret petit">Pour chacun de tes bus, les décisions de justice rendues à l'encontre du candidat, telles quelles : condamnations et relaxes, avec leur statut. Elles ne changent pas son trajet. Méthode et sources : <a href="#methode">comment ça marche</a>.</p>
+<p class="discret petit">Pour chacun de tes bus, les décisions de justice rendues à l'encontre du candidat, telles quelles : condamnations et relaxes, avec leur statut. Elles ne changent pas son trajet. Méthode et sources : <a href="#methode">comment ça marche</a>. <SignalerJustice /></p>
 <div class="justice">
   {#each classement as c (c.candidat.id)}
     {@const n = nbDecisions(c.candidat.id)}
