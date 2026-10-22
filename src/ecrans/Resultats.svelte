@@ -7,15 +7,12 @@
   import Bus from "../lib/Bus.svelte";
   import Photo from "../lib/Photo.svelte";
   import Afficheur from "./Afficheur.svelte";
-  import Justice from "./Justice.svelte";
-  import SignalerJustice from "../lib/SignalerJustice.svelte";
-  import { affairesPubliees, chargerJustice, nombre, type Justice as DonneesJustice } from "../lib/justice";
   import Partage from "./Partage.svelte";
 
   /*
    * Page récap, qui ne répète pas le diaporama (on peut le revoir d'un bouton) :
    * 1. le verdict (afficheur, message, morale) ; 2. l'appel à voter ; 3. le partage, replié ;
-   * 4. le détail bus par bus ; 5. ce que dit la justice ; 6. pour aller plus loin ; 7. recommencer.
+   * 4. le détail bus par bus ; 5. pour aller plus loin ; 6. recommencer.
    */
   let { revelation, classement, bacs, horsSelection, onPourquoi, onRecommencer, onRevoir, onAffiner, restantes = 0, outils }: {
     revelation: Revelation;
@@ -31,14 +28,10 @@
     /** Outils interactifs (priorités, rétroviseur), dans « Pour aller plus loin ». */
     outils?: Snippet;
     onRecommencer: () => void;
-    /** Relance le diaporama de fin (afficheur, peinture grattée, pour rappel, morale, partage). */
+    /** Relance le diaporama de fin (afficheur, peinture grattée, morale, partage). */
     onRevoir: () => void;
   } = $props();
 
-  // « Ce que dit la justice » : le nombre de décisions de chaque candidat, pour l'en-tête de sa carte.
-  let justice = $state<DonneesJustice | null>(null);
-  $effect(() => { chargerJustice().then(j => { justice = j; }); });
-  const nbDecisions = (id: string) => (justice ? (affairesPubliees(justice, id)?.length ?? 0) : null);
 </script>
 
 <h2 id="titre-recap" class="etiquette-signal recap" tabindex="-1">Ton récap</h2>
@@ -87,19 +80,6 @@
 {#if horsSelection}
   <p class="info petit">Le bus de {horsSelection.candidat.nom}, que tu n'avais pas ajouté à ta gare, se serait arrêté encore plus près ({arrets(horsSelection.trajet.arrets)}).</p>
 {/if}
-
-<h2>Ce que dit la justice</h2>
-<p class="discret petit">Pour chacun de tes bus, les décisions de justice rendues à l'encontre du candidat, telles quelles : condamnations et relaxes, avec leur statut. Elles ne changent pas son trajet. Méthode et sources : <a href="#methode">comment ça marche</a>. <SignalerJustice /></p>
-<div class="justice">
-  {#each classement as c (c.candidat.id)}
-    {@const n = nbDecisions(c.candidat.id)}
-    <section class="fiche-justice" class:vide={n === 0} aria-labelledby="justice-{c.candidat.id}">
-      <h3 id="justice-{c.candidat.id}" class="qui-justice"><Photo id={c.candidat.id} taille={40} /> {c.candidat.nom}
-        {#if n !== null}<span class="compte">{n ? nombre(n, "décision") : "aucune décision"}</span>{/if}</h3>
-      <Justice id={c.candidat.id} detail={false} />
-    </section>
-  {/each}
-</div>
 
 <h2>Pour aller plus loin</h2>
 {#if onAffiner && restantes > 0}
@@ -173,12 +153,5 @@
   .partage-replie { margin: 0 0 20px; }
   .partage-replie > summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; font-weight: 800; font-size: 18px; }
   .partage-replie[open] > summary { margin-bottom: 12px; }
-  .justice { display: grid; gap: 12px; }
-  .fiche-justice { background: var(--carte); border-left: 5px solid var(--jaune); border-radius: var(--rayon); padding: 10px 12px; }
-  .fiche-justice.vide { border-left-color: var(--trait); }
-  .fiche-justice :global(.parti summary) { font-size: 15px; }
-  .justice h3 { margin: 0 0 10px; font-size: 17px; }
-  .qui-justice { display: flex; align-items: center; gap: 10px; }
-  .compte { margin-left: auto; font-size: 13.5px; font-weight: 600; color: var(--discret); white-space: nowrap; }
   .bouton { display: inline-flex; align-items: center; min-height: 48px; padding: 10px 18px; border-radius: 999px; background: var(--marque); color: var(--jaune); border: 2px solid var(--jaune); text-decoration: none; font-weight: 900; text-transform: uppercase; letter-spacing: 0.04em; }
 </style>

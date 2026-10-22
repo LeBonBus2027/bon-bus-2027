@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 
 /**
  * Simulations de bout en bout : des parcours tirés au hasard (graine fixe), et pour chacun on vérifie que tout ce qui
- * s'affiche se tient : classement, peinture grattée (d'après le rang), animations, « Pour rappel », tickets de la morale.
+ * s'affiche se tient : classement, peinture grattée (d'après le rang), animations, tickets de la morale.
  * Gare au hasard (les candidats proposés d'office, plus 0 à 14 candidats ajoutés), version rapide ou complète, quelques
  * questions passées. Chaque réponse est notée, et les distances des 21 candidats sont recalculées ici, indépendamment du
  * site, avec la règle publiée : d = 10 × (1 − Σpas ÷ 2n). Le calcul seul est aussi vérifié sur des milliers de parcours
@@ -145,11 +145,6 @@ for (let s = 1; s <= NB; s++) {
     const resumes2 = await textes(".diapo .carte-bus > .visually-hidden");
     const classes2 = await page.locator(".diapo .avant-apres li").evaluateAll(l => l.map(x => (x.classList.contains("ecart") ? 0 : x.classList.contains("reussite") ? 1 : 2)));
     await page.getByRole("button", { name: "Suivant", exact: true }).click();
-    await expect(page.locator(".diapo").getByText("Chargement…")).toHaveCount(0);
-    const fiches = await textes(".diapo .fiche .qui strong");
-    const chapeaux = await page.locator(".diapo .fiche").evaluateAll(l => l.map(f => !!f.querySelector(".chapeau")));
-    const aucune = await textes(".diapo .aucune li");
-    await page.getByRole("button", { name: "Suivant", exact: true }).click();
     const tickets = await page.locator(".diapo .bilan .ticket").evaluateAll(l => l.map(t => ({
       titre: t.querySelector(".titre")!.textContent!, nom: t.querySelector(".qui strong")!.textContent!,
     })));
@@ -208,19 +203,12 @@ for (let s = 1; s <= NB; s++) {
       if (e) expect(r, ctx).toContain(EFFET[e]); else for (const x of Object.values(EFFET)) expect(r, ctx).not.toContain(x);
     });
 
-    // 3. « Pour rappel » : ton plus beau bac et les 3 plus proches ; le coup de cœur qui t'éloigne en tête, avec son chapeau.
+    // Le coup de cœur qui t'éloigne : le bus le plus éloigné de ton plus beau bac, s'il s'arrête plus loin que le meilleur.
     const haut = BEAUTE.find(n => tab.some(t => bacs[t.nom] === n));
-    const attendus = tab.filter((t, k) => k < 3 || bacs[t.nom] === haut).map(t => t.nom);
-    expect([...fiches, ...aucune].sort(), ctx).toEqual([...attendus].sort());
     const beau = haut ? tab.filter(t => bacs[t.nom] === haut).at(-1) : undefined;
     const decu = beau && beau.a > tab[0]!.a ? beau.nom : undefined;
-    if (decu && fiches.includes(decu)) expect(fiches[0], ctx).toBe(decu);
-    fiches.forEach((nom, k) => expect(chapeaux[k], ctx).toBe(nom === decu));
-    const ordre = (l: string[]) => l.filter(n => n !== decu).map(n => tab.findIndex(t => t.nom === n));
-    expect(ordre(fiches), ctx).toEqual([...ordre(fiches)].sort((a, b) => a - b));
-    expect(ordre(aucune), ctx).toEqual([...ordre(aucune)].sort((a, b) => a - b));
 
-    // 4. Tickets de la morale : le coup de cœur qui t'éloigne (s'il y en a un), puis celui qui te rapproche le plus.
+    // 3. Tickets de la morale : le coup de cœur qui t'éloigne (s'il y en a un), puis celui qui te rapproche le plus.
     const intuition = !!haut && bacs[tab[0]!.nom] === haut;
     const meilleur = { titre: intuition ? "Ton intuition" : decu ? "La surprise" : "Ton bus", nom: tab[0]!.nom };
     const attenduTickets = decu ? [{ titre: "Ton coup de cœur", nom: decu }, meilleur] : [meilleur];

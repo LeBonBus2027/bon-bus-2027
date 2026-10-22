@@ -1,7 +1,7 @@
 /**
  * Simulations : des milliers de parcours tirés au hasard (graine fixe) sur les vraies données MonVote2027,
  * pour vérifier que le calcul suit la règle publiée dans « Comment ça marche » et que tout ce qui en découle
- * (classement, peinture grattée, animations, bus mis en avant, « Pour rappel ») reste cohérent.
+ * (classement, peinture grattée, animations, bus mis en avant) reste cohérent.
  */
 import { describe, expect, it } from "vitest";
 import { classer, pas, R0, trajet, type Classe, type Reponse, type Valeur } from "./calcul";
@@ -95,7 +95,7 @@ describe(`simulations (${N} parcours)`, () => {
     expect(panne).toBeGreaterThan(100);
   });
 
-  it("révélation : le meilleur est en tête, le plus beau bus est le plus éloigné de ton plus beau bac, « Pour rappel » couvre ce bac et les 3 plus proches", () => {
+  it("révélation : le meilleur est en tête, le plus beau bus est le plus éloigné de ton plus beau bac", () => {
     for (const { i, p } of simulations) {
       const r = reveler(p.classement, p.bacs, () => 0.5);
       const ctx = `parcours ${i}`;
@@ -116,8 +116,6 @@ describe(`simulations (${N} parcours)`, () => {
       }
       expect(r.intuition, ctx).toBe(!!haut && p.bacs[r.meilleur.candidat.id] === haut);
       expect(r.decu, ctx).toBe(r.beau && r.beau.trajet.arrets > r.meilleur.trajet.arrets ? r.beau : undefined);
-      const attendu = p.classement.filter((c, k) => k < 3 || (!!haut && p.bacs[c.candidat.id] === haut));
-      expect(r.rappel, ctx).toEqual(attendu);
       expect(r.peinture, ctx).toEqual(peintures(p.classement));
     }
   });

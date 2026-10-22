@@ -33,8 +33,6 @@ export interface Revelation {
   focus: Classe<Candidat>[];
   /** « Tout le monde descend » : les 3 bus qui s'arrêtent le plus près. */
   podium: Classe<Candidat>[];
-  /** « Pour rappel » (justice) : tous les bus de ton plus beau bac, plus les 3 plus proches, dans l'ordre du classement. */
-  rappel: Classe<Candidat>[];
   /** Ton plus beau bac occupé (« J'adore » s'il n'est pas vide, etc.). */
   haut?: Niveau;
   /** Peinture grattée de chaque bus de la gare, d'après son rang (voir peintures). */
@@ -117,7 +115,6 @@ export function reveler(classement: readonly Classe<Candidat>[], bacs: Readonly<
     return e === "panne" ? -ORDRE_BEAUTE.indexOf(apres) + ORDRE_BEAUTE.indexOf(avant) - 10 : e === "brille" ? 0 : 1;
   };
   const focus = classement.map((c, i) => ({ c, i, p: priorite(c) })).sort((a, b) => a.p - b.p || a.i - b.i).map(x => x.c);
-  const rappel = classement.filter((c, i) => i < 3 || (!!haut && bacs[c.candidat.id] === haut));
 
   const n = meilleur.candidat.nom, nm = meilleur.trajet.arrets;
   const intuition = !!haut && bacs[meilleur.candidat.id] === haut;
@@ -133,7 +130,7 @@ export function reveler(classement: readonly Classe<Candidat>[], bacs: Readonly<
   }
   const mot = metaphore(bacs[meilleur.candidat.id] ?? "inconnu", haut, beau, intuition, tirage);
   const decu = beau && beau.trajet.arrets > meilleur.trajet.arrets ? beau : undefined;
-  return { meilleur, beau, epave, decu, focus, podium: classement.slice(0, 3), rappel, haut, peinture, message, metaphore: mot, intuition };
+  return { meilleur, beau, epave, decu, focus, podium: classement.slice(0, 3), haut, peinture, message, metaphore: mot, intuition };
 }
 
 export type Peinture = Exclude<Niveau, "inconnu">;

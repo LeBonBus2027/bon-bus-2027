@@ -35,12 +35,6 @@ describe("reveler", () => {
     expect(r.beau?.candidat.id).toBe("d");
   });
 
-  it("« Pour rappel » reprend tous les bus du plus beau bac, pas seulement le plus éloigné", () => {
-    const r = reveler(classement, { a: "bof", b: "bof", c: "pas", d: "adore", e: "adore" });
-    expect(r.haut).toBe("adore");
-    expect(r.rappel.map(c => c.candidat.id)).toEqual(["a", "b", "c", "d", "e"]);
-  });
-
   it("gratte tous les bus : grands écarts d'abord (le plus grand en premier), puis réussites, puis le reste", () => {
     // Peintures : a luxe, b neuf, c correct, d cabossé, e épave.
     const r = reveler(classement, { a: "bof", b: "bof", c: "bof", d: "adore", e: "adore" });

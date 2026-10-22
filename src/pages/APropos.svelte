@@ -14,10 +14,7 @@
 <ul>
   <li><a href="https://monvote2027.fr" target="_blank" rel="noopener noreferrer">MonVote2027</a>, pour son travail de recensement et de sourçage des positions.</li>
   <li><a href="https://www.tiktok.com/@4deux_93" target="_blank" rel="noopener noreferrer">@4deux_93</a>, pour la métaphore.</li>
-  <li><a href="https://poligraph.fr" target="_blank" rel="noopener noreferrer">Poligraph</a>, observatoire citoyen, pour son recensement des affaires judiciaires des élus et des partis.</li>
   <li><a href={selection.url} target="_blank" rel="noopener noreferrer">{selection.source}</a>, pour la moyenne des sondages qui détermine les candidats proposés d'office (au {new Date(selection.date).toLocaleDateString("fr-FR")}).</li>
-  <li><a href="https://casier-politique.fr" target="_blank" rel="noopener noreferrer">Casier politique</a>, pour son recensement des décisions de justice visant des responsables politiques.</li>
-  <li>Les journaux et sites cités en source de chaque décision de justice (lien sous chaque décision, dans « Ce que dit la justice »).</li>
 </ul>
 
 <h2>Crédits photos</h2>
@@ -32,7 +29,6 @@
 <h2>Signaler un problème</h2>
 <ul>
   <li>Une position de candidat te semble fausse : signale-la à <a href="https://monvote2027.fr/contact" target="_blank" rel="noopener noreferrer">MonVote2027</a>, qui la vérifiera.</li>
-  <li>Une décision de justice te semble fausse ou n'est plus à jour : signale-la à <a href="https://poligraph.fr/signaler" target="_blank" rel="noopener noreferrer">Poligraph</a>. Pour <a href="https://casier-politique.fr" target="_blank" rel="noopener noreferrer">Casier politique</a>, qui se base sur Wikipédia : vérifie d'abord sur Wikipédia ; si son site en diffère, signale-le sur <a href="https://codeberg.org/raphael-jolivet/crapulopedia/issues" target="_blank" rel="noopener noreferrer">son dépôt Codeberg</a>.</li>
 </ul>
 
 <style>

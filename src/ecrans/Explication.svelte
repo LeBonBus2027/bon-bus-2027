@@ -5,13 +5,11 @@
   import { arrets, VU, type Peinture } from "../lib/revelation";
   import Bus from "../lib/Bus.svelte";
   import Photo from "../lib/Photo.svelte";
-  import Justice from "./Justice.svelte";
-  import SignalerJustice from "../lib/SignalerJustice.svelte";
 
   /**
    * « Pourquoi X s'arrête à N arrêts » : la même lecture pour chaque candidat. En tête, où le bus s'arrête (jauge de ta
    * porte au terminus) et sa peinture avant → après ; puis le bilan avancé / reculé / immobile ; puis les questions qui
-   * ont le plus compté, chacune avec ta réponse, la position du candidat et le pas (+2 à −2) ; enfin la justice.
+   * ont le plus compté, chacune avec ta réponse, la position du candidat et le pas (+2 à −2).
    */
   let { candidat, trajet, bac, apres, ordre, reponses, positions, onFermer }: {
     candidat: Candidat;
@@ -96,10 +94,6 @@
     <ul class="questions">{#each lignes as l (l.id)}{@render ligne(l)}{/each}</ul>
   </details>
   <p class="petit"><a href={candidat.url_source} target="_blank" rel="noopener noreferrer">Ses positions sourcées sur MonVote2027</a></p>
-
-  <h3>Ce que dit la justice</h3>
-  <p class="discret petit">Les décisions de justice rendues à son encontre, telles quelles. Elles ne changent pas le trajet de son bus. Touche une décision pour le détail et les sources. <SignalerJustice /></p>
-  <Justice id={candidat.id} detail={false} />
 </section>
 
 <style>

@@ -31,11 +31,6 @@ test.describe("parcours complet", () => {
     await page.getByRole("button", { name: "Gratter la peinture" }).click();
     await expect(page.getByRole("heading", { name: "On a gratté la peinture" })).toBeFocused();
     await page.getByRole("button", { name: "Suivant", exact: true }).click();
-    await expect(page.getByRole("heading", { name: "Pour rappel" })).toBeFocused();
-    await expect(page.locator(".diapo :is(.fiche, .aucune li)")).not.toHaveCount(0);
-    await expect(page.locator(".diapo").getByText("Chargement…")).toHaveCount(0);
-    await auditAccessibilite(page, "pour rappel");
-    await page.getByRole("button", { name: "Suivant", exact: true }).click();
     await expect(page.locator(".diapo .girouette")).not.toBeEmpty();
     await expect(page.locator(".diapo .bilan .ticket")).not.toHaveCount(0);
     await auditAccessibilite(page, "morale");
@@ -51,10 +46,6 @@ test.describe("parcours complet", () => {
     await expect(page.getByText("Aucun bus ne te dépose pile devant chez toi.")).toBeVisible();
     await expect(page.locator(".tes-bus > li")).toHaveCount(7);
     await expect(page.getByRole("link", { name: "Vérifier mon inscription" })).toHaveAttribute("href", /service-public\.fr/);
-    // « Ce que dit la justice » : une section par bus de la gare, chargée à la demande.
-    await expect(page.getByRole("heading", { name: "Ce que dit la justice" })).toBeVisible();
-    await expect(page.locator(".justice section")).toHaveCount(7);
-    await expect(page.locator(".justice").getByText("Chargement…")).toHaveCount(0);
     await auditAccessibilite(page, "résultats");
 
     // L'adresse ne contient jamais de réponse ni de résultat.
@@ -183,7 +174,6 @@ test("chaque bus explique sa position, depuis le tableau ou la carte", async ({ 
   await page.getByRole("button", { name: /^Pourquoi \?/ }).first().click();
   await expect(page.getByRole("heading", { name: /^Pourquoi .+ s'arrête/ })).toBeVisible();
   await expect(page.getByText(/Sur tes 20 réponses/)).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Ce que dit la justice" })).toHaveCount(2);   // récap + explication
   await auditAccessibilite(page, "explication");
   await page.getByRole("button", { name: "Fermer l'explication" }).click();
   await expect(page.getByRole("heading", { name: /^Pourquoi .+ s'arrête/ })).toHaveCount(0);
@@ -440,28 +430,6 @@ test("onglet resté ouvert pendant une mise à jour : on propose de recharger au
   await page.getByRole("link", { name: "Comment ça marche", exact: true }).click();
   await expect(page.getByRole("alert")).toContainText("Une nouvelle version du site est en ligne");
   await expect(page.getByRole("button", { name: "Recharger la page" })).toBeVisible();
-});
-
-test("« Ce que dit la justice » : un clic sur une décision ouvre le contexte et les sources", async ({ page }) => {
-  const problemes = surveiller(page);
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/");
-  await page.getByRole("button", { name: "C'est parti" }).click();
-  await classerTout(page);
-  await page.getByRole("button", { name: /place aux questions/ }).click();
-  await page.getByRole("button", { name: /Version rapide/ }).click();
-  await repondreTout(page, 20);
-  await page.getByRole("button", { name: "Faire partir les bus" }).click();
-  await allerAuRecap(page);
-  const carte = page.locator(".fiche-justice").filter({ has: page.getByRole("heading", { name: "Marine Le Pen" }) });
-  const decision = carte.locator("details").first();
-  await expect(decision.locator(".detail")).toBeHidden();
-  await decision.locator("summary").click();
-  await expect(decision.locator(".detail")).toBeVisible();
-  await expect(decision.locator(".affaire")).not.toBeEmpty();
-  await expect(decision.locator(".sources a[href^='https://']").first()).toBeVisible();
-  await auditAccessibilite(page, "décision dépliée");
-  expect(problemes).toEqual([]);
 });
 
 test("« De quoi parle-t-on ? » : texte simple, et texte d'origine de MonVote2027 à la demande", async ({ page }) => {
