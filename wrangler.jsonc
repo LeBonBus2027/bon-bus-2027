@@ -7,5 +7,6 @@
   // Aucune collecte : pas de journaux ni de traces des visites côté Cloudflare.
   "observability": { "enabled": false },
   "workers_dev": true,
-  "preview_urls": true
+  // Pas d'adresse de prévisualisation publique (essai-…workers.dev) : seul le site de production est servi.
+  "preview_urls": false
 }
