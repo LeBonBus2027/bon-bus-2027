@@ -4,10 +4,7 @@
   import { MIN_REPONSES, type Reponse } from "../lib/calcul";
   import { grandTheme, questions } from "../lib/donnees";
   import Maison from "../lib/Maison.svelte";
-  // « De quoi parle-t-on ? » en mots simples, relu par rapport au texte de MonVote2027 (même sens, aucun ajout).
-  // Fichier séparé : l'import des données MonVote ne l'écrase pas.
-  import aidesSimples from "../../data/aides-simples.json";
-  const SIMPLES = aidesSimples as Record<string, string>;
+  import PlusLoin, { type Explication } from "../lib/PlusLoin.svelte";
 
   let { reponses = $bindable(), ordre = $bindable(), format = $bindable(), debut = 0, onFini }: {
     reponses: Record<string, Reponse>;
@@ -32,6 +29,12 @@
   const courante = $derived(parId.get(ordre[index] ?? ""));
   const nbReponses = $derived(ordre.filter(id => (reponses[id] ?? null) !== null).length);
   const progression = $derived(ordre.length ? index / ordre.length : 0);
+
+  // « De quoi parle-t-on ? » : 100 textes (≈ 100 ko compressés), chargés à part pour ne pas alourdir l'accueil.
+  let explications: Record<string, Explication> | null = $state(null);
+  // « De quoi parle-t-on ? » replié au départ ; si tu le déplies, il reste déplié aux questions suivantes.
+  let explicationOuverte = $state(false);
+  $effect(() => { if (format && !explications) import("../../data/explications.json").then(m => (explications = m.default as Record<string, Explication>)); });
 
   function lancer(f: 20 | 100) {
     format = f;
@@ -69,11 +72,10 @@
   <div class="barre" aria-hidden="true"><div style:transform="scaleX({progression})"></div></div>
 
   <h1 tabindex="-1" bind:this={titre} class="question">{courante.texte}</h1>
-  {#if courante.aide}
-    <details class="petit aide"><summary>De quoi parle-t-on ?</summary>
-      <p>{SIMPLES[courante.id] ?? courante.aide}</p>
-      {#if SIMPLES[courante.id]}<details class="origine"><summary>Texte d'origine (MonVote2027)</summary><p>{courante.aide}</p></details>{/if}
-    </details>
+  {#if explications?.[courante.id]}
+    <PlusLoin id={courante.id} texte={explications[courante.id]!} bind:ouvert={explicationOuverte} />
+  {:else if !explications}
+    <div class="attente" aria-hidden="true"></div>
   {/if}
 
   <div class="choix" role="group" aria-label="Ta réponse">
@@ -109,10 +111,7 @@
   .barre div { height: 100%; background: var(--accent); transform-origin: left; transition: transform 0.3s; }
   /* La question reste visible en haut de l'écran pendant qu'on lit « De quoi parle-t-on ? » et les réponses. */
   .question { font-size: clamp(22px, 5vw, 28px); position: sticky; top: 0; z-index: 2; margin-inline: -16px; padding: 10px 16px; background: var(--fond); box-shadow: 0 8px 8px -8px rgb(11 31 58 / 0.25); }
-  details { margin-bottom: 12px; color: var(--discret); }
-  .aide > p { color: var(--encre); font-size: 16px; line-height: 1.5; }
-  .origine { margin: 0; }
-  .origine summary { font-weight: 600; font-size: 14.5px; }
+  .attente { height: 64px; margin: 6px 0 14px; border-radius: calc(var(--rayon) * 1.5); background: var(--carte); }
   .choix { display: grid; gap: 8px; margin: 16px 0 12px; }
   .choix button { border-radius: var(--rayon); text-align: left; }
   .choix button.actif { background: var(--encre); color: var(--fond); }

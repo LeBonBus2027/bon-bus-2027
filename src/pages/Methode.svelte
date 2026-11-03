@@ -8,9 +8,19 @@
 
 <h2>D'où viennent les données</h2>
 <p>Les {questions.length} questions et les positions des {candidats.length} candidats viennent de <a href="https://monvote2027.fr/donnees" target="_blank" rel="noopener noreferrer">MonVote2027</a>, un outil citoyen indépendant qui source chaque position (programmes, déclarations, votes). Nous n'en modifions aucune. Une erreur sur une position ? Signale-la directement à MonVote2027 : la correction arrivera ici à l'import suivant.</p>
-<p>Les explications « De quoi parle-t-on ? » sont réécrites en mots simples d'après celles de MonVote2027, sans changer leur sens : le texte d'origine reste affiché juste en dessous.</p>
+<p>Les explications « De quoi parle-t-on ? » sous chaque question sont rédigées par LeBonBus2027, d'après les sources citées sous chacune. Voir plus bas comment elles sont écrites.</p>
 <p>Les portraits des candidats viennent de Wikimedia Commons, sous licence libre, choisis selon les mêmes critères pour tous. Leurs auteurs sont crédités sur la page <a href="#a-propos">À propos</a>.</p>
 <p class="petit discret">Version des données : import du {new Date(meta.date_import).toLocaleDateString("fr-FR")}, empreinte <code>{meta.empreinte.slice(0, 16)}…</code></p>
+
+<h2>Les explications « De quoi parle-t-on ? »</h2>
+<p>Sous chaque question, un bouton « De quoi parle-t-on ? » déplie une explication en quatre volets : le contexte, ce que disent les preuves, ce qu'il faut savoir aussi, et ce qui reste un choix de valeurs. C'est le même texte pour tout le monde, quelle que soit ta réponse, et il ne cite aucun candidat ni aucun parti.</p>
+<ul>
+  <li><strong>Les preuves les plus solides comptent le plus :</strong> d'abord les revues de la recherche, puis les études évaluées, puis la statistique publique (INSEE, DARES, Cour des comptes…). Les rapports d'institutions, d'ONG ou de groupes de réflexion sont présentés comme tels. Un avis ou une déclaration ne pèse jamais autant qu'une étude.</li>
+  <li><strong>La même règle pour tous les arguments,</strong> que la preuve arrange ou non un programme.</li>
+  <li><strong>Les données les plus récentes d'abord.</strong></li>
+  <li><strong>Les faits d'un côté, les choix de valeurs de l'autre.</strong> Les textes ne disent jamais quoi voter.</li>
+</ul>
+<p>Chaque explication liste ses sources. Ces textes résument des travaux publiés : ils peuvent contenir des erreurs ou vieillir.</p>
 
 <h2>Quels candidats au départ</h2>
 <p>Pour que le classement reste rapide, on te propose d'office les candidats à <strong>{selection.seuil} % ou plus</strong> dans la moyenne des sondages du premier tour ({retenusParDefaut.length} candidats). Source : <a href={selection.url} target="_blank" rel="noopener noreferrer">{selection.source}</a>, au {new Date(selection.date).toLocaleDateString("fr-FR")}. Ce seuil est le même que celui du remboursement des frais de campagne.</p>

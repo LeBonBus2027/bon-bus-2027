@@ -432,19 +432,36 @@ test("onglet resté ouvert pendant une mise à jour : on propose de recharger au
   await expect(page.getByRole("button", { name: "Recharger la page" })).toBeVisible();
 });
 
-test("« De quoi parle-t-on ? » : texte simple, et texte d'origine de MonVote2027 à la demande", async ({ page }) => {
+test("« De quoi parle-t-on ? » : bouton bien visible, quatre volets au clavier, sources, reste déplié d'une question à l'autre", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "C'est parti" }).click();
   await classerTout(page);
   await page.getByRole("button", { name: /place aux questions/ }).click();
   await page.getByRole("button", { name: /Version rapide/ }).click();
-  const aide = page.locator("details.aide");
-  await aide.locator("> summary").click();
-  await expect(aide.locator("> p")).not.toBeEmpty();
-  await aide.locator(".origine summary").click();
-  await expect(aide.locator(".origine p")).not.toBeEmpty();
-  expect(await aide.locator("> p").innerText()).not.toBe(await aide.locator(".origine p").innerText());
-  await auditAccessibilite(page, "aide dépliée");
+  const bouton = page.getByRole("button", { name: /De quoi parle-t-on/ });
+  await expect(bouton).toHaveAttribute("aria-expanded", "false");
+  await expect(page.getByRole("tab")).toHaveCount(0);
+  await bouton.click();
+  await expect(bouton).toHaveAttribute("aria-expanded", "true");
+  const encart = page.getByRole("region", { name: /De quoi parle-t-on/ });
+  const onglets = encart.getByRole("tab");
+  await expect(onglets.first()).toHaveAttribute("aria-selected", "true");
+  await expect(encart.getByRole("tabpanel")).not.toBeEmpty();
+  // Flèche droite : volet suivant ; Fin : dernier volet (« Ce qui reste un choix »).
+  await onglets.first().focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(onglets.nth(1)).toHaveAttribute("aria-selected", "true");
+  await page.keyboard.press("End");
+  await expect(onglets.last()).toHaveAttribute("aria-selected", "true");
+  await expect(onglets.last()).toContainText("Ce qui reste un choix");
+  await encart.getByText(/^Sources \(\d+\)$/).click();
+  await expect(encart.locator(".sources a").first()).toHaveAttribute("href", /^https:\/\//);
+  await auditAccessibilite(page, "explication dépliée");
+  // Question suivante : toujours déplié, revenu au premier volet.
+  await page.getByRole("button", { name: "Passer", exact: true }).click();
+  await expect(bouton).toHaveAttribute("aria-expanded", "true");
+  await expect(encart.getByRole("tab").first()).toHaveAttribute("aria-selected", "true");
+  await auditAccessibilite(page, "explication repliée");
 });
 
 test("le récap ne répète pas le diaporama, mais permet de le revoir", async ({ page }) => {
@@ -473,8 +490,7 @@ test("la question reste visible en haut de l'écran pendant qu'on lit « De quoi
   await classerTout(page);
   await page.getByRole("button", { name: /place aux questions/ }).click();
   await page.getByRole("button", { name: /Version rapide/ }).click();
-  await page.locator("details.aide > summary").click();
-  await page.locator("details.aide .origine summary").click();
+  await page.getByRole("button", { name: /De quoi parle-t-on/ }).click();
   await page.getByRole("button", { name: "Passer", exact: true }).scrollIntoViewIfNeeded();
   const haut = await page.locator("h1.question").evaluate(e => e.getBoundingClientRect().top);
   expect(haut).toBeGreaterThanOrEqual(-1);
