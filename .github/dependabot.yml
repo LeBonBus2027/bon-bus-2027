@@ -19,6 +19,10 @@ updates:
     cooldown:
       default-days: 14
     open-pull-requests-limit: 3
+    # Versions majeures de TypeScript : changement de compilateur, à faire à la main quand les outils Svelte le prendront en charge.
+    ignore:
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
     groups:
       outils:
         patterns: ["*"]

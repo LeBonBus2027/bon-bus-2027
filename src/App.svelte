@@ -2,7 +2,7 @@
   import { onMount, tick } from "svelte";
   import { melanger } from "./lib/aleatoire";
   import type { Reponse } from "./lib/calcul";
-  import { candidats, meta, redaction, retenusParDefaut, selection } from "./lib/candidats";
+  import { candidats, enSilence, meta, redaction, retenusParDefaut, selection } from "./lib/candidats";
   import type { Niveau } from "./lib/niveaux";
   import Accueil from "./ecrans/Accueil.svelte";
   import Bus from "./lib/Bus.svelte";
@@ -182,7 +182,9 @@
     <ul class="sources">
       <li><span class="quoi">Questions et positions</span><a href="https://monvote2027.fr" target="_blank" rel="noopener noreferrer">MonVote2027</a><span class="detail">Données du {new Date(meta.date_import).toLocaleDateString("fr-FR")}</span></li>
       <li><span class="quoi">Explications « De quoi parle-t-on ? »</span><a href="#methode">{redaction.auteur}</a><span class="detail">vérifiées le {new Date(redaction.date).toLocaleDateString("fr-FR")}, sources sous chaque texte</span></li>
+      {#if !enSilence}
       <li><span class="quoi">Candidats proposés d'office</span><a href={selection.url} target="_blank" rel="noopener noreferrer">{selection.nom}</a><span class="detail">moyenne des sondages au {new Date(selection.date).toLocaleDateString("fr-FR")}</span></li>
+      {/if}
       <li><span class="quoi">Portraits</span><a href="#a-propos">Wikimedia Commons</a><span class="detail">auteurs crédités dans « À propos »</span></li>
       <li><span class="quoi">Idée originale</span><a href="https://www.tiktok.com/@4deux_93/video/7688815863260024097" target="_blank" rel="noopener noreferrer">Vidéo de @4deux_93</a><span class="detail">la métaphore des bus</span></li>
     </ul>

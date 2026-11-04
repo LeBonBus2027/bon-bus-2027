@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { dateLongue, redaction, selection } from "../lib/candidats";
+  import { dateLongue, enSilence, redaction, selection } from "../lib/candidats";
   /** Date de la dernière relecture de cette page (à changer à chaque modification). */
   const MAJ = "2026-11-04";
 </script>
@@ -17,7 +17,7 @@
 
 <h2>Données et propriété intellectuelle</h2>
 <p>Questions et positionnements des candidats : <a href="https://monvote2027.fr" target="_blank" rel="noopener noreferrer">MonVote2027</a>, d'après les données publiées sur <a href="https://monvote2027.fr/donnees" target="_blank" rel="noopener noreferrer">monvote2027.fr/donnees</a>. Les explications « De quoi parle-t-on ? » sont rédigées par {redaction.auteur} d'après les sources citées sous chacune, qui restent la propriété de leurs auteurs (textes et sources vérifiés le {dateLongue(redaction.date)}). Les illustrations et le code du site sont originaux.</p>
-<p>Candidats proposés d'office ({selection.seuil} % ou plus) : <a href={selection.url} target="_blank" rel="noopener noreferrer">{selection.source}</a>, au {new Date(selection.date).toLocaleDateString("fr-FR")}.</p>
+{#if !enSilence}<p>Candidats proposés d'office ({selection.seuil} % ou plus) : <a href={selection.url} target="_blank" rel="noopener noreferrer">{selection.source}</a>, au {new Date(selection.date).toLocaleDateString("fr-FR")}.</p>{/if}
 <p>Les portraits des candidats viennent de Wikimedia Commons, sous licences libres (CC0, CC BY, CC BY-SA ou domaine public). Ils sont reproduits sans modification autre qu'un recadrage, avec le crédit de leurs auteurs sur la page <a href="#a-propos">À propos</a>. Le site n'utilise aucun logo de parti.</p>
 
 <h2>Données personnelles</h2>

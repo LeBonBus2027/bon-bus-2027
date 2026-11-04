@@ -1,6 +1,6 @@
 <script lang="ts">
   import { COUVERTURE_MIN, MIN_REPONSES, R0 } from "../lib/calcul";
-  import { candidats, dateLongue, meta, questions, redaction, retenusParDefaut, selection } from "../lib/donnees";
+  import { candidats, dateLongue, enSilence, meta, questions, redaction, retenusParDefaut, selection } from "../lib/donnees";
 </script>
 
 <h1 tabindex="-1">Comment ça marche</h1>
@@ -23,7 +23,11 @@
 <p>Chaque explication liste ses sources. Ces textes résument des travaux publiés : ils peuvent contenir des erreurs ou vieillir.</p>
 
 <h2>Quels candidats au départ</h2>
-<p>Pour que le classement reste rapide, on te propose d'office les candidats à <strong>{selection.seuil} % ou plus</strong> dans la moyenne des sondages du premier tour ({retenusParDefaut.length} candidats). Source : <a href={selection.url} target="_blank" rel="noopener noreferrer">{selection.source}</a>, au {new Date(selection.date).toLocaleDateString("fr-FR")}. Ce seuil est le même que celui du remboursement des frais de campagne.</p>
+{#if enSilence}
+<p>La loi interdit de publier ou de commenter des sondages la veille et le jour du vote. Pendant cette période, on te propose donc tous les candidats, sans présélection.</p>
+{:else}
+<p>Pour que le classement reste rapide, on te propose d'office les candidats à <strong>{selection.seuil} % ou plus</strong> dans la moyenne des sondages du premier tour ({retenusParDefaut.length} candidats). Source : <a href={selection.url} target="_blank" rel="noopener noreferrer">{selection.source}</a>, au {new Date(selection.date).toLocaleDateString("fr-FR")}. Ce seuil est le même que celui du remboursement des frais de campagne. La veille et le jour de chaque tour, comme la loi l'impose, le site ne mentionne plus aucun sondage et propose tous les candidats.</p>
+{/if}
 <p>Tous les autres candidats référencés restent disponibles : tu peux les ajouter à ta gare en un geste. Le calcul est fait pour tous les candidats ; si le bus d'un candidat que tu n'as pas ajouté s'arrête plus près de chez toi que les tiens, on te le signale.</p>
 
 <h2>Comment les bus avancent</h2>

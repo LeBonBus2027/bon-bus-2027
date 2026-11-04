@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { candidats, selection } from "../lib/candidats";
+  import { candidats, enSilence, selection } from "../lib/candidats";
   import { PHOTOS } from "../lib/Photo.svelte";
 </script>
 
@@ -14,7 +14,7 @@
 <ul>
   <li><a href="https://monvote2027.fr" target="_blank" rel="noopener noreferrer">MonVote2027</a>, pour son travail de recensement et de sourçage des positions.</li>
   <li><a href="https://www.tiktok.com/@4deux_93" target="_blank" rel="noopener noreferrer">@4deux_93</a>, pour la métaphore.</li>
-  <li><a href={selection.url} target="_blank" rel="noopener noreferrer">{selection.source}</a>, pour la moyenne des sondages qui détermine les candidats proposés d'office (au {new Date(selection.date).toLocaleDateString("fr-FR")}).</li>
+  {#if !enSilence}<li><a href={selection.url} target="_blank" rel="noopener noreferrer">{selection.source}</a>, pour la moyenne des sondages qui détermine les candidats proposés d'office (au {new Date(selection.date).toLocaleDateString("fr-FR")}).</li>{/if}
   <li>Les chercheuses et chercheurs, les services de statistique publique et les institutions dont les travaux sont cités sous chaque explication « De quoi parle-t-on ? ».</li>
 </ul>
 

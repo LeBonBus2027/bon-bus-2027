@@ -552,3 +552,24 @@ test.describe("bande-annonce de l'accueil", () => {
     await auditAccessibilite(page, "vignettes");
   });
 });
+
+test("silence des sondages : la veille et le jour du vote, plus aucun sondage et tous les candidats proposés", async ({ page }) => {
+  await page.clock.setFixedTime(new Date("2027-04-17T12:00:00+02:00"));   // samedi, veille du premier tour
+  await page.goto("/");
+  await expect(page.locator("footer")).not.toContainText(/sondage|Pouls/i);
+  await page.getByRole("button", { name: "C'est parti" }).click();
+  await expect(page.getByText(/candidats recensés par MonVote2027/)).toBeVisible();
+  await expect(page.getByText(/Candidat 1 sur 21/)).toBeVisible();
+  await expect(page.locator("main")).not.toContainText(/sondage/i);
+  for (const ecran of ["#methode", "#a-propos", "#mentions-legales"]) {
+    await page.goto("/" + ecran);
+    await expect(page.locator("main h1").first()).toBeVisible();
+    await expect(page.locator("main")).not.toContainText(/Pouls|moyenne des sondages/i);
+  }
+});
+
+test("hors silence, la moyenne des sondages reste citée", async ({ page }) => {
+  await page.clock.setFixedTime(new Date("2027-04-25T12:00:00+02:00"));   // entre les deux tours
+  await page.goto("/");
+  await expect(page.locator("footer")).toContainText("Pouls");
+});

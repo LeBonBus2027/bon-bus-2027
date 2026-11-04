@@ -2,7 +2,7 @@
   import { untrack } from "svelte";
   import Bus from "../lib/Bus.svelte";
   import Photo from "../lib/Photo.svelte";
-  import { candidats, selection, type Candidat } from "../lib/candidats";
+  import { candidats, enSilence, selection, type Candidat } from "../lib/candidats";
   import { NIVEAUX, BAC, type Niveau } from "../lib/niveaux";
 
   let { ordre = $bindable(), bacs = $bindable(), onFini }: {
@@ -64,7 +64,11 @@
     <p><button class="discret" onclick={() => (index -= 1)}>Revenir au précédent</button></p>
   {/if}
   {#if index === 0 && Object.keys(bacs).length === 0}
-    <p class="discret petit">On te propose les {ordre.length} candidats à {selection.seuil} % ou plus dans la moyenne des sondages. Tu pourras en ajouter d'autres juste après.</p>
+    {#if enSilence}
+      <p class="discret petit">On te propose les {ordre.length} candidats recensés par MonVote2027.</p>
+    {:else}
+      <p class="discret petit">On te propose les {ordre.length} candidats à {selection.seuil} % ou plus dans la moyenne des sondages. Tu pourras en ajouter d'autres juste après.</p>
+    {/if}
   {/if}
 {:else}
   <h1 tabindex="-1" bind:this={titre}>Ta gare routière</h1>
@@ -90,7 +94,7 @@
   {#if autres.length}
     <details class="boite ajout">
       <summary>Ajouter des candidats ({autres.length} autres)</summary>
-      <p class="discret petit">Ces candidats sont sous {selection.seuil} % dans la moyenne des sondages, ou n'y figurent pas. Coche ceux que tu veux voir partir de la gare, puis ajoute-les.</p>
+      <p class="discret petit">{#if !enSilence}Ces candidats sont sous {selection.seuil} % dans la moyenne des sondages, ou n'y figurent pas. {/if}Coche ceux que tu veux voir partir de la gare, puis ajoute-les.</p>
       <ul>
         {#each autres as c (c.id)}
           <li>
