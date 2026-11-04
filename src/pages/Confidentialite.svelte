@@ -16,5 +16,5 @@
 <p>Comme tout site, notre hébergeur, Cloudflare, traite techniquement l'adresse IP des visiteurs pour acheminer les pages et protéger le service contre les attaques. Nous n'avons activé aucun journal ni aucune statistique de visite. Ces traitements ne contiennent aucune réponse ni aucun résultat.</p>
 
 <h2>Les liens vers d'autres sites</h2>
-<p>Les liens vers MonVote2027 et vers service-public.fr ouvrent ces sites dans un nouvel onglet. Ils ont leurs propres règles de confidentialité.</p>
+<p>Les liens vers d'autres sites (MonVote2027, service-public.fr, la moyenne des sondages, les sources des explications…) ouvrent ces sites dans un nouvel onglet. Ils ont leurs propres règles de confidentialité.</p>
 

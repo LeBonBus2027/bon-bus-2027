@@ -1,11 +1,13 @@
 <script lang="ts">
   import { dateLongue, redaction, selection } from "../lib/candidats";
+  /** Date de la dernière relecture de cette page (à changer à chaque modification). */
+  const MAJ = "2026-11-04";
 </script>
 
 <h1 tabindex="-1">Mentions légales</h1>
 
 <h2>Éditeur</h2>
-<p>Site édité à titre personnel et bénévole, sans but lucratif. Conformément à l'article 6, III, 2 de la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie numérique, l'éditeur, personne physique non professionnelle, a choisi de préserver son anonymat ; son identité a été communiquée à l'hébergeur.</p>
+<p>Site <strong>lebonbus2027.fr</strong>, édité à titre personnel et bénévole, sans but lucratif. Conformément à l'article 6, III, 2 de la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie numérique, l'éditeur, personne physique non professionnelle, a choisi de préserver son anonymat ; son identité a été communiquée à l'hébergeur.</p>
 
 <h2>Hébergeur</h2>
 <p>Cloudflare, Inc., 101 Townsend St, San Francisco, CA 94107, États-Unis. Téléphone : +1 650 319 8930.</p>
@@ -17,3 +19,8 @@
 <p>Questions et positionnements des candidats : <a href="https://monvote2027.fr" target="_blank" rel="noopener noreferrer">MonVote2027</a>, d'après les données publiées sur <a href="https://monvote2027.fr/donnees" target="_blank" rel="noopener noreferrer">monvote2027.fr/donnees</a>. Les explications « De quoi parle-t-on ? » sont rédigées par {redaction.auteur} d'après les sources citées sous chacune, qui restent la propriété de leurs auteurs (textes et sources vérifiés le {dateLongue(redaction.date)}). Les illustrations et le code du site sont originaux.</p>
 <p>Candidats proposés d'office ({selection.seuil} % ou plus) : <a href={selection.url} target="_blank" rel="noopener noreferrer">{selection.source}</a>, au {new Date(selection.date).toLocaleDateString("fr-FR")}.</p>
 <p>Les portraits des candidats viennent de Wikimedia Commons, sous licences libres (CC0, CC BY, CC BY-SA ou domaine public). Ils sont reproduits sans modification autre qu'un recadrage, avec le crédit de leurs auteurs sur la page <a href="#a-propos">À propos</a>. Le site n'utilise aucun logo de parti.</p>
+
+<h2>Données personnelles</h2>
+<p>Le site ne collecte aucune donnée personnelle et ne dépose aucun cookie. Le détail est sur la page <a href="#confidentialite">Confidentialité</a>.</p>
+
+<p class="petit discret">Mentions mises à jour le {dateLongue(MAJ)}.</p>
