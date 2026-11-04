@@ -42,7 +42,7 @@
 {#snippet jauge(nom: string, d: number)}
   <p class="jauge-personne">
     <span class="nom-personne">{nom}</span>
-    <span class="jauge" aria-hidden="true"><span class="repere" style:left="{Math.min(100, (Math.round(d) / 20) * 100)}%"></span></span>
+    <span class="jauge" aria-hidden="true"><span class="repere" style:left="{100 - Math.min(100, (Math.round(d) / 20) * 100)}%"></span></span>
     <span class="arrets">{arrets(Math.round(d))}</span>
   </p>
 {/snippet}
@@ -79,7 +79,7 @@
     <p class="discret petit">C'est le compromis : le bus qui laisse la personne la plus éloignée de vous deux le moins loin possible de chez elle. Aucun bus ne dépose deux personnes pile devant chez elles.</p>
 
     <h2>Tous les bus, pour vous deux</h2>
-    <p class="echelle discret petit" aria-hidden="true"><span class="graduations"><span>⌂ chez vous</span><span>gare</span><span>terminus</span></span></p>
+    <p class="echelle discret petit" aria-hidden="true"><span class="graduations"><span>terminus</span><span>gare</span><span>chez vous ⌂</span></span></p>
     <ol class="duo-bus">
       {#each comp.lignes as l, i (l.id)}
         <li class:premier={l.id === comp.commun.id}>
@@ -108,7 +108,7 @@
   .onglets { display: flex; gap: 6px; margin-bottom: 14px; overflow-x: auto; }
   .onglets button { flex: 1 1 0; min-width: 0; border-radius: 6px; font-size: 15px; padding: 8px 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .onglets button.actif { background: var(--jaune); border-color: var(--jaune); color: var(--marque); font-weight: 900; }
-  /* « Ensemble » : mêmes codes que le reste (afficheur jaune sur bleu nuit, ticket, jauges porte → terminus). */
+  /* « Ensemble » : mêmes codes que le reste (afficheur jaune sur bleu nuit, ticket, jauges du terminus, à gauche, jusqu'à chez vous, à droite). */
   .tableau-arrivee { padding: 12px 14px 14px; border-radius: var(--rayon); background: var(--marque); color: var(--jaune); box-shadow: inset 0 0 0 3px #13294a, 0 6px 0 #13294a; margin-bottom: 8px; }
   .tableau-arrivee p { margin: 0; }
   .tete-afficheur { display: flex; align-items: center; gap: 8px; font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-weight: 700; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.85; }
@@ -125,11 +125,11 @@
   .jauge-personne { display: grid; grid-template-columns: 6em minmax(0, 1fr) 6.5em; align-items: center; gap: 10px; margin: 6px 0; font-size: 14.5px; }
   .nom-personne { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .arrets { font-weight: 800; text-align: right; white-space: nowrap; }
-  .jauge { position: relative; height: 8px; border-radius: 999px; background: linear-gradient(90deg, var(--jaune), var(--trait) 50%, var(--trait)); }
+  .jauge { position: relative; height: 8px; border-radius: 999px; background: linear-gradient(90deg, var(--trait), var(--trait) 50%, var(--jaune)); }
   .jauge::after { content: ""; position: absolute; left: 50%; top: -3px; width: 2px; height: 14px; background: var(--discret); }
   .repere { position: absolute; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: var(--marque); border: 3px solid var(--fond); box-shadow: 0 0 0 2px var(--marque); z-index: 1; }
-  .echelle { display: grid; grid-template-columns: 6em minmax(0, 1fr) 6.5em; gap: 10px; margin: 0 0 4px; padding: 0 12px; }
-  .graduations { grid-column: 2; position: relative; height: 1.3em; }
+  .echelle { display: grid; grid-template-columns: 6em minmax(0, 1fr) 6.5em; gap: 10px; margin: 0 0 4px; padding: 0 14px; font-size: 14.5px; }
+  .graduations { grid-column: 2; position: relative; height: 1.3em; font-size: 13px; }
   .graduations span { position: absolute; top: 0; white-space: nowrap; }
   .graduations span:nth-child(1) { left: 0; }
   .graduations span:nth-child(2) { left: 50%; transform: translateX(-50%); }
@@ -139,6 +139,11 @@
   .duo-bus li.premier { border-color: var(--jaune); }
   .qui-bus { display: flex; align-items: center; gap: 10px; margin: 0 0 4px; font-size: 16.5px; }
   .rang { display: grid; place-items: center; width: 1.7em; height: 1.7em; border-radius: 6px; background: var(--marque); color: var(--jaune); font-weight: 900; }
-  @media (max-width: 420px) { .jauge-personne, .echelle { grid-template-columns: 4.5em minmax(0, 1fr) 5.6em; } }
+  @media (max-width: 420px) {
+    .jauge-personne, .echelle { grid-template-columns: 4.5em minmax(0, 1fr) 5.6em; }
+    /* Jauge étroite : seulement les deux extrémités ; la gare reste marquée par le trait au milieu. */
+    .graduations { font-size: 12px; }
+    .graduations span:nth-child(2) { display: none; }
+  }
   .fin { margin-top: 20px; }
 </style>
