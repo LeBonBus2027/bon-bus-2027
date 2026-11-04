@@ -11,6 +11,8 @@ export default defineConfig({
   retries: ci ? 1 : 0,
   // En CI, un processus par cœur (par défaut, la moitié : un seul sur la machine de GitHub).
   workers: ci ? "100%" : undefined,
+  // La machine de CI est plus lente (WebKit surtout) : délai doublé pour les longs parcours.
+  timeout: ci ? 60_000 : 30_000,
   reporter: ci ? "github" : "list",
   use: { baseURL: `http://127.0.0.1:${PORT}`, trace: "retain-on-failure" },
   // On teste le site construit, servi avec les vrais en-têtes de sécurité (public/_headers).
