@@ -3,10 +3,12 @@
 {
   "name": "bon-bus-2027",
   "compatibility_date": "2026-10-19",
-  "assets": { "directory": "./dist" },
+  // Adresse inconnue : vraie erreur 404 avec une page lisible (dist/404.html), plutôt qu'une page blanche.
+  "assets": { "directory": "./dist", "not_found_handling": "404-page" },
   // Aucune collecte : pas de journaux ni de traces des visites côté Cloudflare.
   "observability": { "enabled": false },
-  "workers_dev": true,
+  // Le site n'est servi que sur lebonbus2027.fr : pas de copie sur …workers.dev.
+  "workers_dev": false,
   // Pas d'adresse de prévisualisation publique (essai-…workers.dev) : seul le site de production est servi.
   "preview_urls": false
 }

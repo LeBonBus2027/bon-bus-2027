@@ -5,8 +5,13 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>LeBonBus2027 · Quel bus te ramène chez toi ?</title>
   <meta name="description" content="Range les candidats à la présidentielle 2027 selon ton ressenti, réponds aux questions, et regarde quel bus s'arrête vraiment le plus près de chez toi. Rien n'est enregistré.">
-  <!-- Aperçu des liens partagés. VITE_SITE_URL (fichier .env) = adresse du site, sans barre finale, à renseigner avant la mise en ligne. -->
+  <link rel="canonical" href="%VITE_SITE_URL%/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta name="theme-color" content="#0b1f3a">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="%VITE_SITE_URL%/">
+  <meta property="og:site_name" content="LeBonBus2027">
   <meta property="og:locale" content="fr_FR">
   <meta property="og:title" content="Quel bus te ramène chez toi ?">
   <meta property="og:description" content="Aucun bus ne te dépose pile devant ta porte. Lequel te rapproche le plus ? Un outil citoyen, neutre, sans aucune collecte de données.">
@@ -18,6 +23,7 @@
 </head>
 <body>
   <div id="app"></div>
+  <noscript><p>LeBonBus2027 a besoin de JavaScript pour calculer ton résultat dans ton navigateur (rien n'est envoyé). Active-le, puis recharge la page.</p></noscript>
   <script type="module" src="/src/main.ts"></script>
 </body>
 </html>
