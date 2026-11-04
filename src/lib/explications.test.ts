@@ -36,8 +36,10 @@ describe("textes « Pour aller plus loin »", () => {
       const t = tout(e).replace(/(la|La) Convention (européenne|citoyenne|protège|permet)/g, "");
       expect(t, `${id} : « La Convention »`).not.toMatch(/\bLa Convention\b/);
     }
+    // Homonymes sans lien avec un candidat, cités avec leur prénom (q4 : l'économiste Michaël Zemmour).
+    const HOMONYMES = /Michaël Zemmour/g;
     for (const [id, e] of Object.entries(TEXTES)) {
-      const t = tout(e);
+      const t = tout(e).replace(HOMONYMES, "");
       for (const n of noms) expect(t, `${id} : « ${n} »`).not.toMatch(new RegExp(`\\b${n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`));
     }
   });
