@@ -17,6 +17,10 @@ export function surveiller(page: Page) {
 
 /** Audit d'accessibilité WCAG 2.2 niveau AA sur l'écran courant. */
 export async function auditAccessibilite(page: Page, ecran: string) {
+  // Attendre la fin des animations courtes (fondus d'apparition) : en plein fondu, un texte semi-transparent fausse le calcul du contraste.
+  await page.evaluate(() => Promise.all(document.getAnimations()
+    .filter(a => Number.isFinite(a.effect?.getComputedTiming().endTime ?? Infinity))
+    .map(a => a.finished.catch(() => undefined))));
   const res = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"]).analyze();
   expect(res.violations.map(v => `${ecran} : ${v.id} (${v.nodes.length}) ${v.help}`)).toEqual([]);
 }

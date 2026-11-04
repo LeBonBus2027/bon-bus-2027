@@ -461,7 +461,7 @@ test("« De quoi parle-t-on ? » : bouton bien visible, quatre volets au clavier
   await page.getByRole("button", { name: "Passer", exact: true }).click();
   await expect(bouton).toHaveAttribute("aria-expanded", "true");
   await expect(encart.getByRole("tab").first()).toHaveAttribute("aria-selected", "true");
-  await auditAccessibilite(page, "explication repliée");
+  await auditAccessibilite(page, "question suivante, explication toujours dépliée");
 });
 
 test("le récap ne répète pas le diaporama, mais permet de le revoir", async ({ page }) => {
