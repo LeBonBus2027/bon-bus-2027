@@ -1,0 +1,25 @@
+# Mises à jour proposées en pull request, à relire avant fusion : rien n'est fusionné automatiquement.
+# Délai de 14 jours après chaque publication, pour ne jamais prendre une version toute fraîche (chaîne d'approvisionnement).
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    cooldown:
+      default-days: 14
+    groups:
+      actions:
+        patterns: ["*"]
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+    cooldown:
+      default-days: 14
+    open-pull-requests-limit: 3
+    groups:
+      outils:
+        patterns: ["*"]
+        update-types: [minor, patch]

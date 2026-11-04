@@ -1,7 +1,8 @@
 # Import hebdomadaire des positions publiées par MonVote2027 (cahier des charges, section 3).
 # Rien n'est publié automatiquement : si les données ont changé, une pull request est ouverte avec la liste
 # des positions modifiées, à relire et valider avant fusion.
-# Avant d'activer : épingler chaque action sur un SHA de commit (protection de la chaîne d'approvisionnement).
+# Actions épinglées sur le SHA d'une version publiée depuis au moins deux semaines (chaîne d'approvisionnement).
+# Prérequis : Settings > Actions > General > « Allow GitHub Actions to create and approve pull requests ».
 name: Import MonVote2027
 
 on:
@@ -22,8 +23,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
           cache: npm
@@ -50,13 +51,18 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          branche="import-monvote-$(date +%Y-%m-%d)"
+          # Une seule pull request d'import à la fois : si la précédente n'est pas encore relue, on la met à jour.
+          branche="import-monvote"
           git config user.name "import-monvote[bot]"
           git config user.email "import-monvote@users.noreply.github.com"
           git switch -c "$branche"
           git add data/
           git commit -m "Import MonVote2027 du $(date +%d/%m/%Y)"
-          git push -u origin "$branche"
+          git push --force -u origin "$branche"
+          if [ -n "$(gh pr list --head "$branche" --state open --json number --jq '.[].number')" ]; then
+            gh pr comment "$branche" --body "Mise à jour avec l'import du $(date +%d/%m/%Y) : la liste des positions modifiées est dans le journal de cette exécution."
+            exit 0
+          fi
           {
             echo "Import automatique des positions publiées par MonVote2027."
             echo
