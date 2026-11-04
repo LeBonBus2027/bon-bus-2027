@@ -1,6 +1,7 @@
-# Contrôles à chaque modification : neutralité, types, tests unitaires, tests de bout en bout et accessibilité.
-# Chaque action est épinglée sur le SHA d'une version publiée depuis au moins deux semaines (chaîne d'approvisionnement) ;
-# Dependabot propose les mises à jour (.github/dependabot.yml).
+# Contrôles à chaque modification (neutralité, types, tests unitaires, tests de bout en bout et accessibilité),
+# puis mise en ligne automatique sur Cloudflare quand tout passe sur main.
+# - À chaque envoi sur main : Chrome et mobile (rapide). Sur les pull requests, chaque lundi et à la main : les 4 navigateurs.
+# - Chaque action est épinglée sur le SHA d'une version publiée depuis au moins deux semaines ; Dependabot propose les mises à jour.
 name: CI
 
 on:
@@ -9,20 +10,25 @@ on:
     paths-ignore: ["**.md", "rapports/**", "maquette/**"]
   pull_request:
     paths-ignore: ["**.md", "rapports/**", "maquette/**"]
+  schedule:
+    - cron: "0 5 * * 1"   # chaque lundi à 5 h UTC : vérification complète sur les 4 navigateurs
   workflow_dispatch:
 
 permissions:
   contents: read
 
-# Une nouvelle modification sur la même branche annule la vérification devenue inutile.
+# Une nouvelle modification sur la même branche annule la vérification devenue inutile ; la plus récente est mise en ligne.
 concurrency:
-  group: ci-${{ github.ref }}
+  group: ci-${{ github.ref }}-${{ github.event_name }}
   cancel-in-progress: true
 
 jobs:
   verifier:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
+    env:
+      # Firefox et Safari en plus, sauf pour un simple envoi sur main (déjà vérifié en local avant la mise en ligne).
+      NAVIGATEURS: ${{ github.event_name == 'push' && 'chromium' || 'tous' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -41,24 +47,26 @@ jobs:
       - name: Tests unitaires
         run: npm test
 
-      # Navigateurs de test gardés en cache tant que la version de Playwright ne change pas (gain d'environ 1 minute).
-      - name: Version de Playwright
+      # Navigateurs de test gardés en cache tant que la version de Playwright ne change pas.
+      - name: Navigateurs à installer
         id: playwright
-        run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+        run: |
+          echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+          if [ "$NAVIGATEURS" = "tous" ]; then echo "liste=chromium firefox webkit" >> "$GITHUB_OUTPUT"; else echo "liste=chromium" >> "$GITHUB_OUTPUT"; fi
       - name: Cache des navigateurs de test
         id: cache-navigateurs
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
+          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}-${{ env.NAVIGATEURS }}
       - name: Navigateurs de test
         if: steps.cache-navigateurs.outputs.cache-hit != 'true'
-        run: npx playwright install --with-deps chromium firefox webkit
+        run: npx playwright install --with-deps ${{ steps.playwright.outputs.liste }}
       - name: Dépendances système des navigateurs
         if: steps.cache-navigateurs.outputs.cache-hit == 'true'
-        run: npx playwright install-deps chromium firefox webkit
+        run: npx playwright install-deps ${{ steps.playwright.outputs.liste }}
 
-      - name: Tests de bout en bout et accessibilité (Chrome, Firefox, Safari, mobile)
+      - name: Tests de bout en bout et accessibilité
         run: npm run test:e2e
         env:
           CI: "1"
@@ -68,3 +76,39 @@ jobs:
           name: rapport-playwright
           path: test-results/
           retention-days: 7
+
+  # Mise en ligne : seulement sur main, après un envoi (une fusion de l'import du lundi, par exemple), si tout est vert.
+  # Secrets requis : CLOUDFLARE_API_TOKEN (jeton limité à « Workers Scripts : modifier ») et CLOUDFLARE_ACCOUNT_ID.
+  mettre-en-ligne:
+    needs: verifier
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    concurrency:
+      group: mise-en-ligne
+      cancel-in-progress: false
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      WRANGLER_SEND_METRICS: "false"
+    steps:
+      - name: Jeton Cloudflare présent ?
+        id: jeton
+        run: |
+          if [ -n "$CLOUDFLARE_API_TOKEN" ] && [ -n "$CLOUDFLARE_ACCOUNT_ID" ]; then echo "ok=oui" >> "$GITHUB_OUTPUT";
+          else echo "::notice::Pas de jeton Cloudflare : mise en ligne automatique ignorée (à faire à la main)."; echo "ok=non" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: steps.jeton.outputs.ok == 'oui'
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        if: steps.jeton.outputs.ok == 'oui'
+        with:
+          node-version: 24
+          cache: npm
+      - name: Construire et mettre en ligne
+        if: steps.jeton.outputs.ok == 'oui'
+        run: |
+          npm ci --ignore-scripts
+          npx vite build
+          npx --yes wrangler@4.145.0 deploy

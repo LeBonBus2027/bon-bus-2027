@@ -1,8 +1,10 @@
 import { defineConfig, devices } from "@playwright/test";
 
 const PORT = 5199;
-// En local : Chromium (ordinateur + mobile). En CI, on ajoute Firefox et WebKit (Safari).
+// Par défaut : Chromium (ordinateur + mobile). NAVIGATEURS=tous ajoute Firefox et WebKit (Safari) :
+// la CI le fait sur les pull requests et une fois par semaine.
 const ci = !!process.env.CI;
+const tous = process.env.NAVIGATEURS === "tous";
 
 export default defineConfig({
   testDir: "e2e",
@@ -20,7 +22,7 @@ export default defineConfig({
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
     { name: "mobile", use: { ...devices["Pixel 7"] } },
-    ...(ci ? [
+    ...(tous ? [
       { name: "firefox", use: { ...devices["Desktop Firefox"] } },
       { name: "webkit", use: { ...devices["iPhone 14"] } },
     ] : []),

@@ -82,10 +82,16 @@ Avant toute mise en ligne, la vérification complète doit passer : contrôle de
 npm run verifier
 ```
 
-Mettre à jour les positions depuis MonVote2027 (chaque position modifiée est listée, à relire avant publication) :
+Chaque lundi, GitHub importe tout seul les positions MonVote2027 et la moyenne des sondages Pouls. S'il y a du nouveau, il ouvre une demande de mise à jour qui liste chaque changement. Une fois relue et fusionnée, la CI vérifie tout et met le site en ligne.
+
+Les mêmes imports à la main :
 
 ```bash
 npm run import:monvote
+```
+
+```bash
+npm run import:pouls
 ```
 
 Régénérer les explications à partir des textes rédigés (un fichier `qNN.md` par question) :

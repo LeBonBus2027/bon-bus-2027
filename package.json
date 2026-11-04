@@ -14,7 +14,8 @@
     "import:monvote": "node scripts/import-monvote.mjs",
     "cloudflare": "bash scripts/cloudflare.sh",
     "audit:monvote": "node scripts/audit-monvote.mjs",
-    "simulations": "vitest run src/lib/simulations.test.ts --mode rapport -u"
+    "simulations": "vitest run src/lib/simulations.test.ts --mode rapport -u",
+    "import:pouls": "node scripts/import-pouls.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.14.0",
