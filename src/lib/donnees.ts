@@ -6,7 +6,7 @@ import { positions as positionsBrutes, questions as questionsBrutes } from "../.
 import type { Position } from "./calcul";
 
 // Ce qui est léger (candidats, sélection) vit dans candidats.ts ; on le réexporte pour garder un seul point d'entrée.
-export { candidats, meta, moyenne, retenusParDefaut, selection, type Candidat } from "./candidats";
+export { candidats, dateLongue, meta, moyenne, redaction, retenusParDefaut, selection, type Candidat } from "./candidats";
 
 export interface Question {
   id: string;

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { selection } from "../lib/candidats";
+  import { dateLongue, redaction, selection } from "../lib/candidats";
 </script>
 
 <h1 tabindex="-1">Mentions légales</h1>
@@ -14,6 +14,6 @@
 <p>Ce site n'est financé par aucun parti, aucun candidat et aucune entreprise. Il ne contient aucune publicité. Il n'est affilié à aucune administration.</p>
 
 <h2>Données et propriété intellectuelle</h2>
-<p>Questions et positionnements des candidats : <a href="https://monvote2027.fr" target="_blank" rel="noopener noreferrer">MonVote2027</a>, d'après les données publiées sur <a href="https://monvote2027.fr/donnees" target="_blank" rel="noopener noreferrer">monvote2027.fr/donnees</a>. Les explications « De quoi parle-t-on ? » sont rédigées par LeBonBus2027 d'après les sources citées sous chacune. Les illustrations et le code du site sont originaux.</p>
+<p>Questions et positionnements des candidats : <a href="https://monvote2027.fr" target="_blank" rel="noopener noreferrer">MonVote2027</a>, d'après les données publiées sur <a href="https://monvote2027.fr/donnees" target="_blank" rel="noopener noreferrer">monvote2027.fr/donnees</a>. Les explications « De quoi parle-t-on ? » sont rédigées par {redaction.auteur} d'après les sources citées sous chacune, qui restent la propriété de leurs auteurs (textes et sources vérifiés le {dateLongue(redaction.date)}). Les illustrations et le code du site sont originaux.</p>
 <p>Candidats proposés d'office ({selection.seuil} % ou plus) : <a href={selection.url} target="_blank" rel="noopener noreferrer">{selection.source}</a>, au {new Date(selection.date).toLocaleDateString("fr-FR")}.</p>
 <p>Les portraits des candidats viennent de Wikimedia Commons, sous licences libres (CC0, CC BY, CC BY-SA ou domaine public). Ils sont reproduits sans modification autre qu'un recadrage, avec le crédit de leurs auteurs sur la page <a href="#a-propos">À propos</a>. Le site n'utilise aucun logo de parti.</p>

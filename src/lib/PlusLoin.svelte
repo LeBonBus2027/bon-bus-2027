@@ -11,6 +11,7 @@
 </script>
 
 <script lang="ts">
+  import { dateLongue, redaction } from "./candidats";
   /**
    * « De quoi parle-t-on ? » sous chaque question : un grand bouton qui déplie l'explication (le même texte quelle que
    * soit la réponse). Quatre volets en onglets (le contexte, les preuves, à savoir aussi, ce qui reste un choix), le premier ouvert
@@ -126,6 +127,7 @@
         <li><a href={s.url} target="_blank" rel="noopener noreferrer nofollow">{s.titre}</a> <span class="domaine">{domaine(s.url)}</span></li>
       {/each}
     </ol>
+    <p class="verifie">Texte rédigé par {redaction.auteur}, vérifié le {dateLongue(redaction.date)}.</p>
   </details>
   </div>
   {/if}
@@ -188,6 +190,7 @@
   .sources ol { margin: 4px 0 8px; padding-left: 20px; display: grid; gap: 6px; }
   .sources li { font-size: 14px; line-height: 1.4; padding-left: 0; }
   .sources li::before { content: none; }
+  .verifie { margin: 0 0 6px; font-size: 13.5px; color: var(--discret); }
   .domaine { color: var(--discret); font-size: 12.5px; }
   @media (prefers-reduced-motion: reduce) { .contenu, .corps { animation: none; } .chevron, .pastille { transition: none; } }
 </style>

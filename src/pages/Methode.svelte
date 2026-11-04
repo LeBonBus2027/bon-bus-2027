@@ -1,6 +1,6 @@
 <script lang="ts">
   import { COUVERTURE_MIN, MIN_REPONSES, R0 } from "../lib/calcul";
-  import { candidats, meta, questions, retenusParDefaut, selection } from "../lib/donnees";
+  import { candidats, dateLongue, meta, questions, redaction, retenusParDefaut, selection } from "../lib/donnees";
 </script>
 
 <h1 tabindex="-1">Comment ça marche</h1>
@@ -8,9 +8,9 @@
 
 <h2>D'où viennent les données</h2>
 <p>Les {questions.length} questions et les positions des {candidats.length} candidats viennent de <a href="https://monvote2027.fr/donnees" target="_blank" rel="noopener noreferrer">MonVote2027</a>, un outil citoyen indépendant qui source chaque position (programmes, déclarations, votes). Nous n'en modifions aucune. Une erreur sur une position ? Signale-la directement à MonVote2027 : la correction arrivera ici à l'import suivant.</p>
-<p>Les explications « De quoi parle-t-on ? » sous chaque question sont rédigées par LeBonBus2027, d'après les sources citées sous chacune. Voir plus bas comment elles sont écrites.</p>
+<p>Les explications « De quoi parle-t-on ? » sous chaque question sont rédigées par LeBonBus2027, d'après les sources citées sous chacune. Textes et sources vérifiés le {dateLongue(redaction.date)}. Voir plus bas comment elles sont écrites.</p>
 <p>Les portraits des candidats viennent de Wikimedia Commons, sous licence libre, choisis selon les mêmes critères pour tous. Leurs auteurs sont crédités sur la page <a href="#a-propos">À propos</a>.</p>
-<p class="petit discret">Version des données : import du {new Date(meta.date_import).toLocaleDateString("fr-FR")}, empreinte <code>{meta.empreinte.slice(0, 16)}…</code></p>
+<p class="petit discret">Version des données : explications vérifiées le {new Date(redaction.date).toLocaleDateString("fr-FR")}, positions importées de MonVote2027 le {new Date(meta.date_import).toLocaleDateString("fr-FR")}, empreinte <code>{meta.empreinte.slice(0, 16)}…</code></p>
 
 <h2>Les explications « De quoi parle-t-on ? »</h2>
 <p>Sous chaque question, un bouton « De quoi parle-t-on ? » déplie une explication en quatre volets : le contexte, ce que disent les preuves, ce qu'il faut savoir aussi, et ce qui reste un choix de valeurs. C'est le même texte pour tout le monde, quelle que soit ta réponse, et il ne cite aucun candidat ni aucun parti.</p>
