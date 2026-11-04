@@ -39,6 +39,14 @@
 <p class="message">{revelation.message}</p>
 
 <p class="morale"><span>Aucun bus ne te dépose pile devant chez toi. Prends celui qui te rapproche le plus.</span></p>
+
+<!-- Le partage, juste sous le verdict : c'est le moment où l'on a envie de le montrer. -->
+<section class="partage-vedette" aria-labelledby="titre-partage">
+  <h2 id="titre-partage">Partage ton ticket</h2>
+  <p class="accroche">Tes potes devinent-ils quel bus te ramène chez toi ? Envoie-leur ton ticket.</p>
+  <Partage {revelation} {bacs} titre={false} vedette />
+</section>
+
 <p><button class="revoir" onclick={onRevoir}>Revoir le diaporama</button></p>
 
 <div class="boite conduis">
@@ -46,11 +54,6 @@
   <p>Ton vote, c'est une voix de plus dans le bus qui te rapproche le plus. Avant tout, vérifie ton inscription sur les listes électorales : ça prend deux minutes.</p>
   <p><a class="bouton" href="https://www.service-public.fr/particuliers/vosdroits/R51788" target="_blank" rel="noopener noreferrer">Vérifier mon inscription</a></p>
 </div>
-
-<details class="boite partage-replie">
-  <summary>Partager mon ticket</summary>
-  <Partage {revelation} {bacs} titre={false} />
-</details>
 
 <h2>Tes bus</h2>
 <p class="discret petit">Où chaque bus s'arrête, de ta porte (à gauche) jusqu'au terminus (à droite), en passant par la gare d'où ils sont tous partis.</p>
@@ -150,8 +153,12 @@
   .pourquoi { justify-self: end; min-height: 40px; padding: 6px 14px; font-size: 15px; border-color: var(--trait); }
   .recommencer { margin-top: 24px; }
   .revoir { min-height: 44px; padding: 8px 16px; }
-  .partage-replie { margin: 0 0 20px; }
-  .partage-replie > summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; font-weight: 800; font-size: 18px; }
-  .partage-replie[open] > summary { margin-bottom: 12px; }
+  /* Partage mis en avant : carte bleu nuit bordée de jaune, comme l'afficheur des bus. */
+  .partage-vedette {
+    margin: 18px 0 16px; padding: 18px 16px 16px; border-radius: calc(var(--rayon) * 1.5);
+    background: var(--marque); color: #fff; border: 3px solid var(--jaune); box-shadow: 0 10px 28px rgb(11 31 58 / 0.25);
+  }
+  .partage-vedette h2 { margin: 0 0 4px; color: var(--jaune); font-size: clamp(22px, 5.5vw, 28px); }
+  .accroche { margin: 0 0 14px; font-size: 17px; line-height: 1.4; color: #e9eef5; }
   .bouton { display: inline-flex; align-items: center; min-height: 48px; padding: 10px 18px; border-radius: 999px; background: var(--marque); color: var(--jaune); border: 2px solid var(--jaune); text-decoration: none; font-weight: 900; text-transform: uppercase; letter-spacing: 0.04em; }
 </style>

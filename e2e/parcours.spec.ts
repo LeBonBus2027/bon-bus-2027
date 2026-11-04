@@ -239,8 +239,10 @@ test("le ticket de bus à partager s'affiche en aperçu, avec ou sans noms", asy
   await repondreTout(page, 20);
   await page.getByRole("button", { name: "Faire partir les bus" }).click();
   await allerAuRecap(page);
-  // Dans le récap, le partage est replié : un clic l'ouvre.
-  await page.getByText("Partager mon ticket", { exact: true }).click();
+  // Dans le récap, le partage est affiché d'emblée, juste sous le verdict, avec un gros bouton et les réseaux visibles.
+  await expect(page.getByRole("heading", { name: "Partage ton ticket" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Partager mon ticket" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "WhatsApp" })).toBeVisible();
   const apercu = page.getByRole("img", { name: /Aperçu de ton ticket/ });
   await expect(apercu).toBeVisible();
   const taille = await apercu.evaluate((img: HTMLImageElement) => [img.naturalWidth, img.naturalHeight]);

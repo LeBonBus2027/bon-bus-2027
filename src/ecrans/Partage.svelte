@@ -5,10 +5,12 @@
   import { lignesPartage, lignesTicket } from "../lib/partage";
   import { dessinerTicket } from "../lib/ticket";
 
-  let { revelation, bacs, titre = true }: {
+  let { revelation, bacs, titre = true, vedette = false }: {
     revelation: Revelation; bacs: Record<string, Niveau>;
     /** false quand le titre est déjà donné autour (diaporama). */
     titre?: boolean;
+    /** Récap : sur fond bleu nuit, gros bouton jaune et réseaux visibles d'emblée (on veut que ça circule). */
+    vedette?: boolean;
   } = $props();
 
   let avecNoms = $state(false);
@@ -121,14 +123,7 @@
   }
 </script>
 
-<div class="boite partage" class:nu={!titre}>
-  {#if titre}<h2>Partage ton trajet</h2>{/if}
-  {#if apercu}<img class="apercu" src={apercu} alt="Aperçu de ton ticket de bus à partager : ton coup de cœur et celui qui te ramène, tels que tu les imaginais et tels qu'ils sont vraiment pour toi." />{/if}
-  <p><button class="principal" onclick={partager} disabled={enCours}>{enCours ? "Préparation…" : "Partager"}</button></p>
-  <label><input type="checkbox" bind:checked={avecNoms} /> Afficher les noms des candidats</label>
-  <p class="discret petit">Sans les noms, ton partage ne dévoile pas tes préférences : il donne juste envie d'essayer. Le lien mène à l'accueil, jamais à ton résultat.</p>
-  <details>
-    <summary>Choisir un réseau, copier le lien ou télécharger l'image</summary>
+{#snippet listeReseaux()}
   <ul class="reseaux" aria-label="Partager sur un réseau">
     {#each reseaux as r (r.nom)}
       <li><a class="reseau" href={r.url} target="_blank" rel="noopener noreferrer" onclick={() => copierAvant(r)}>{r.nom}</a></li>
@@ -136,7 +131,24 @@
     <li><button class="reseau" onclick={copier}>Copier le lien</button></li>
     <li><button class="reseau" onclick={telecharger}>Télécharger l'image</button></li>
   </ul>
-  </details>
+{/snippet}
+
+<div class="boite partage" class:nu={!titre} class:vedette>
+  {#if titre}<h2>Partage ton trajet</h2>{/if}
+  {#if apercu}<img class="apercu" src={apercu} alt="Aperçu de ton ticket de bus à partager : ton coup de cœur et celui qui te ramène, tels que tu les imaginais et tels qu'ils sont vraiment pour toi." />{/if}
+  <p><button class="principal" class:geant={vedette} onclick={partager} disabled={enCours}>
+    {#if vedette}<svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>{/if}
+    {enCours ? "Préparation…" : vedette ? "Partager mon ticket" : "Partager"}
+  </button></p>
+  {#if vedette}{@render listeReseaux()}{/if}
+  <label><input type="checkbox" bind:checked={avecNoms} /> Afficher les noms des candidats</label>
+  <p class="discret petit">Sans les noms, ton partage ne dévoile pas tes préférences : il donne juste envie d'essayer. Le lien mène à l'accueil, jamais à ton résultat.</p>
+  {#if !vedette}
+    <details>
+      <summary>Choisir un réseau, copier le lien ou télécharger l'image</summary>
+      {@render listeReseaux()}
+    </details>
+  {/if}
   {#if message}<p role="status">{message}</p>{/if}
   <div class="cache" aria-hidden="true">
     {#each NIVEAUX as n (n.cle)}
@@ -161,5 +173,22 @@
   .partage p:last-of-type { margin-bottom: 0; }
   summary { min-height: 48px; padding: 12px 0; font-weight: 700; color: var(--lien); }
   .cache { position: absolute; width: 1px; height: 1px; overflow: hidden; left: -9999px; }
+  /* Récap : posé sur la carte bleu nuit de la page. */
+  .vedette { margin: 0; padding: 0; background: none; color: #fff; }
+  .vedette .apercu { max-width: 280px; box-shadow: 0 8px 24px rgb(0 0 0 / 0.35); }
+  .geant {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px; width: 100%; min-height: 60px;
+    font-size: 19px; border-radius: 999px; box-shadow: 0 4px 0 #c9a200; animation: appel 2.4s ease-in-out 1s 3;
+  }
+  .geant:active { transform: translateY(2px); box-shadow: 0 2px 0 #c9a200; }
+  .icone { width: 24px; height: 24px; flex: none; }
+  @keyframes appel { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.035); } }
+  .vedette .reseaux { justify-content: center; margin: 0 0 10px; }
+  .vedette .reseau { background: #fff; color: var(--marque); border-color: #fff; }
+  .vedette .reseau:hover { border-color: var(--jaune); }
+  .vedette label { color: #fff; }
+  .vedette .discret { color: #c9d4e3; }
+  .vedette [role="status"] { color: var(--jaune); font-weight: 700; }
+  @media (prefers-reduced-motion: reduce) { .geant { animation: none; } }
   .apercu { display: block; width: 100%; max-width: 220px; height: auto; margin: 0 auto 14px; border-radius: var(--rayon); box-shadow: 0 6px 20px rgb(11 31 58 / 0.18); }
 </style>
