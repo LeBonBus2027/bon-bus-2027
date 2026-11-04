@@ -9,6 +9,8 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: ci,
   retries: ci ? 1 : 0,
+  // En CI, un processus par cœur (par défaut, la moitié : un seul sur la machine de GitHub).
+  workers: ci ? "100%" : undefined,
   reporter: ci ? "github" : "list",
   use: { baseURL: `http://127.0.0.1:${PORT}`, trace: "retain-on-failure" },
   // On teste le site construit, servi avec les vrais en-têtes de sécurité (public/_headers).

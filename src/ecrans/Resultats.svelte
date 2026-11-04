@@ -56,8 +56,8 @@
 </div>
 
 <h2>Tes bus</h2>
-<p class="discret petit">Où chaque bus s'arrête, de ta porte (à gauche) jusqu'au terminus (à droite), en passant par la gare d'où ils sont tous partis.</p>
-<p class="echelle" aria-hidden="true"><span class="graduations"><span>⌂ chez toi</span><span>gare</span><span>terminus</span></span></p>
+<p class="discret petit">Tous les bus partent de la gare, au milieu. Plus un bus va vers la droite, plus il te rapproche de chez toi ; vers la gauche, il t'en éloigne, jusqu'au terminus.</p>
+<p class="echelle" aria-hidden="true"><span class="graduations"><span>terminus</span><span>gare</span><span>chez toi ⌂</span></span></p>
 <ol class="tes-bus">
   {#each classement as c, i (c.candidat.id)}
     {@const avant = bacs[c.candidat.id] ?? "inconnu"}
@@ -70,7 +70,7 @@
         <span class="parti">{c.candidat.parti}</span>
       </span>
       <span class="distance">{arrets(c.trajet.arrets)}{#if c.trajet.incomplet}<span class="incomplet"> (position incomplète)</span>{/if}</span>
-      <span class="jauge" aria-hidden="true"><span class="repere" style:left="{Math.min(100, (c.trajet.distance / 20) * 100)}%"></span></span>
+      <span class="jauge" aria-hidden="true"><span class="repere" style:left="{100 - Math.min(100, (c.trajet.distance / 20) * 100)}%"></span></span>
       <span class="peintures">
         <svg viewBox="-34 -8 240 112" aria-hidden="true"><Bus niveau={avant} /></svg><span aria-hidden="true">→</span><svg viewBox="-34 -8 240 112" aria-hidden="true"><Bus niveau={apres} /></svg>
         <span class="bacs">{BAC[avant]} → <span class="bus-apres">{NIVEAUX.find(n => n.cle === apres)?.bus}</span></span>
@@ -122,16 +122,17 @@
   .parti { font-size: 14px; color: var(--discret); }
   .distance { font-weight: 900; font-size: 18px; white-space: nowrap; text-align: right; }
   .incomplet { display: block; font-size: 12.5px; font-weight: 600; color: var(--discret); white-space: normal; }
-  /* Jauge : de ta porte (0) au terminus (20), la gare au milieu (10). */
-  .jauge { grid-column: 3; position: relative; height: 8px; border-radius: 999px; background: linear-gradient(90deg, var(--jaune), var(--trait) 50%, var(--trait)); }
+  /* Jauge : du terminus (à gauche) à ta porte (à droite), la gare au milieu : plus le bus va à droite, mieux c'est. */
+  .jauge { grid-column: 3; position: relative; height: 8px; border-radius: 999px; background: linear-gradient(90deg, var(--trait), var(--trait) 50%, var(--jaune)); }
   .jauge::after { content: ""; position: absolute; left: 50%; top: -3px; width: 2px; height: 14px; background: var(--discret); }
   .repere { position: absolute; top: 50%; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; background: var(--marque); border: 3px solid var(--fond); box-shadow: 0 0 0 2px var(--marque); z-index: 1; }
   .peintures { grid-column: 3; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; font-size: 14px; color: var(--discret); }
   .peintures svg { width: 40px; height: auto; }
   .bacs { flex-basis: 100%; }
   /* Graduations au-dessus de la liste, sur la même grille que les lignes pour tomber pile sur les jauges. */
-  .echelle { display: grid; grid-template-columns: 1.7em 44px minmax(0, 1fr) 8.5em; column-gap: 10px; margin: 0 0 4px; padding: 0 14px; font-size: 13px; color: var(--discret); }
+  .echelle { display: grid; grid-template-columns: 1.7em 44px minmax(0, 1fr) 8.5em; column-gap: 10px; margin: 0 0 4px; padding: 0 14px; color: var(--discret); }
   .graduations { grid-column: 3; position: relative; height: 1.3em; }
+  .graduations { font-size: 13px; }
   .graduations span { position: absolute; top: 0; white-space: nowrap; }
   .graduations span:nth-child(1) { left: 0; }
   .graduations span:nth-child(2) { left: 50%; transform: translateX(-50%); }
@@ -140,6 +141,9 @@
     .tes-bus li, .echelle { grid-template-columns: 1.7em 44px minmax(0, 1fr) 7.4em; column-gap: 8px; }
     .tes-bus li { padding: 8px 10px; }
     .echelle { padding: 0 12px; }
+    /* Jauge étroite : seulement les deux extrémités ; la gare reste marquée par le trait au milieu de chaque jauge. */
+    .graduations { font-size: 12px; }
+    .graduations span:nth-child(2) { display: none; }
     .nom { font-size: 16px; }
     .distance { font-size: 16px; }
     .pourquoi { padding: 4px 10px; font-size: 14px; }

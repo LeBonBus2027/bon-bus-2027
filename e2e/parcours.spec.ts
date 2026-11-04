@@ -188,23 +188,26 @@ test("chaque bus explique sa position, depuis le tableau ou la carte", async ({ 
   expect(problemes).toEqual([]);
 });
 
-test("le mode sombre reste lisible (contrastes WCAG AA)", async ({ page }) => {
-  await page.emulateMedia({ colorScheme: "dark", reducedMotion: "reduce" });
-  await page.goto("/");
-  expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe("rgb(14, 23, 38)");
-  await auditAccessibilite(page, "accueil sombre");
-  await page.getByRole("button", { name: "C'est parti" }).click();
-  await auditAccessibilite(page, "classement sombre");
-  await classerTout(page);
-  await auditAccessibilite(page, "gare sombre");
-  await page.getByRole("button", { name: /place aux questions/ }).click();
-  await page.getByRole("button", { name: /Version rapide/ }).click();
-  await auditAccessibilite(page, "question sombre");
-  await repondreTout(page, 20);
-  await page.getByRole("button", { name: "Faire partir les bus" }).click();
-  await allerAuRecap(page);
-  await expect(page.getByRole("heading", { name: "Terminus !" })).toBeVisible();
-  await auditAccessibilite(page, "résultats sombres");
+// Mode sombre réglé sur le navigateur de test lui-même (plus fiable que emulateMedia avant le chargement, notamment sous Firefox).
+test.describe("mode sombre", () => {
+  test.use({ colorScheme: "dark", reducedMotion: "reduce" });
+  test("le mode sombre reste lisible (contrastes WCAG AA)", async ({ page }) => {
+    await page.goto("/");
+    expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe("rgb(14, 23, 38)");
+    await auditAccessibilite(page, "accueil sombre");
+    await page.getByRole("button", { name: "C'est parti" }).click();
+    await auditAccessibilite(page, "classement sombre");
+    await classerTout(page);
+    await auditAccessibilite(page, "gare sombre");
+    await page.getByRole("button", { name: /place aux questions/ }).click();
+    await page.getByRole("button", { name: /Version rapide/ }).click();
+    await auditAccessibilite(page, "question sombre");
+    await repondreTout(page, 20);
+    await page.getByRole("button", { name: "Faire partir les bus" }).click();
+    await allerAuRecap(page);
+    await expect(page.getByRole("heading", { name: "Terminus !" })).toBeVisible();
+    await auditAccessibilite(page, "résultats sombres");
+  });
 });
 
 test("le bouton de l'accueil force le mode sombre ou clair", async ({ page }) => {
