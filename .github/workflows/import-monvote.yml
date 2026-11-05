@@ -51,12 +51,16 @@ jobs:
           if git diff --quiet -- data/; then echo "change=non" >> "$GITHUB_OUTPUT"; else echo "change=oui" >> "$GITHUB_OUTPUT"; fi
 
       # Les pull requests ouvertes avec le jeton du workflow ne relancent pas la CI : on vérifie donc ici.
+      # Un échec n'empêche pas la pull request : elle est ouverte quand même, avec un avertissement, pour ne rien rater
+      # (par exemple un nouveau candidat sans portrait, ou dont le nom apparaît dans une explication).
       - name: Contrôles (neutralité, types, tests unitaires)
+        id: controles
         if: steps.diff.outputs.change == 'oui'
+        continue-on-error: true
         run: |
-          node scripts/verifier-neutralite.mjs
-          npm run check
-          npm test
+          node scripts/verifier-neutralite.mjs 2>&1 | tee rapport-controles.txt
+          npm run check 2>&1 | tail -5 | tee -a rapport-controles.txt
+          npm test 2>&1 | tail -30 | tee -a rapport-controles.txt
 
       - name: Ouvrir une pull request à relire
         if: steps.diff.outputs.change == 'oui'
@@ -75,6 +79,11 @@ jobs:
           {
             echo "Import automatique des données sources."
             echo
+            if [ "${{ steps.controles.outcome }}" = "failure" ]; then
+              echo "> [!WARNING]"
+              echo "> **Les contrôles automatiques ont échoué : ne pas fusionner en l'état.** Le détail est plus bas et dans le journal de cette exécution."
+              echo
+            fi
             echo "**Positions MonVote2027**"
             echo '```'
             cat rapport-monvote.txt 2>/dev/null || echo "(échec de l'import, voir le journal)"
@@ -89,6 +98,14 @@ jobs:
             echo "- [ ] aucun candidat ajouté ou retiré par erreur"
             echo "- [ ] un candidat marqué ⚠ franchit le seuil des sondages : vérifier le chiffre sur pouls.app"
             echo
+            if [ "${{ steps.controles.outcome }}" = "failure" ]; then
+              echo
+              echo "**Contrôles en échec**"
+              echo '```'
+              tail -40 rapport-controles.txt 2>/dev/null
+              echo '```'
+            fi
+            echo
             echo "Une fois fusionnée, la CI vérifie tout et met le site en ligne."
           } > corps-pr.md
           if [ -n "$(gh pr list --head "$branche" --state open --json number --jq '.[].number')" ]; then
@@ -97,8 +114,8 @@ jobs:
             gh pr create --title "Import des données du $jour" --body-file corps-pr.md --base main --head "$branche"
           fi
 
-      - name: Prévenir si une source n'a pas pu être importée
-        if: steps.monvote.outcome == 'failure' || steps.pouls.outcome == 'failure'
+      - name: Prévenir si une source ou un contrôle a échoué
+        if: steps.monvote.outcome == 'failure' || steps.pouls.outcome == 'failure' || steps.controles.outcome == 'failure'
         run: |
-          echo "::error::Import en échec — MonVote2027 : ${{ steps.monvote.outcome }}, Pouls : ${{ steps.pouls.outcome }}. Voir le journal ci-dessus."
+          echo "::error::Import en échec — MonVote2027 : ${{ steps.monvote.outcome }}, Pouls : ${{ steps.pouls.outcome }}, contrôles : ${{ steps.controles.outcome }}. Voir le journal ci-dessus."
           exit 1

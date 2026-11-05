@@ -5,7 +5,8 @@
  *   npm run import:monvote                      télécharge la page
  *   npm run import:monvote -- --fichier x.html  lit une copie locale
  *
- * Le script refuse d'écrire si la structure attendue n'est pas trouvée (21 candidats × 100 questions,
+ * Le script refuse d'écrire si la structure attendue n'est pas trouvée (100 questions, entre 8 et 40 candidats, tous placés
+ * sur chaque question,
  * chaque candidat placé une seule fois par question) et affiche chaque position modifiée par rapport
  * à l'import précédent, pour relecture avant publication.
  */
@@ -32,7 +33,9 @@ if (process.argv.includes("--decouper")) {
   console.log("Découpage écrit : data/candidats.json et data/questions.json");
   process.exit(0);
 }
-const ATTENDU = { candidats: 21, questions: 100, rapides: 20 };
+// Le nombre de candidats peut changer (retraits, nouvelles candidatures, liste officielle du Conseil constitutionnel) :
+// on accepte une fourchette large, et le rapport signale en tête tout candidat ajouté ou retiré.
+const ATTENDU = { candidatsMin: 8, candidatsMax: 40, questions: 100, rapides: 20 };
 const NIVEAUX = {
   "Tout à fait pour": 2,
   "Plutôt pour": 1,
@@ -58,6 +61,7 @@ function analyser(html) {
   const candidats = new Map();
   const questions = [];
   const positions = {};
+  const tailles = [];
 
   for (const bloc of blocs) {
     const id = un(/data-qid="([^"]+)"/, bloc, "data-qid");
@@ -80,11 +84,14 @@ function analyser(html) {
         (positions[cid] ??= {})[id] = NIVEAUX[libelle];
       }
     }
-    if (vus.size !== ATTENDU.candidats) throw new Error(`${id} : ${vus.size} candidats placés au lieu de ${ATTENDU.candidats}`);
+    tailles.push([id, vus.size]);
   }
 
   if (questions.length !== ATTENDU.questions) throw new Error(`${questions.length} questions au lieu de ${ATTENDU.questions}`);
-  if (candidats.size !== ATTENDU.candidats) throw new Error(`${candidats.size} candidats au lieu de ${ATTENDU.candidats}`);
+  if (candidats.size < ATTENDU.candidatsMin || candidats.size > ATTENDU.candidatsMax)
+    throw new Error(`${candidats.size} candidats : hors de la fourchette attendue (${ATTENDU.candidatsMin} à ${ATTENDU.candidatsMax})`);
+  // Chaque candidat doit être placé sur chaque question : sinon la page est incomplète.
+  for (const [id, n] of tailles) if (n !== candidats.size) throw new Error(`${id} : ${n} candidats placés sur ${candidats.size}`);
   const rapides = questions.filter(q => q.quiz_rapide).length;
   if (rapides !== ATTENDU.rapides) throw new Error(`${rapides} questions du quiz rapide au lieu de ${ATTENDU.rapides}`);
 
@@ -103,8 +110,11 @@ function differences(avant, apres) {
     if (a !== undefined && a !== b) lignes.push(`  ${c.nom} · Q${q.numero} : ${a} → ${b}`);
   }
   const ids = l => new Set((l ?? []).map(x => x.id));
-  for (const id of ids(apres.candidats)) if (!ids(avant.candidats).has(id)) lignes.push(`  + candidat ${id}`);
-  for (const id of ids(avant.candidats)) if (!ids(apres.candidats).has(id)) lignes.push(`  − candidat ${id}`);
+  const nom = id => [...(apres.candidats ?? []), ...(avant.candidats ?? [])].find(c => c.id === id)?.nom ?? id;
+  for (const id of ids(apres.candidats)) if (!ids(avant.candidats).has(id))
+    lignes.unshift(`  ⚠ NOUVEAU CANDIDAT : ${nom(id)} (${id}). À faire : ajouter son portrait (node scripts/photos-commons.mjs), vérifier qu'aucune explication ne cite son nom.`);
+  for (const id of ids(avant.candidats)) if (!ids(apres.candidats).has(id))
+    lignes.unshift(`  ⚠ CANDIDAT RETIRÉ : ${nom(id)} (${id}) : retiré du site (classement, résultats, page À propos).`);
   for (const q of apres.questions) {
     const old = avant.questions?.find(x => x.id === q.id);
     if (old && old.texte !== q.texte) lignes.push(`  texte Q${q.numero} modifié`);

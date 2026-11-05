@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { allerAuRecap, auditAccessibilite, classerTout, repondreTout, surveiller } from "./outils";
+import { allerAuRecap, auditAccessibilite, classerTout, NB_AUTRES, NB_CANDIDATS, NB_RETENUS, repondreTout, surveiller } from "./outils";
 
 test.describe("parcours complet", () => {
   test("version rapide, de l'accueil au message final", async ({ page }) => {
@@ -11,7 +11,7 @@ test.describe("parcours complet", () => {
     await auditAccessibilite(page, "accueil");
     await page.getByRole("button", { name: "C'est parti" }).click();
 
-    await expect(page.getByText("Candidat 1 sur 7")).toBeVisible();
+    await expect(page.getByText(`Candidat 1 sur ${NB_RETENUS}`)).toBeVisible();
     await auditAccessibilite(page, "classement");
     await classerTout(page);
     await auditAccessibilite(page, "gare routière");
@@ -66,7 +66,7 @@ test.describe("parcours complet", () => {
     await page.getByRole("button", { name: "Recommencer" }).click();
     await expect(page.getByRole("heading", { name: "Quel bus te ramène chez toi ?" })).toBeVisible();
     await page.getByRole("button", { name: "C'est parti" }).click();
-    await expect(page.getByText("Candidat 1 sur 7")).toBeVisible();
+    await expect(page.getByText(`Candidat 1 sur ${NB_RETENUS}`)).toBeVisible();
   });
 });
 
@@ -99,10 +99,10 @@ test("le classement se fait entièrement au clavier", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "C'est parti" }).focus();
   await page.keyboard.press("Enter");
-  await expect(page.getByText("Candidat 1 sur 7")).toBeVisible();
+  await expect(page.getByText(`Candidat 1 sur ${NB_RETENUS}`)).toBeVisible();
   await page.keyboard.press("Tab");
   await page.keyboard.press("Enter");
-  await expect(page.getByText("Candidat 2 sur 7")).toBeVisible();
+  await expect(page.getByText(`Candidat 2 sur ${NB_RETENUS}`)).toBeVisible();
 });
 
 test("les pages annexes s'ouvrent et rendent la main au parcours", async ({ page }) => {
@@ -115,7 +115,7 @@ test("les pages annexes s'ouvrent et rendent la main au parcours", async ({ page
     await expect(page.getByRole("heading", { level: 1, name: titre })).toBeVisible();
     await auditAccessibilite(page, titre);
     await page.getByRole("link", { name: "← Revenir au site" }).click();
-    await expect(page.getByText("Candidat 2 sur 7")).toBeVisible();
+    await expect(page.getByText(`Candidat 2 sur ${NB_RETENUS}`)).toBeVisible();
   }
   expect(problemes).toEqual([]);
 });
@@ -135,7 +135,7 @@ test("on peut ajouter plusieurs candidats non retenus au départ, d'un coup", as
   await page.goto("/");
   await page.getByRole("button", { name: "C'est parti" }).click();
   await classerTout(page);
-  await page.getByText(/Ajouter des candidats \(14 autres\)/).click();
+  await page.getByText(`Ajouter des candidats (${NB_AUTRES} autres)`).click();
   const ajouter = page.locator(".ajouter .principal");
   await expect(ajouter).toBeDisabled();
   const cases = page.locator(".ajout input[type=checkbox]");
@@ -150,11 +150,11 @@ test("on peut ajouter plusieurs candidats non retenus au départ, d'un coup", as
   // Ils passent ensuite un par un dans les bacs, dans l'ordre de la liste.
   for (const [i, nom] of noms.entries()) {
     await expect(page.getByRole("heading", { name: nom })).toBeVisible();
-    await expect(page.getByText(`Candidat ${8 + i} sur 10`)).toBeVisible();
+    await expect(page.getByText(`Candidat ${NB_RETENUS + 1 + i} sur ${NB_RETENUS + 3}`)).toBeVisible();
     await page.getByRole("button", { name: "Bof" }).click();
   }
   await expect(page.getByRole("heading", { name: "Ta gare routière" })).toBeVisible();
-  await expect(page.getByText(/Ajouter des candidats \(11 autres\)/)).toBeVisible();
+  await expect(page.getByText(`Ajouter des candidats (${NB_AUTRES - 3} autres)`)).toBeVisible();
 });
 
 test("chaque bus explique sa position, depuis le tableau ou la carte", async ({ page }) => {
@@ -279,7 +279,7 @@ test("mode duo : deux trajets sur le même téléphone, puis « Ensemble »", as
   await auditAccessibilite(page, "relais");
   await page.getByRole("button", { name: "C'est moi, j'y vais" }).click();
   await expect(page.getByText("Au tour de Papa")).toBeVisible();
-  await expect(page.getByText("Candidat 1 sur 7")).toBeVisible();   // le classement de Léa n'est pas montré
+  await expect(page.getByText(`Candidat 1 sur ${NB_RETENUS}`)).toBeVisible();   // le classement de Léa n'est pas montré
   await classerTout(page);
   await page.getByRole("button", { name: /place aux questions/ }).click();
   // Même format que Léa : directement aux questions.
@@ -417,13 +417,13 @@ test("le logo LeBonBus2027 ramène à l'accueil, après confirmation si un parco
   // Refus : on reste où on était, rien n'est perdu.
   page.once("dialog", d => d.dismiss());
   await logo.click();
-  await expect(page.getByText("Candidat 2 sur 7")).toBeVisible();
+  await expect(page.getByText(`Candidat 2 sur ${NB_RETENUS}`)).toBeVisible();
   // Accord : retour à l'accueil, parcours effacé.
   page.once("dialog", d => d.accept());
   await logo.click();
   await expect(page.getByRole("heading", { name: "Quel bus te ramène chez toi ?" })).toBeVisible();
   await page.getByRole("button", { name: "C'est parti" }).click();
-  await expect(page.getByText("Candidat 1 sur 7")).toBeVisible();
+  await expect(page.getByText(`Candidat 1 sur ${NB_RETENUS}`)).toBeVisible();
   // Depuis une page annexe aussi.
   await page.goto("/#methode");
   await page.getByRole("link", { name: /^LeBonBus2027\s*, retour à l'accueil$/ }).click();
@@ -559,7 +559,7 @@ test("silence des sondages : la veille et le jour du vote, plus aucun sondage et
   await expect(page.locator("footer")).not.toContainText(/sondage|Pouls/i);
   await page.getByRole("button", { name: "C'est parti" }).click();
   await expect(page.getByText(/candidats recensés par MonVote2027/)).toBeVisible();
-  await expect(page.getByText(/Candidat 1 sur 21/)).toBeVisible();
+  await expect(page.getByText(`Candidat 1 sur ${NB_CANDIDATS}`)).toBeVisible();
   await expect(page.locator("main")).not.toContainText(/sondage/i);
   for (const ecran of ["#methode", "#a-propos", "#mentions-legales"]) {
     await page.goto("/" + ecran);

@@ -1,5 +1,18 @@
 import { expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { readFileSync } from "node:fs";
+
+/**
+ * Nombres tirés des données, pour que les tests suivent les changements de la liste des candidats (retraits, ajouts)
+ * et de la moyenne des sondages (candidats qui franchissent le seuil), au lieu de les figer.
+ */
+const lire = (f: string) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url), "utf8"));
+const { candidats: LISTE } = lire("candidats.json") as { candidats: { id: string }[] };
+const SONDAGES = lire("selection.json") as { seuil: number; moyennes: Record<string, number> };
+export const NB_CANDIDATS = LISTE.length;
+export const NB_RETENUS = LISTE.filter(c => (SONDAGES.moyennes[c.id] ?? 0) >= SONDAGES.seuil).length;
+export const NB_AUTRES = NB_CANDIDATS - NB_RETENUS;
+
 
 /** Surveille la page : erreurs JS, violations de la politique de sécurité, requêtes vers un autre site. */
 export function surveiller(page: Page) {

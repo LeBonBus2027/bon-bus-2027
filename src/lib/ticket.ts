@@ -166,10 +166,10 @@ export async function dessinerTicket(
   police(ctx, 800, 22, "3px"); ctx.fillText("PRÉSIDENTIELLE 2027", 0, 44);
   ctx.restore();
 
-  // Appel sous le ticket.
+  // Appel sous le ticket (la question est déjà en tête) : l'adresse et le hashtag, pour suivre ce qui s'en dit sur les réseaux.
   ctx.textAlign = "center";
   police(ctx, 900, 38);
-  const appel = `Et toi, quel bus te ramène chez toi ? · ${hote}`;
+  const appel = `Et toi ? · ${hote} · #LeBonBus2027`;
   const largeur = ctx.measureText(appel).width;
   ctx.fillStyle = JAUNE; ctx.fillRect((W - largeur) / 2 - 16, H - 76, largeur + 32, 22);
   ctx.fillStyle = NUIT; ctx.fillText(appel, W / 2, H - 58);

@@ -23,8 +23,13 @@ await page.evaluate(() => {
         <div style="font-size:74px;font-weight:900;line-height:1.05;margin-top:14px">Quel bus te ramène chez toi&nbsp;?</div>
       </div>
       <div style="display:flex;justify-content:space-around;align-items:flex-end;padding:34px 40px 0">${svg("adore")}${svg("bof")}${svg("jamais")}</div>
-      <div style="margin:22px 64px 0;font-size:30px;font-weight:800">
-        <span style="background:linear-gradient(transparent 58%,#ffcd00 58%)">Aucun bus ne te dépose pile devant ta porte. Lequel te rapproche le plus&nbsp;?</span>
+      <div style="margin:22px 64px 0;font-size:30px;font-weight:800;line-height:1.45">
+        <span style="background:linear-gradient(transparent 58%,#ffcd00 58%)">Aucun bus ne te dépose pile devant ta porte.</span><br>
+        <span style="background:linear-gradient(transparent 58%,#ffcd00 58%)">Lequel te rapproche le plus&nbsp;?</span>
+      </div>
+      <!-- Bas de l'image : l'adresse et le hashtag, pour retrouver le site et suivre ce qui s'en dit sur les réseaux. -->
+      <div style="margin-top:auto;background:#0b1f3a;color:#fff;padding:16px 64px;display:flex;justify-content:space-between;align-items:center;font-size:28px;font-weight:800">
+        <span>lebonbus2027.fr</span><span style="color:#ffcd00">#LeBonBus2027</span>
       </div>
     </div>`;
 });

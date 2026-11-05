@@ -23,7 +23,9 @@
   const lien = `${location.origin}${location.pathname}`;
   const APPEL = "Et toi, quel bus te ramène chez toi ?";
 
-  const texte = $derived(`${lignesPartage(revelation, bacs, avecNoms).join(" ")} ${APPEL}`);
+  // Le hashtag permet de suivre ce qui se dit du site sur les réseaux (aucune mesure d'audience sur le site lui-même).
+  const HASHTAG = "#LeBonBus2027";
+  const texte = $derived(`${lignesPartage(revelation, bacs, avecNoms).join(" ")} ${APPEL} ${HASHTAG}`);
   const e = encodeURIComponent;
 
   // Simples liens vers les pages de partage des réseaux : aucun de leurs scripts n'est chargé ici.
