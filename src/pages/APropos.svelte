@@ -26,6 +26,9 @@
     <li>{c.nom} : <a href={p.page} target="_blank" rel="noopener noreferrer">{p.auteur || "auteur inconnu"}</a>, {p.licence}{p.date ? `, ${p.date.slice(0, 4)}` : ""}</li>
   {/each}
 </ul>
+{#if candidats.some(c => !PHOTOS[c.id])}
+  <p class="petit">Pas encore de portrait sous licence libre pour : {candidats.filter(c => !PHOTOS[c.id]).map(c => c.nom).join(", ")}. Les initiales le remplacent, avec le même cadre que les autres. Ce n'est pas un choix éditorial : le portrait sera ajouté dès qu'il en existe un.</p>
+{/if}
 
 <h2>Signaler un problème</h2>
 <ul>
