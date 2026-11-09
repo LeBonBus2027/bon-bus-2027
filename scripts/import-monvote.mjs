@@ -40,6 +40,7 @@ const NIVEAUX = {
   "Tout à fait pour": 2,
   "Plutôt pour": 1,
   "Neutre / partagé": 0,
+  "Neutre / nuancé": 0,   // libellé utilisé par MonVote2027 depuis le 9 novembre 2026 (même sens)
   "Plutôt contre": -1,
   "Tout à fait contre": -2,
 };
@@ -72,18 +73,26 @@ function analyser(html) {
     questions.push({ id, numero, texte, aide: aide ? decode(aide[1]) : null, themes, quiz_rapide: bloc.includes("q-tag-rapide") });
 
     const vus = new Set();
-    for (const col of bloc.split('class="pos-col"').slice(1)) {
-      const libelle = un(/class="pos-col-label">([^<]+)</, col, `libellé de colonne (${id})`);
-      if (!(libelle in NIVEAUX)) throw new Error(`Niveau inconnu « ${libelle} » (${id})`);
-      for (const b of col.matchAll(/<button class="pos-cand-bubble"([^>]*)>/g)) {
+    const placer = (zone, valeur) => {
+      for (const b of zone.matchAll(/<button class="pos-cand-bubble"([^>]*)>/g)) {
         const attr = nom => un(new RegExp(`data-${nom}="([^"]*)"`), b[1], `data-${nom}`);
         const cid = attr("cid");
         if (vus.has(cid)) throw new Error(`${cid} placé deux fois sur ${id}`);
         vus.add(cid);
         if (!candidats.has(cid)) candidats.set(cid, { id: cid, nom: attr("name"), parti: attr("party"), url_source: `https://monvote2027.fr/candidat/${cid}` });
-        (positions[cid] ??= {})[id] = NIVEAUX[libelle];
+        (positions[cid] ??= {})[id] = valeur;
       }
+    };
+    // Depuis le 9 novembre 2026, MonVote2027 range à part, sous les cinq colonnes, les candidats sans position connue
+    // (« Position inconnue : aucune source trouvée, question non comptée pour ce candidat »). On coupe donc chaque
+    // colonne avant ce bloc, et ses candidats reçoivent null (question ignorée dans le calcul, comme chez MonVote2027).
+    const [colonnes, ...inconnues] = bloc.split('class="pos-inconnue"');
+    for (const col of colonnes.split('class="pos-col"').slice(1)) {
+      const libelle = un(/class="pos-col-label">([^<]+)</, col, `libellé de colonne (${id})`);
+      if (!(libelle in NIVEAUX)) throw new Error(`Niveau inconnu « ${libelle} » (${id})`);
+      placer(col, NIVEAUX[libelle]);
     }
+    for (const zone of inconnues) placer(zone, null);
     tailles.push([id, vus.size]);
   }
 
@@ -107,7 +116,8 @@ function differences(avant, apres) {
   const lignes = [];
   for (const c of apres.candidats) for (const q of apres.questions) {
     const a = avant.positions?.[c.id]?.[q.id], b = apres.positions[c.id][q.id];
-    if (a !== undefined && a !== b) lignes.push(`  ${c.nom} · Q${q.numero} : ${a} → ${b}`);
+    const lisible = v => (v === null ? "inconnue" : v);
+    if (a !== undefined && a !== b) lignes.push(`  ${c.nom} · Q${q.numero} : ${lisible(a)} → ${lisible(b)}`);
   }
   const ids = l => new Set((l ?? []).map(x => x.id));
   const nom = id => [...(apres.candidats ?? []), ...(avant.candidats ?? [])].find(c => c.id === id)?.nom ?? id;
