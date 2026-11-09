@@ -23,7 +23,8 @@
 <ul class="petit credits">
   {#each candidats.filter(c => PHOTOS[c.id]) as c (c.id)}
     {@const p = PHOTOS[c.id]!}
-    <li>{c.nom} : <a href={p.page} target="_blank" rel="noopener noreferrer">{p.auteur || "auteur inconnu"}</a>, {p.licence}{p.date ? `, ${p.date.slice(0, 4)}` : ""}</li>
+    {@const annee = p.date?.match(/\d{4}/)?.[0]}
+    <li>{c.nom} : <a href={p.page} target="_blank" rel="noopener noreferrer">{p.auteur || "auteur inconnu"}</a>, {p.licence}{annee ? `, ${annee}` : ""}</li>
   {/each}
 </ul>
 {#if candidats.some(c => !PHOTOS[c.id])}

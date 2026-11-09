@@ -30,6 +30,9 @@ async function json(url) {
 }
 const licenceLibre = l => /^(cc0|cc[ -]by([ -]sa)?[ -]\d|public domain|pd)/i.test((l ?? "").trim());
 const sansHtml = s => (s ?? "").replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+// Commons donne la date tantôt en ISO (« 2024-05-19 »), tantôt en clair (« 25 September 2004 (original upload date) ») :
+// on garde l'ISO, sinon l'année seule (le site n'affiche que l'année).
+const dateIso = s => s.match(/^\d{4}(-\d{2}){0,2}/)?.[0] ?? s.match(/\d{4}/)?.[0] ?? "";
 
 async function fiche(nom) {
   const r = await json(`https://www.wikidata.org/w/api.php?action=wbsearchentities&search=${encodeURIComponent(nom)}&language=fr&type=item&limit=5&format=json`);
@@ -48,7 +51,7 @@ for (const c of donnees.candidats) {
   const m = ii?.extmetadata ?? {};
   const licence = m.LicenseShortName?.value ?? "";
   const entree = {
-    wikidata: qid, fichier, licence, auteur: sansHtml(m.Artist?.value), date: sansHtml(m.DateTimeOriginal?.value).slice(0, 10),
+    wikidata: qid, fichier, licence, auteur: sansHtml(m.Artist?.value), date: dateIso(sansHtml(m.DateTimeOriginal?.value)),
     page: ii?.descriptionurl, vignette: ii?.thumburl,
     ...(CHOIX[c.id]?.cadrage ? { cadrage: CHOIX[c.id].cadrage } : {}),
   };

@@ -94,7 +94,7 @@
   {#if autres.length}
     <details class="boite ajout">
       <summary>Ajouter des candidats ({autres.length} autres)</summary>
-      <p class="discret petit">{#if !enSilence}Ces candidats sont sous {selection.seuil} % dans la moyenne des sondages, ou n'y figurent pas. {/if}Coche ceux que tu veux voir partir de la gare, puis ajoute-les.</p>
+      <p class="discret petit">{#if !enSilence}Ces candidats sont sous {selection.seuil} % dans la moyenne des sondages, ou n'y figurent pas.{" "}{/if}Coche ceux que tu veux voir partir de la gare, puis ajoute-les.</p>
       <ul>
         {#each autres as c (c.id)}
           <li>

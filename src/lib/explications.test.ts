@@ -31,7 +31,7 @@ describe("textes « Pour aller plus loin »", () => {
     // « La Convention » est aussi un nom commun ici (Convention européenne des droits de l'homme, Convention citoyenne pour le climat) :
     // ce nom de parti est contrôlé à part, seulement quand il n'est suivi d'aucun de ces compléments.
     const GENERIQUES = new Set(["La Convention"]);
-    const noms = [...new Set(monvote.candidats.flatMap(c => [c.nom.split(" ").at(-1)!, c.parti]))].filter(n => !GENERIQUES.has(n));
+    const noms = [...new Set(monvote.candidats.flatMap(c => [c.nom.split(" ").at(-1)!, c.parti]))].filter(n => n && !GENERIQUES.has(n)); // parti vide : candidat sans étiquette
     for (const [id, e] of Object.entries(TEXTES)) {
       const t = tout(e).replace(/(la|La) Convention (européenne|citoyenne|protège|permet)/g, "");
       expect(t, `${id} : « La Convention »`).not.toMatch(/\bLa Convention\b/);

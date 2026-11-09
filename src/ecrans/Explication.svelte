@@ -25,7 +25,7 @@
   } = $props();
 
   const TOI: Record<number, string> = { 2: "Tout à fait d'accord", 1: "Plutôt d'accord", 0: "Neutre", [-1]: "Plutôt pas d'accord", [-2]: "Pas du tout d'accord" };
-  const LUI: Record<number, string> = { 2: "Tout à fait pour", 1: "Plutôt pour", 0: "Neutre ou partagé", [-1]: "Plutôt contre", [-2]: "Tout à fait contre" };
+  const LUI: Record<number, string> = { 2: "Tout à fait pour", 1: "Plutôt pour", 0: "Neutre ou nuancé", [-1]: "Plutôt contre", [-2]: "Tout à fait contre" };
   const parId = new Map(questions.map(q => [q.id, q]));
   const nomBus = (n: Niveau) => NIVEAUX.find(x => x.cle === n)?.bus ?? "";
 
@@ -51,7 +51,7 @@
       <span class="q">{l.texte}</span>
       <span class="avis">
         <span class="avis-toi"><span class="qui">Toi</span> {TOI[l.u ?? 0]}</span>
-        <span class="avis-lui"><span class="qui">Candidat</span> {l.p === null ? "pas de position" : LUI[l.p]}</span>
+        <span class="avis-lui"><span class="qui">Candidat</span> {l.p === null ? "position inconnue" : LUI[l.p]}</span>
       </span>
     </span>
   </li>

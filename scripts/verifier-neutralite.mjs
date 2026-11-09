@@ -27,7 +27,7 @@ const interdits = [
     { motif: new RegExp(`\\b${echapper(c.nom.split(" ").at(-1))}\\b`), raison: `nom de candidat (${c.nom})` },
     { motif: new RegExp(`["'\`]${echapper(c.id)}["'\`]`), raison: `identifiant de candidat (${c.id})` },
   ]),
-  ...[...new Set(donnees.candidats.map(c => c.parti))].map(p => ({ motif: new RegExp(echapper(p)), raison: `nom de parti (${p})` })),
+  ...[...new Set(donnees.candidats.map(c => c.parti).filter(Boolean))].map(p => ({ motif: new RegExp(echapper(p)), raison: `nom de parti (${p})` })),
   { motif: /\{@html/, raison: "injection de HTML brut ({@html})" },
   { motif: /\.innerHTML\s*=|insertAdjacentHTML|outerHTML\s*=/, raison: "injection de HTML brut" },
   // Citer la moyenne des sondages publiés (sélection des candidats) est permis ; présenter l'outil comme un sondage, non.
