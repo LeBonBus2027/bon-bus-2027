@@ -5,7 +5,7 @@
     "licence": "Licence ouverte (nom exact à confirmer auprès de l'éditeur)",
     "attribution": "Questions et positionnements : MonVote2027 (monvote2027.fr)",
     "date_import": "2026-11-09",
-    "empreinte": "f7a6abb297c4773a0b9e819f53beb705dd8985e890ab48d5a5f5a546eaaadc6a"
+    "empreinte": "5c97c034812720540dbd1a6d248be21ebaec2bd617b18d89f9f467dd41c23727"
   },
   "candidats": [
     {
@@ -109,6 +109,12 @@
       "nom": "Florian Philippot",
       "parti": "Les Patriotes",
       "url_source": "https://monvote2027.fr/candidat/philippot"
+    },
+    {
+      "id": "polony",
+      "nom": "Natacha Polony",
+      "parti": "Nous sommes la France",
+      "url_source": "https://monvote2027.fr/candidat/polony"
     },
     {
       "id": "retailleau",

@@ -192,5 +192,14 @@
     "date": "2022-04-25",
     "page": "https://commons.wikimedia.org/wiki/File:Portrait_d%27%C3%89ric_Zemmour,_avril_2022.jpg",
     "local": "photos/zemmour.jpg"
+  },
+  "polony": {
+    "wikidata": "Q941949",
+    "fichier": "Natacha Polony Cannes 2015.jpg",
+    "licence": "CC BY-SA 3.0",
+    "auteur": "Georges Biard",
+    "date": "2015-05",
+    "page": "https://commons.wikimedia.org/wiki/File:Natacha_Polony_Cannes_2015.jpg",
+    "local": "photos/polony.jpg"
   }
 }
