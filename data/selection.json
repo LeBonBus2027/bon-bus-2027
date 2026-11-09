@@ -2,21 +2,22 @@
   "nom": "Pouls",
   "source": "Pouls (pouls.app), moyenne pondérée des sondages du premier tour sur 30 jours, d'après les notices de la Commission des sondages",
   "url": "https://pouls.app/",
-  "date": "2026-11-04",
+  "date": "2026-11-09",
   "seuil": 5,
   "note": "Seuil de 5 % : le même que celui du remboursement des frais de campagne. Un candidat absent des moyennes est considéré sous le seuil. Les autres candidats restent ajoutables à la main.",
   "moyennes": {
-    "le_pen": 34.8,
-    "melenchon": 17.3,
-    "philippe": 14.6,
-    "glucksmann": 12.8,
-    "attal": 8.7,
-    "retailleau": 7.3,
+    "le_pen": 34.5,
+    "melenchon": 17.2,
+    "philippe": 14.3,
+    "glucksmann": 13.2,
+    "attal": 8.4,
+    "retailleau": 7.1,
     "lisnard": 7,
-    "zemmour": 4.2,
-    "tondelier": 2.8,
+    "zemmour": 4.1,
+    "tondelier": 2.7,
     "dupont_aignan": 2.1,
     "roussel": 1.9,
-    "arthaud": 0.7
+    "devillepin": 1.6,
+    "arthaud": 0.6
   }
 }

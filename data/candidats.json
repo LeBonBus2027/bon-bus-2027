@@ -4,8 +4,8 @@
     "url": "https://monvote2027.fr/donnees",
     "licence": "Licence ouverte (nom exact à confirmer auprès de l'éditeur)",
     "attribution": "Questions et positionnements : MonVote2027 (monvote2027.fr)",
-    "date_import": "2026-11-04",
-    "empreinte": "f93032b5a0e3b2f59ad5e72670afe567c4f997cbdfc6662d521e0f5d2f58605e"
+    "date_import": "2026-11-09",
+    "empreinte": "f7a6abb297c4773a0b9e819f53beb705dd8985e890ab48d5a5f5a546eaaadc6a"
   },
   "candidats": [
     {
@@ -91,6 +91,12 @@
       "nom": "Jean-Luc Mélenchon",
       "parti": "La France Insoumise",
       "url_source": "https://monvote2027.fr/candidat/melenchon"
+    },
+    {
+      "id": "mikolajczak",
+      "nom": "Antoine Mikolajczak",
+      "parti": "Équinoxe",
+      "url_source": "https://monvote2027.fr/candidat/mikolajczak"
     },
     {
       "id": "philippe",
