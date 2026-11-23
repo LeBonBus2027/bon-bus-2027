@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest";
 import { melanger, tirageCrypto } from "./aleatoire";
 
 describe("melanger", () => {
-  it("place chaque candidat à chaque rang avec la même fréquence (à ±1 point)", () => {
+  // 42 000 tirages cryptographiques : 4 à 6 secondes selon la charge de la machine, d'où un délai plus large que les 5 s par défaut.
+  it("place chaque candidat à chaque rang avec la même fréquence (à ±1 point)", { timeout: 30_000 }, () => {
     const n = 21, tours = 42_000;
     const compte = Array.from({ length: n }, () => new Array<number>(n).fill(0));
     const liste = Array.from({ length: n }, (_, i) => i);

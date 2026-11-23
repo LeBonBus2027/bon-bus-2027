@@ -4,8 +4,8 @@
     "url": "https://monvote2027.fr/donnees",
     "licence": "Licence ouverte (nom exact à confirmer auprès de l'éditeur)",
     "attribution": "Questions et positionnements : MonVote2027 (monvote2027.fr)",
-    "date_import": "2026-11-16",
-    "empreinte": "481a43f788362beb0a799ec9f67e825a8efac8022cc7479668b50dcd12929f7d"
+    "date_import": "2026-11-23",
+    "empreinte": "f7561426ae79b3e9bff3577d60947d17b3aa45e2d194d328f3f54dc2c4a47865"
   },
   "candidats": [
     {
@@ -127,12 +127,6 @@
       "nom": "Fabien Roussel",
       "parti": "Parti Communiste Français",
       "url_source": "https://monvote2027.fr/candidat/roussel"
-    },
-    {
-      "id": "ruffin",
-      "nom": "François Ruffin",
-      "parti": "Debout !",
-      "url_source": "https://monvote2027.fr/candidat/ruffin"
     },
     {
       "id": "tondelier",
